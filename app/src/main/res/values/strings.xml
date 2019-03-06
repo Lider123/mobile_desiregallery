@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">DesireGallery</string>
+
+    <string name="rating_placeholder">Rating: 0.0</string>
+</resources>
