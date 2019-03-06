@@ -6,7 +6,7 @@ import java.net.URL
 class Post {
 
     private var id : String = ""
-    private var imageUrl : URL = URL("")
+    private var imageUrl : URL? = null
     private var rating : Float = 0.0f
     private var comments : List<String> = ArrayList()
 
@@ -18,7 +18,7 @@ class Post {
         this.id = id
     }
 
-    fun getImageUrl() : URL {
+    fun getImageUrl() : URL? {
         return imageUrl
     }
 
