@@ -3,19 +3,21 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorBackground"
         android:orientation="vertical">
 
     <com.example.desiregallery.ui.widgets.SquareImageView
             android:id="@+id/item_post_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_launcher_foreground"/>
+            android:src="@drawable/image_placeholder"/>
 
     <TextView
             android:id="@+id/item_post_rating"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:textColor="@color/colorOnBackground"
             android:text="@string/rating_placeholder"/>
 
 </LinearLayout>
