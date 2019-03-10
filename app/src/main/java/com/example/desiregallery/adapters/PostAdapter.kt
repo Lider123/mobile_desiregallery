@@ -27,7 +27,7 @@ class PostAdapter(val items : List<Post>, val context: Context) : RecyclerView.A
             .placeholder(R.drawable.image_placeholder)
             .error(R.drawable.image_error)
             .into(p0.imageView)
-        p0.ratingTextView.text = item.getRating().toString()
+        p0.ratingTextView.text = context.getString(R.string.rating_text, item.getRating())
 
     }
 
