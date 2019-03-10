@@ -24,8 +24,8 @@ class PostAdapter(val items : List<Post>, val context: Context) : RecyclerView.A
         val item : Post = items.get(p1)
         Picasso.with(context)
             .load(item.getImageUrl().toString())
-            .placeholder(R.drawable.ic_launcher_foreground)
-            .error(R.drawable.ic_launcher_background)
+            .placeholder(R.drawable.image_placeholder)
+            .error(R.drawable.image_error)
             .into(p0.imageView)
         p0.ratingTextView.text = item.getRating().toString()
 
