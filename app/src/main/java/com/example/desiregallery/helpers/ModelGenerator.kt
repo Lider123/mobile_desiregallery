@@ -52,6 +52,27 @@ class ModelGenerator {
             p.setComments(Arrays.asList("love it", "another cat"))
             posts.add(p)
 
+            p = Post()
+            p.setId("7")
+            p.setImageUrl("https://loremflickr.com/100/100/cat")
+            p.setRating(3.9f)
+            p.setComments(ArrayList())
+            posts.add(p)
+
+            p = Post()
+            p.setId("8")
+            p.setImageUrl("https://loremflickr.com/150/100/cat")
+            p.setRating(3.8f)
+            p.setComments(ArrayList())
+            posts.add(p)
+
+            p = Post()
+            p.setId("9")
+            p.setImageUrl("https://loremflickr.com/100/150/cat")
+            p.setRating(3.3f)
+            p.setComments(ArrayList())
+            posts.add(p)
+
             return posts
         }
     }
