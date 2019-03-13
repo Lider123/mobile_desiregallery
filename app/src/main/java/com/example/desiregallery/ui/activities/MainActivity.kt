@@ -1,8 +1,11 @@
 package com.example.desiregallery.ui.activities
 
+import android.content.res.Configuration
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import com.example.desiregallery.R
 import com.example.desiregallery.adapters.PostAdapter
 import com.example.desiregallery.helpers.ModelGenerator
@@ -19,7 +22,13 @@ class MainActivity : AppCompatActivity() {
 
         posts = ModelGenerator.getPosts()
 
-        post_list.layoutManager = LinearLayoutManager(this)
+        lateinit var layoutManager: RecyclerView.LayoutManager
+        when(resources.configuration.orientation) {
+            Configuration.ORIENTATION_PORTRAIT -> layoutManager = LinearLayoutManager(this)
+            Configuration.ORIENTATION_LANDSCAPE -> layoutManager = GridLayoutManager(this, 2)
+        }
+
+        post_list.layoutManager = layoutManager
         post_list.adapter = PostAdapter(posts, this)
     }
 }
