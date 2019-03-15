@@ -8,4 +8,8 @@
     <string name="send">Send</string>
     <string name="comments">Comments</string>
     <string name="title_activity_main2">Main2Activity</string>
+    <string name="item_post_rating_placeholder">0.0</string>
+    <string name="item_post_rating_format">%1$.1f</string>
+
+    <string name="dialog_rate_text">Rate this post!</string>
 </resources>
