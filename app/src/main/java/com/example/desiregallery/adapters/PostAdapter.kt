@@ -2,13 +2,18 @@ package com.example.desiregallery.adapters
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.telecom.Call
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import com.example.desiregallery.R
 import com.example.desiregallery.models.Post
 import com.example.desiregallery.ui.widgets.SquareImageView
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_post.view.*
 
@@ -24,17 +29,38 @@ class PostAdapter(val items : List<Post>, val context: Context) : RecyclerView.A
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item : Post = items[position]
-        Picasso.with(context)
-            .load(item.getImageUrl().toString())
-            .placeholder(R.drawable.image_placeholder)
-            .error(R.drawable.image_error)
-            .into(holder.imageView)
-        holder.ratingTextView.text = context.getString(R.string.rating_text, item.getRating())
-
+        holder.bind(context, item)
     }
 
     class ViewHolder(view : View) : RecyclerView.ViewHolder(view) {
-        val imageView : SquareImageView = view.item_post_image
-        val ratingTextView : TextView = view.item_post_rating
+        private val imageView: SquareImageView = view.item_post_image
+        private val ratingTextView: TextView = view.item_post_rating
+        private val commentView: ImageView = view.item_post_comment
+        private val progressBar: ProgressBar = view.item_progress
+
+        fun bind(context: Context, item: Post) {
+            Picasso.with(context)
+                .load(item.getImageUrl().toString())
+                .error(R.drawable.image_error)
+                .into(imageView, object: Callback {
+                    override fun onSuccess() {
+                        progressBar.visibility = View.GONE
+                    }
+
+                    override fun onError() {
+                        progressBar.visibility = View.GONE
+                    }
+
+                })
+            ratingTextView.text = context.getString(R.string.rating_text_format, item.getRating())
+            ratingTextView.setOnClickListener{
+                // TODO: handle onClick event for the rating view
+                Toast.makeText(context, "Rating view has been pressed for image " + item.getId(), Toast.LENGTH_SHORT).show()
+            }
+            commentView.setOnClickListener{
+                // TODO: handle onClick event for the comment view
+                Toast.makeText(context, "Comment view has been pressed for image " + item.getId(), Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }
