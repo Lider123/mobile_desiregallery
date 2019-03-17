@@ -1,9 +1,10 @@
 package com.example.desiregallery.models
 
+import java.io.Serializable
 import java.net.MalformedURLException
 import java.net.URL
 
-class Post {
+class Post : Serializable {
 
     private var id : String = ""
     private var imageUrl : URL? = null
