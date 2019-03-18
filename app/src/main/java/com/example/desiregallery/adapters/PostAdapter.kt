@@ -1,6 +1,9 @@
 package com.example.desiregallery.adapters
 
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.support.v7.widget.RecyclerView
 import android.telecom.Call
 import android.view.LayoutInflater
@@ -11,11 +14,14 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import com.example.desiregallery.R
+import com.example.desiregallery.Utils
 import com.example.desiregallery.models.Post
+import com.example.desiregallery.ui.activities.FullScreenImageActivity
 import com.example.desiregallery.ui.widgets.SquareImageView
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_post.view.*
+import java.io.ByteArrayOutputStream
 
 
 class PostAdapter(val items : List<Post>, val context: Context) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
@@ -52,6 +58,12 @@ class PostAdapter(val items : List<Post>, val context: Context) : RecyclerView.A
                     }
 
                 })
+            imageView.setOnClickListener {
+                val bmpImage = (imageView.drawable as BitmapDrawable).bitmap
+                val intent = Intent(context, FullScreenImageActivity::class.java)
+                intent.putExtra("bytesImage", Utils.bitmapToBytes(bmpImage))
+                context.startActivity(intent)
+            }
             ratingTextView.text = context.getString(R.string.rating_text_format, item.getRating())
             ratingTextView.setOnClickListener{
                 // TODO: handle onClick event for the rating view
