@@ -10,7 +10,6 @@
 
     <dimen name="button_corners_radius">15dp</dimen>
     <dimen name="edit_text_corners_radius">15dp</dimen>
-    <dimen name="splash_screen_padding_horizontal">64dp</dimen>
 
     <dimen name="dialog_rate_padding">16dp</dimen>
     <dimen name="dialog_rate_background_radius">45dp</dimen>

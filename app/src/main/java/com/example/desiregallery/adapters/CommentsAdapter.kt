@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import com.example.desiregallery.R
 import kotlinx.android.synthetic.main.item_comment.view.*
 
-class CommentsAdapter(val items: List<String>, val context: Context) : RecyclerView.Adapter<CommentsAdapter.ViewHolder>() {
+class CommentsAdapter(private val items: List<String>, val context: Context) : RecyclerView.Adapter<CommentsAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): CommentsAdapter.ViewHolder {
         return CommentsAdapter.ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_comment, parent, false))
     }

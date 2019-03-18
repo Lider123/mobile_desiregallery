@@ -2,7 +2,6 @@ package com.example.desiregallery.adapters
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -19,11 +18,10 @@ import com.example.desiregallery.ui.widgets.SquareImageView
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_post.view.*
-import java.io.ByteArrayOutputStream
-import java.nio.channels.InterruptedByTimeoutException
 
 
-class PostAdapter(val items : List<Post>, val context: Context) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
+
+class PostAdapter(private val items : List<Post>, val context: Context) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
     override fun getItemCount() : Int {
         return items.size
     }
@@ -77,14 +75,13 @@ class PostAdapter(val items : List<Post>, val context: Context) : RecyclerView.A
                 intent.putExtra("bytesImage", Utils.bitmapToBytes(bmpImage))
                 context.startActivity(intent)
             }
-            ratingTextView.text = context.getString(R.string.rating_text_format, item.getRating())
+            ratingTextView.text = context.getString(R.string.item_post_rating_format, item.getRating())
             ratingTextView.text = context.getString(R.string.item_post_rating_format, item.getRating())
             ratingTextView.setOnClickListener{
                 rateDialog = ImageRateDialog(context, handleRate)
                 rateDialog.show()
             }
             commentView.setOnClickListener{
-                // TODO: handle onClick event for the comment view
                 val intent = Intent(context, CommentsActivity::class.java)
                 intent.putExtra("post", item)
                 context.startActivity(intent)
