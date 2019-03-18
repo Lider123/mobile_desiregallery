@@ -17,11 +17,13 @@ import com.example.desiregallery.R
 import com.example.desiregallery.Utils
 import com.example.desiregallery.models.Post
 import com.example.desiregallery.ui.activities.FullScreenImageActivity
+import com.example.desiregallery.ui.activities.CommentsActivity
 import com.example.desiregallery.ui.widgets.SquareImageView
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_post.view.*
 import java.io.ByteArrayOutputStream
+import java.nio.channels.InterruptedByTimeoutException
 
 
 class PostAdapter(val items : List<Post>, val context: Context) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
@@ -71,7 +73,9 @@ class PostAdapter(val items : List<Post>, val context: Context) : RecyclerView.A
             }
             commentView.setOnClickListener{
                 // TODO: handle onClick event for the comment view
-                Toast.makeText(context, "Comment view has been pressed for image " + item.getId(), Toast.LENGTH_SHORT).show()
+                val intent = Intent(context, CommentsActivity::class.java)
+                intent.putExtra("post", item)
+                context.startActivity(intent)
             }
         }
     }

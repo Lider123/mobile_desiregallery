@@ -23,6 +23,10 @@
         </activity>
         <activity android:name=".ui.activities.MainActivity"/>
         <activity
+                android:name=".ui.activities.CommentsActivity"
+                android:label="@string/comments"
+                android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
                 android:name=".ui.activities.FullScreenImageActivity"
                 android:theme="@style/Theme.AppCompat.NoActionBar"/>
     </application>
