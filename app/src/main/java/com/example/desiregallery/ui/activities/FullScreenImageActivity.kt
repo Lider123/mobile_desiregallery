@@ -1,19 +1,14 @@
 package com.example.desiregallery.ui.activities
 
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
-import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
-import android.view.View
-import com.example.desiregallery.R
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_full_screen_image.*
-import android.graphics.BitmapFactory
-import android.R.attr.data
 import android.os.Build
+import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
+import android.view.View
 import android.view.WindowManager
+import com.example.desiregallery.R
 import com.example.desiregallery.Utils
+import kotlinx.android.synthetic.main.activity_full_screen_image.*
 
 
 class FullScreenImageActivity : AppCompatActivity() {
