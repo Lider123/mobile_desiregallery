@@ -21,8 +21,9 @@ class CommentsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_comments)
         comments_button_back.setOnClickListener { onBackPressed() }
         comments_button_send.setOnClickListener {
-            if (!comments_input.text.isEmpty())
-                handleSend(comments_input.text.toString())
+            val commentText = comments_input.text.trim()
+            if (!commentText.isEmpty())
+                handleSend(commentText.toString())
         }
 
         post = intent.getSerializableExtra("post") as Post
