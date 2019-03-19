@@ -3,6 +3,7 @@ package com.example.desiregallery.ui.activities
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import com.example.desiregallery.R
 import com.example.desiregallery.Utils
 import com.example.desiregallery.adapters.CommentsAdapter
@@ -38,7 +39,7 @@ class CommentsActivity : AppCompatActivity() {
         comments_input.clearFocus()
         Utils.hideSoftKeyboard(this)
 
-        val comments = post.getComments() as MutableList
+        val comments = post.getComments() as ArrayList
         comments.add(text)
         post.setComments(comments)
         adapter.notifyItemInserted(comments.size-1)
