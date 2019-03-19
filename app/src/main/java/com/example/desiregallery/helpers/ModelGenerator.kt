@@ -23,23 +23,24 @@ class ModelGenerator {
             p.setImageUrl("https://via.placeholder.com/600/771796")
             p.setRating(4.6f)
             p.setNumOfRates(5)
-            p.setComments(Arrays.asList("good", "nice"))
+            p.setComments(arrayListOf("good", "nice"))
             posts.add(p)
 
             p = Post()
             p.setId("3")
             p.setImageUrl("https://via.placeholder.com/600/24f355")
             p.setRating(3.1f)
-            p.setComments(Arrays.asList(
+            p.setComments(arrayListOf(
                 "bad",
                 "very bad",
                 "not bad",
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
                 "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
                 "But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness."
-            ))
+            )
+            )
             p.setNumOfRates(10)
-            p.setComments(Arrays.asList("bad", "very bad", "not bad"))
+            p.setComments(arrayListOf("bad", "very bad", "not bad"))
             posts.add(p)
 
             p = Post()
@@ -47,7 +48,7 @@ class ModelGenerator {
             p.setImageUrl("https://via.placeholder.com/600/d32776")
             p.setRating(0.0f)
             p.setNumOfRates(0)
-            p.setComments(Arrays.asList("very well"))
+            p.setComments(arrayListOf("very well"))
             posts.add(p)
 
             p = Post()
@@ -55,7 +56,7 @@ class ModelGenerator {
             p.setImageUrl("https://loremflickr.com/320/240/cat")
             p.setRating(5.0f)
             p.setNumOfRates(1)
-            p.setComments(Arrays.asList("so cute", "love cats"))
+            p.setComments(arrayListOf("so cute", "love cats"))
             posts.add(p)
 
             p = Post()
@@ -63,7 +64,7 @@ class ModelGenerator {
             p.setImageUrl("https://loremflickr.com/240/320/cat")
             p.setRating(4.9f)
             p.setNumOfRates(10)
-            p.setComments(Arrays.asList("love it", "another cat"))
+            p.setComments(arrayListOf("love it", "another cat"))
             posts.add(p)
 
             p = Post()
