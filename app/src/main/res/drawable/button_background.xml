@@ -6,7 +6,7 @@
             <solid android:color="@color/colorSecondary"/>
             <stroke
                     android:width="2dp"
-                    android:color="@color/colorSecondaryVariant"/>
+                    android:color="@color/colorSecondaryDark"/>
             <corners android:radius="@dimen/button_corners_radius"/>
         </shape>
     </item>
@@ -16,7 +16,7 @@
             <solid android:color="@color/colorPrimary"/>
             <stroke
                     android:width="2dp"
-                    android:color="@color/colorPrimaryVariant"/>
+                    android:color="@color/colorPrimaryDark"/>
             <corners android:radius="@dimen/button_corners_radius"/>
         </shape>
     </item>

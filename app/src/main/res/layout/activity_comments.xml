@@ -33,7 +33,7 @@
                 android:minLines="1"
                 android:maxLines="5"
                 android:textColor="@color/colorOnBackground"
-                android:textColorHint="@color/colorSecondaryVariant"
+                android:textColorHint="@color/colorSecondaryDark"
                 android:background="@drawable/comment_input_text_background"
                 android:hint="@string/comments_input_hint"
                 android:padding="16dp"/>
