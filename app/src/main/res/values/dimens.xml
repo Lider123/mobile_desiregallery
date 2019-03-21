@@ -3,7 +3,7 @@
     <dimen name="image_padding">8dp</dimen>
 
     <dimen name="item_status_padding">8dp</dimen>
-    <dimen name="item_rating_font_size">14sp</dimen>
+    <dimen name="item_rating_font_size">18sp</dimen>
 
     <dimen name="comments_input_view_padding">16dp</dimen>
     <dimen name="item_comment_margin">16dp</dimen>
