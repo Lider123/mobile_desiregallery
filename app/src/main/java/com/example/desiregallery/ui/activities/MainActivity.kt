@@ -23,9 +23,11 @@ class MainActivity : AppCompatActivity() {
         posts = ModelGenerator.getPosts()
 
         lateinit var layoutManager: RecyclerView.LayoutManager
-        when(resources.configuration.orientation) {
-            Configuration.ORIENTATION_PORTRAIT -> layoutManager = LinearLayoutManager(this)
-            Configuration.ORIENTATION_LANDSCAPE -> layoutManager = GridLayoutManager(this, 2)
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            layoutManager = GridLayoutManager(this, 2)
+        }
+        else {
+            layoutManager = LinearLayoutManager(this)
         }
 
         post_list.layoutManager = layoutManager
