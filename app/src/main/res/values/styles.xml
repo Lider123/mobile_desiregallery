@@ -12,4 +12,8 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+    <style name="CustomButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@drawable/button_background</item>
+        <item name="android:textColor">@color/colorOnPrimary</item>
+    </style>
 </resources>

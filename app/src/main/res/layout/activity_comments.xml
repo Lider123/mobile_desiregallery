@@ -10,7 +10,7 @@
 
     <include
             android:id="@+id/commnets_app_bar"
-            layout="@layout/comments_toolbar" />
+            layout="@layout/toolbar_comments" />
 
     <android.support.v7.widget.RecyclerView
             android:id="@+id/comments_list"
@@ -32,11 +32,12 @@
                 android:inputType="textMultiLine"
                 android:minLines="1"
                 android:maxLines="5"
+                android:gravity="center_vertical"
                 android:textColor="@color/colorOnBackground"
                 android:textColorHint="@color/colorSecondaryDark"
                 android:background="@drawable/comment_input_text_background"
-                android:hint="@string/comments_input_hint"
-                android:padding="16dp"/>
+                android:padding="@dimen/comments_input_view_padding"
+                android:hint="@string/comments_input_hint"/>
 
         <Button
                 android:id="@+id/comments_button_send"
@@ -44,10 +45,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
-                android:background="@drawable/button_background"
-                android:textColor="@drawable/button_text_color"
                 android:text="@string/send"
-                android:layout_gravity="center_vertical"/>
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="2dp"
+                style="@style/CustomButton"/>
 
     </LinearLayout>
 

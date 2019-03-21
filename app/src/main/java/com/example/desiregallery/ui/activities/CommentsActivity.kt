@@ -9,7 +9,7 @@ import com.example.desiregallery.Utils
 import com.example.desiregallery.adapters.CommentsAdapter
 import com.example.desiregallery.models.Post
 import kotlinx.android.synthetic.main.activity_comments.*
-import kotlinx.android.synthetic.main.comments_toolbar.*
+import kotlinx.android.synthetic.main.toolbar_comments.*
 
 
 class CommentsActivity : AppCompatActivity() {
