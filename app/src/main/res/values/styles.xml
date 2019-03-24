@@ -16,4 +16,11 @@
         <item name="android:background">@drawable/button_background</item>
         <item name="android:textColor">@color/colorOnPrimary</item>
     </style>
+    <style name="CustomEditText" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/colorOnBackground</item>
+        <item name="android:textColorHint">@color/colorSecondaryDark</item>
+        <item name="android:background">@drawable/comment_input_text_background</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">@dimen/comments_input_view_padding</item>
+    </style>
 </resources>

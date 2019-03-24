@@ -32,12 +32,8 @@
                 android:inputType="textMultiLine"
                 android:minLines="1"
                 android:maxLines="5"
-                android:gravity="center_vertical"
-                android:textColor="@color/colorOnBackground"
-                android:textColorHint="@color/colorSecondaryDark"
-                android:background="@drawable/comment_input_text_background"
-                android:padding="@dimen/comments_input_view_padding"
-                android:hint="@string/comments_input_hint"/>
+                android:hint="@string/comments_input_hint"
+                style="@style/CustomEditText"/>
 
         <Button
                 android:id="@+id/comments_button_send"
