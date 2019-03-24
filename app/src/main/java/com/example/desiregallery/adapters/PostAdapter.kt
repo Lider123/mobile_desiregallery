@@ -17,10 +17,8 @@ import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_post.view.*
 
-
-
-class PostAdapter(private val items : List<Post>, val context: Context) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
-    override fun getItemCount() : Int {
+class PostAdapter(private val items: List<Post>, val context: Context) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
+    override fun getItemCount(): Int {
         return items.size
     }
 
@@ -29,12 +27,12 @@ class PostAdapter(private val items : List<Post>, val context: Context) : Recycl
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item : Post = items[position]
+        val item: Post = items[position]
         val presenter = PostPresenter(holder, item)
         holder.bind(context, presenter)
     }
 
-    class ViewHolder(view : View) : RecyclerView.ViewHolder(view), PostView {
+    class ViewHolder(view: View): RecyclerView.ViewHolder(view), PostView {
         private val imageView: SquareImageView = view.item_post_image
         private val ratingTextView: TextView = view.item_post_rating
         private val commentView: ImageView = view.item_post_comment
@@ -66,7 +64,6 @@ class PostAdapter(private val items : List<Post>, val context: Context) : Recycl
                     override fun onError() {
                         progressBar.visibility = View.GONE
                     }
-
                 })
         }
 

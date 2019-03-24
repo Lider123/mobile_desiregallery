@@ -13,7 +13,7 @@ public class PostListViewModel extends ViewModel {
 
     public LiveData<List<Post>> getPosts() {
         if (posts == null) {
-            posts = new MutableLiveData<List<Post>>();
+            posts = new MutableLiveData<>();
             loadPosts();
         }
         return posts;

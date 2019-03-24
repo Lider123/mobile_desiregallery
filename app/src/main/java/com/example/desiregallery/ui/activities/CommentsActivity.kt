@@ -3,7 +3,6 @@ package com.example.desiregallery.ui.activities
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import com.example.desiregallery.R
 import com.example.desiregallery.Utils
 import com.example.desiregallery.adapters.CommentsAdapter

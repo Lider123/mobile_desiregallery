@@ -13,7 +13,7 @@
 
     <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:src="@drawable/logo"
             android:paddingBottom="32dp"
             android:scaleType="fitEnd"
@@ -32,7 +32,7 @@
             android:id="@+id/input_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
+            android:inputType="textPassword"
             android:hint="@string/password"
             style="@style/CustomEditText"
             android:layout_marginBottom="8dp"/>
