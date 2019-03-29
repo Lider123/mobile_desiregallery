@@ -10,7 +10,7 @@ class Post : Serializable {
     private var imageUrl : URL? = null
     private var rating : Float = 0.0f
     private var numOfRates: Int = 0
-    private var comments : List<String> = ArrayList()
+    private var comments : List<Comment> = ArrayList()
 
     fun getId() : String {
         return id
@@ -53,11 +53,11 @@ class Post : Serializable {
         this.numOfRates = numOfRates
     }
 
-    fun getComments() : List<String> {
+    fun getComments() : List<Comment> {
         return comments
     }
 
-    fun setComments(comments : List<String>) {
+    fun setComments(comments : List<Comment>) {
         this.comments = comments
     }
 

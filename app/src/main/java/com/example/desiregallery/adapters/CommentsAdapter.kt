@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.desiregallery.R
+import com.example.desiregallery.Utils
+import com.example.desiregallery.models.Comment
 import kotlinx.android.synthetic.main.item_comment.view.*
 
-class CommentsAdapter(private val items: List<String>, val context: Context) : RecyclerView.Adapter<CommentsAdapter.ViewHolder>() {
+class CommentsAdapter(private val items: List<Comment>, val context: Context) : RecyclerView.Adapter<CommentsAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): CommentsAdapter.ViewHolder {
         return CommentsAdapter.ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_comment, parent, false))
     }
@@ -23,10 +25,12 @@ class CommentsAdapter(private val items: List<String>, val context: Context) : R
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val textView = view.item_comment_text_view
+        private val textView = view.item_comment_text
+        private val timestampView = view.item_comment_timestamp
 
-        fun bind(item: String) {
-            textView.text = item
+        fun bind(item: Comment) {
+            textView.text = item.text
+            timestampView.text = Utils.dateToString(item.timestamp)
         }
     }
 }

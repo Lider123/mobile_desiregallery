@@ -7,6 +7,7 @@ import android.util.Log
 import com.example.desiregallery.R
 import com.example.desiregallery.Utils
 import com.example.desiregallery.adapters.CommentsAdapter
+import com.example.desiregallery.models.Comment
 import com.example.desiregallery.models.Post
 import kotlinx.android.synthetic.main.activity_comments.*
 import kotlinx.android.synthetic.main.toolbar_comments.*
@@ -40,7 +41,7 @@ class CommentsActivity : AppCompatActivity() {
         Utils.hideSoftKeyboard(this)
 
         val comments = post.getComments() as ArrayList
-        comments.add(text)
+        comments.add(Comment(text))
         post.setComments(comments)
         adapter.notifyItemInserted(comments.size-1)
     }
