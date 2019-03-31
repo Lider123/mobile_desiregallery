@@ -65,4 +65,30 @@ class Post : Serializable {
         rating = (rating * numOfRates + rate) / (numOfRates + 1)
         numOfRates++
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Post
+
+        if (id != other.id) return false
+        if (imageUrl != other.imageUrl) return false
+        if (rating != other.rating) return false
+        if (numOfRates != other.numOfRates) return false
+        if (comments != other.comments) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + (imageUrl?.hashCode() ?: 0)
+        result = 31 * result + rating.hashCode()
+        result = 31 * result + numOfRates
+        result = 31 * result + comments.hashCode()
+        return result
+    }
+
+
 }

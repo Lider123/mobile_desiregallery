@@ -8,10 +8,13 @@ import com.example.desiregallery.Utils
 import com.example.desiregallery.adapters.CommentsAdapter
 import com.example.desiregallery.models.Post
 import kotlinx.android.synthetic.main.activity_comments.*
-import kotlinx.android.synthetic.main.comments_toolbar.*
+import kotlinx.android.synthetic.main.toolbar_comments.*
 
 
 class CommentsActivity : AppCompatActivity() {
+    companion object {
+        const val EXTRA_POST = "post"
+    }
 
     private lateinit var post: Post
     private lateinit var adapter: CommentsAdapter
@@ -21,11 +24,12 @@ class CommentsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_comments)
         comments_button_back.setOnClickListener { onBackPressed() }
         comments_button_send.setOnClickListener {
-            if (!comments_input.text.isEmpty())
-                handleSend(comments_input.text.toString())
+            val commentText = comments_input.text.trim()
+            if (!commentText.isEmpty())
+                handleSend(commentText.toString())
         }
 
-        post = intent.getSerializableExtra("post") as Post
+        post = intent.getSerializableExtra(EXTRA_POST) as Post
 
         comments_list.layoutManager = LinearLayoutManager(this)
         adapter = CommentsAdapter(post.getComments(), this)
@@ -37,7 +41,7 @@ class CommentsActivity : AppCompatActivity() {
         comments_input.clearFocus()
         Utils.hideSoftKeyboard(this)
 
-        val comments = post.getComments() as MutableList
+        val comments = post.getComments() as ArrayList
         comments.add(text)
         post.setComments(comments)
         adapter.notifyItemInserted(comments.size-1)

@@ -1,0 +1,49 @@
+package com.example.desiregallery.viewmodels;
+
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.ViewModel;
+import android.support.annotation.NonNull;
+import android.util.Log;
+import com.example.desiregallery.models.Post;
+import com.example.desiregallery.network.DGNetwork;
+import com.example.desiregallery.network.IDGApi;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import java.util.List;
+
+public class PostListViewModel extends ViewModel {
+    private static final String TAG = PostListViewModel.class.getSimpleName();
+
+    private MutableLiveData<List<Post>> posts;
+
+    public LiveData<List<Post>> getPosts() {
+        if (posts == null) {
+            posts = new MutableLiveData<>();
+            loadPosts();
+        }
+        return posts;
+    }
+
+    private void loadPosts() {
+        IDGApi api = DGNetwork.getService();
+        api.getPosts().enqueue(new Callback<List<Post>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<Post>> call, @NonNull Response<List<Post>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    posts.setValue(response.body());
+                    Log.i(TAG, "Posts have been loaded");
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<Post>> call, @NonNull Throwable t) {
+                Log.e(TAG, "Unable to load posts");
+                t.printStackTrace();
+            }
+        });
+    }
+
+}

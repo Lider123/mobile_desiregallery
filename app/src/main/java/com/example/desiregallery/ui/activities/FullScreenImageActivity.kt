@@ -12,6 +12,9 @@ import kotlinx.android.synthetic.main.activity_full_screen_image.*
 
 
 class FullScreenImageActivity : AppCompatActivity() {
+    companion object {
+        const val EXTRA_IMAGE = "bytesImage"
+    }
 
     private lateinit var image: Bitmap
 
@@ -22,7 +25,7 @@ class FullScreenImageActivity : AppCompatActivity() {
         else
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
         setContentView(R.layout.activity_full_screen_image)
-        image = Utils.bytesToBitmap(intent.getByteArrayExtra("bytesImage"))
+        image = Utils.bytesToBitmap(intent.getByteArrayExtra(EXTRA_IMAGE))
         image_view_full_screen.setImageBitmap(image)
     }
 }
