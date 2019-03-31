@@ -38,13 +38,13 @@ public class PostPresenter {
 
     public void goToCommentActivity(Context context) {
         Intent intent = new Intent(context, CommentsActivity.class);
-        intent.putExtra("post", post);
+        intent.putExtra(CommentsActivity.EXTRA_POST, post);
         context.startActivity(intent);
     }
 
     public void goToImageFullScreen(Context context, Bitmap bmpImage) {
         Intent intent = new Intent(context, FullScreenImageActivity.class);
-        intent.putExtra("bytesImage", Utils.Companion.bitmapToBytes(bmpImage));
+        intent.putExtra(FullScreenImageActivity.EXTRA_IMAGE, Utils.Companion.bitmapToBytes(bmpImage));
         context.startActivity(intent);
     }
 }

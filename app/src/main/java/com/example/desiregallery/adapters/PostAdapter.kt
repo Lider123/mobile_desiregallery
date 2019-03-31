@@ -17,7 +17,10 @@ import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_post.view.*
 
-class PostAdapter(private val items: List<Post>, val context: Context) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
+class PostAdapter(
+    private val items: List<Post>,
+    private val context: Context
+) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
     override fun getItemCount(): Int {
         return items.size
     }
@@ -32,7 +35,7 @@ class PostAdapter(private val items: List<Post>, val context: Context) : Recycle
         holder.bind(context, presenter)
     }
 
-    class ViewHolder(view: View): RecyclerView.ViewHolder(view), PostView {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view), PostView {
         private val imageView: SquareImageView = view.item_post_image
         private val ratingTextView: TextView = view.item_post_rating
         private val commentView: ImageView = view.item_post_comment

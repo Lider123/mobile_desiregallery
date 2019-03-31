@@ -11,7 +11,6 @@ import android.util.Log
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.adapters.PostAdapter
-import com.example.desiregallery.helpers.ModelGenerator
 import com.example.desiregallery.models.Post
 import com.example.desiregallery.viewmodels.PostListViewModel
 import kotlinx.android.synthetic.main.activity_main.*
@@ -27,7 +26,6 @@ class MainActivity : AppCompatActivity() {
 
         prefs = getSharedPreferences(MainApplication.APP_PREFERENCES, Context.MODE_PRIVATE)
         val currLogin = prefs.getString(MainApplication.PREFS_CURR_USER_KEY, null)
-        val currUser = ModelGenerator.getUser(currLogin!!)
         Log.d(TAG, String.format("Current user is %s", currLogin))
 
         val model = ViewModelProviders.of(this).get(PostListViewModel::class.java)

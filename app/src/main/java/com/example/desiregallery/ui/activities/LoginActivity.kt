@@ -6,10 +6,8 @@ import android.content.SharedPreferences
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import com.example.desiregallery.R
-import com.example.desiregallery.helpers.ModelGenerator
 import kotlinx.android.synthetic.main.activity_login.*
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.models.User
@@ -34,11 +32,11 @@ class LoginActivity : AppCompatActivity() {
             goToMainActivity()
         }
 
-        button_login.setOnClickListener(View.OnClickListener {
+        button_login.setOnClickListener {
             val login = input_login.text.toString()
             val password = input_password.text.toString()
             login(login, password)
-        })
+        }
     }
 
     private fun login(login: String, password: String) {

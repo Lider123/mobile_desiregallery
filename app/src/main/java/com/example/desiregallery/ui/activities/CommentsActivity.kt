@@ -12,6 +12,9 @@ import kotlinx.android.synthetic.main.toolbar_comments.*
 
 
 class CommentsActivity : AppCompatActivity() {
+    companion object {
+        const val EXTRA_POST = "post"
+    }
 
     private lateinit var post: Post
     private lateinit var adapter: CommentsAdapter
@@ -26,7 +29,7 @@ class CommentsActivity : AppCompatActivity() {
                 handleSend(commentText.toString())
         }
 
-        post = intent.getSerializableExtra("post") as Post
+        post = intent.getSerializableExtra(EXTRA_POST) as Post
 
         comments_list.layoutManager = LinearLayoutManager(this)
         adapter = CommentsAdapter(post.getComments(), this)

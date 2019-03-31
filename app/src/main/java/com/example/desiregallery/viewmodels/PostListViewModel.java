@@ -3,8 +3,8 @@ package com.example.desiregallery.viewmodels;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.support.annotation.NonNull;
 import android.util.Log;
-import com.example.desiregallery.MainApplication;
 import com.example.desiregallery.models.Post;
 import com.example.desiregallery.network.DGNetwork;
 import com.example.desiregallery.network.IDGApi;
@@ -31,7 +31,7 @@ public class PostListViewModel extends ViewModel {
         IDGApi api = DGNetwork.getService();
         api.getPosts().enqueue(new Callback<List<Post>>() {
             @Override
-            public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+            public void onResponse(@NonNull Call<List<Post>> call, @NonNull Response<List<Post>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     posts.setValue(response.body());
                     Log.i(TAG, "Posts have been loaded");
@@ -39,7 +39,7 @@ public class PostListViewModel extends ViewModel {
             }
 
             @Override
-            public void onFailure(Call<List<Post>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<Post>> call, @NonNull Throwable t) {
                 Log.e(TAG, "Unable to load posts");
                 t.printStackTrace();
             }
