@@ -9,4 +9,11 @@
     <string name="comments">Comments</string>
 
     <string name="dialog_rate_text">Rate this post!</string>
+
+    <string name="Login">Login</string>
+    <string name="login">login</string>
+    <string name="password">password</string>
+    <string name="login_error">Unable to login. Check your network connection</string>
+    <string name="invalid_login">Invalid login</string>
+    <string name="invalid_password">Invalid password</string>
 </resources>
