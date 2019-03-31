@@ -12,6 +12,11 @@ import com.example.desiregallery.R
 import com.example.desiregallery.helpers.ModelGenerator
 import kotlinx.android.synthetic.main.activity_login.*
 import com.example.desiregallery.MainApplication
+import com.example.desiregallery.models.User
+import com.example.desiregallery.network.DGNetwork
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class LoginActivity : AppCompatActivity() {
@@ -37,19 +42,28 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun login(login: String, password: String) {
-        val user = ModelGenerator.getUser(login)
-        if (user == null) {
-            Toast.makeText(this, R.string.invalid_login, Toast.LENGTH_SHORT).show()
-            return
-        }
-        if (user.getPassword() != password) {
-            Toast.makeText(this, R.string.invalid_password, Toast.LENGTH_SHORT).show()
-            return
-        }
+        DGNetwork.getService().getUser(login).enqueue(object: Callback<User> {
+            override fun onResponse(call: Call<User>, response: Response<User>) {
+                if (response.body() == null) {
+                    Toast.makeText(applicationContext, R.string.invalid_login, Toast.LENGTH_SHORT).show()
+                    return
+                }
+                val user = response.body()
+                if (user?.getPassword() != password) {
+                    Toast.makeText(applicationContext, R.string.invalid_password, Toast.LENGTH_SHORT).show()
+                    return
+                }
 
-        prefs.edit().putString(MainApplication.PREFS_CURR_USER_KEY, login).apply()
-        Log.d(TAG, String.format("User %s logged in", login))
-        goToMainActivity()
+                prefs.edit().putString(MainApplication.PREFS_CURR_USER_KEY, login).apply()
+                Log.d(TAG, String.format("User %s logged in", login))
+                goToMainActivity()
+            }
+
+            override fun onFailure(call: Call<User>, t: Throwable) {
+                Toast.makeText(applicationContext, R.string.login_error, Toast.LENGTH_LONG).show()
+                Log.e(TAG, "Unable to log in")
+            }
+        })
     }
 
     private fun goToMainActivity() {
