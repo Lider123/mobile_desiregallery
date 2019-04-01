@@ -10,6 +10,7 @@ import android.widget.Toast
 import com.example.desiregallery.R
 import kotlinx.android.synthetic.main.activity_login.*
 import com.example.desiregallery.MainApplication
+import com.example.desiregallery.database.DGDatabase
 import com.example.desiregallery.models.User
 import com.example.desiregallery.network.DGNetwork
 import retrofit2.Call
@@ -54,6 +55,7 @@ class LoginActivity : AppCompatActivity() {
 
                 prefs.edit().putString(MainApplication.PREFS_CURR_USER_KEY, login).apply()
                 Log.d(TAG, String.format("User %s logged in", login))
+                DGDatabase.updateUser(user)
                 goToMainActivity()
             }
 
