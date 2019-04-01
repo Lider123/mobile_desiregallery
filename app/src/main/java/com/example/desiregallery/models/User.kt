@@ -1,6 +1,13 @@
 package com.example.desiregallery.models
 
-class User(private var login: String, private var password: String) {
+import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
+
+open class User(
+    @PrimaryKey
+    private var login: String = "",
+    private var password: String = ""
+): RealmObject() {
 
     fun getLogin(): String {
         return login
