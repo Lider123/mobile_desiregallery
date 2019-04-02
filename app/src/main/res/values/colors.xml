@@ -17,4 +17,6 @@
     <color name="colorOnError">#FFF</color>
     <color name="colorDisabled">#999</color>
     <color name="colorOnDisabled">#555</color>
+
+    <color name="colorHint">#4000</color>
 </resources>
