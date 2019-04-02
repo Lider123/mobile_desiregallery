@@ -2,14 +2,23 @@ package com.example.desiregallery
 
 import com.example.desiregallery.helpers.ModelGenerator
 import com.example.desiregallery.network.DGNetwork
+import junit.framework.TestCase
 import org.junit.Assert
 import org.junit.Test
+
 
 class ApiUnitTest {
     @Test
     fun gettingPosts_responseOk() {
         val api = DGNetwork.getService()
         val response = api.getPosts().execute()
+        Assert.assertEquals(200, response.code())
+    }
+
+    @Test
+    fun gettingUsers_responseOk() {
+        val api = DGNetwork.getService()
+        val response = api.getUsers().execute()
         Assert.assertEquals(200, response.code())
     }
 

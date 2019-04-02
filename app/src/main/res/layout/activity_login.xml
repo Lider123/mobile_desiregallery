@@ -43,7 +43,19 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/Login"
-            android:layout_marginBottom="32dp"
-            style="@style/CustomButton"/>
+            style="@style/CustomButton"
+            android:layout_marginBottom="8dp"/>
+
+    <TextView
+            android:text="@string/SignUp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:foregroundGravity="center"
+            android:id="@+id/link_signup"
+            android:gravity="center_horizontal"
+            android:textColor="@color/colorSecondary"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginBottom="32dp"/>
 
 </LinearLayout>

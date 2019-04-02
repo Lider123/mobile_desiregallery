@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:state_pressed="true">
+    <item android:state_pressed="true" android:state_enabled="true">
         <shape>
-            <solid android:color="@color/colorPrimaryDark"/>
+            <solid android:color="@color/colorSecondaryLight"/>
             <corners android:radius="@dimen/button_corners_radius"/>
         </shape>
     </item>
 
-    <item>
+    <item android:state_enabled="false">
         <shape>
-            <solid android:color="@color/colorPrimary"/>
+            <solid android:color="@color/colorDisabled"/>
+            <corners android:radius="@dimen/button_corners_radius"/>
+        </shape>
+    </item>
+
+    <item android:state_enabled="true">
+        <shape>
+            <solid android:color="@color/colorSecondary"/>
             <corners android:radius="@dimen/button_corners_radius"/>
         </shape>
     </item>

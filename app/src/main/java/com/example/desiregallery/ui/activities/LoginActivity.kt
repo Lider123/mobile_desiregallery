@@ -5,6 +5,8 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.widget.Toast
 import com.example.desiregallery.R
@@ -22,6 +24,7 @@ class LoginActivity : AppCompatActivity() {
     private val TAG = LoginActivity::class.java.simpleName
 
     private lateinit var prefs: SharedPreferences
+    private lateinit var inputTextWatcher: TextWatcher
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,11 +36,35 @@ class LoginActivity : AppCompatActivity() {
             goToMainActivity()
         }
 
+        inputTextWatcher = object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {}
+
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {}
+
+            override fun afterTextChanged(editable: Editable) {
+                checkForEmptyFields()
+            }
+        }
+        button_login.isEnabled = false
+        initListeners()
+    }
+
+    private fun initListeners() {
+        input_login.addTextChangedListener(inputTextWatcher)
+        input_password.addTextChangedListener(inputTextWatcher)
         button_login.setOnClickListener {
             val login = input_login.text.toString()
             val password = input_password.text.toString()
             login(login, password)
         }
+        link_signup.setOnClickListener {
+            val intent = Intent(this, SignupActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    private fun checkForEmptyFields() {
+        button_login.isEnabled = !(input_login.text.toString().trim().isEmpty() || input_password.text.toString().trim().isEmpty())
     }
 
     private fun login(login: String, password: String) {

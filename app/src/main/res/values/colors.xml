@@ -15,4 +15,6 @@
     <color name="colorOnSurface">#000</color>
     <color name="colorError">#C62828</color>
     <color name="colorOnError">#FFF</color>
+    <color name="colorDisabled">#999</color>
+    <color name="colorOnDisabled">#555</color>
 </resources>
