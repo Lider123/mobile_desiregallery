@@ -3,6 +3,7 @@ package com.example.desiregallery.ui.activities
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -36,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        prefs = getSharedPreferences(MainApplication.APP_PREFERENCES, Context.MODE_PRIVATE)
 
         setCurrentUser()
         setContent()
@@ -77,8 +79,7 @@ class MainActivity : AppCompatActivity() {
                     return@setNavigationItemSelectedListener true
                 }
                 R.id.nav_logout -> {
-                    // TODO
-                    Toast.makeText(this, "Selected logout", Toast.LENGTH_SHORT).show()
+                    handleLogout()
                     return@setNavigationItemSelectedListener true
                 }
                 else -> return@setNavigationItemSelectedListener false
@@ -98,7 +99,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun setCurrentUser() {
         Thread(Runnable {
-            prefs = getSharedPreferences(MainApplication.APP_PREFERENCES, Context.MODE_PRIVATE)
             val currLogin = prefs.getString(MainApplication.PREFS_CURR_USER_KEY, null)
             currUser = DGDatabase.getUser(currLogin!!)
             Log.d(TAG, String.format("Current user is %s", currUser?.getLogin()))
@@ -111,5 +111,12 @@ class MainActivity : AppCompatActivity() {
             post_list.layoutManager = LinearLayoutManager(this)
             post_list.adapter = PostAdapter(posts!!, this)
         })
+    }
+
+    private fun handleLogout() {
+        prefs.edit().remove(MainApplication.PREFS_CURR_USER_KEY).apply()
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }
