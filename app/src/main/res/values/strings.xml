@@ -21,4 +21,8 @@
     <string name="non_equal_passwords">Passwords are note equal</string>
     <string name="non_unique_login">Login is already exists</string>
     <string name="signup_error">Unable to sign up. Check your network connection</string>
+
+    <string name="Profile">Profile</string>
+    <string name="Settings">Settings</string>
+    <string name="LogOut">Log out</string>
 </resources>
