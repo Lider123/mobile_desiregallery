@@ -23,6 +23,7 @@
     <string name="signup_error">Unable to sign up. Check your network connection</string>
 
     <string name="Profile">Profile</string>
+    <string name="Feed">Feed</string>
     <string name="Settings">Settings</string>
     <string name="LogOut">Log out</string>
 </resources>

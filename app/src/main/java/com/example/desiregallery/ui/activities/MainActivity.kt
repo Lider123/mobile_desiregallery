@@ -1,7 +1,5 @@
 package com.example.desiregallery.ui.activities
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -11,25 +9,23 @@ import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBar
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.MenuItem
-import android.widget.Toast
-import com.example.desiregallery.MainApplication
-import com.example.desiregallery.R
-import com.example.desiregallery.adapters.PostAdapter
+import com.example.desiregallery.*
 import com.example.desiregallery.database.DGDatabase
-import com.example.desiregallery.models.Post
 import com.example.desiregallery.models.User
-import com.example.desiregallery.viewmodels.PostListViewModel
-import kotlinx.android.synthetic.main.activity_main.*
+import com.example.desiregallery.ui.fragments.FeedFragment
+import com.example.desiregallery.ui.fragments.ProfileFragment
+import com.example.desiregallery.ui.fragments.SettingsFragment
 
 
 class MainActivity : AppCompatActivity() {
     private val TAG = MainActivity::class.java.simpleName
 
     private lateinit var drawerLayout: DrawerLayout
+    private lateinit var navigationView: NavigationView
+    private lateinit var toolbar: Toolbar
 
     private lateinit var prefs: SharedPreferences
     private var currUser: User? = null
@@ -40,51 +36,9 @@ class MainActivity : AppCompatActivity() {
         prefs = getSharedPreferences(MainApplication.APP_PREFERENCES, Context.MODE_PRIVATE)
 
         setCurrentUser()
-        setContent()
         setToolbar()
         setNavigationMenu()
-    }
-
-    private fun setToolbar() {
-        val toolbar: Toolbar = findViewById(R.id.main_toolbar)
-        setSupportActionBar(toolbar)
-        val actionbar: ActionBar? = supportActionBar
-        actionbar?.apply {
-            setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.ic_menu_coloronprimary_32dp)
-        }
-    }
-
-    private fun setNavigationMenu() {
-        drawerLayout = findViewById(R.id.drawer_layout)
-        val navigationView: NavigationView = findViewById(R.id.nav_view)
-        navigationView.itemIconTintList = null
-        navigationView.setNavigationItemSelectedListener { menuItem ->
-            menuItem.isChecked = true
-            drawerLayout.closeDrawers()
-
-            when(menuItem.itemId) {
-                R.id.nav_profile -> {
-                    // TODO: add profile fragment to the main container
-                    /* How to add fragment
-                    val fragTransaction = supportFragmentManager.beginTransaction()
-                    fragTransaction.add(R.id.main_container, Fragment())
-                    fragTransaction.commit()*/
-                    Toast.makeText(this, "Selected profile", Toast.LENGTH_SHORT).show()
-                    return@setNavigationItemSelectedListener true
-                }
-                R.id.nav_settings -> {
-                    // TODO
-                    Toast.makeText(this, "Selected settings", Toast.LENGTH_SHORT).show()
-                    return@setNavigationItemSelectedListener true
-                }
-                R.id.nav_logout -> {
-                    handleLogout()
-                    return@setNavigationItemSelectedListener true
-                }
-                else -> return@setNavigationItemSelectedListener false
-            }
-        }
+        setDefaultFragment()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -97,6 +51,55 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun setToolbar() {
+        toolbar = findViewById(R.id.main_toolbar)
+        toolbar.title = resources.getString(R.string.app_name)
+        setSupportActionBar(toolbar)
+        val actionbar: ActionBar? = supportActionBar
+        actionbar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(R.drawable.ic_menu_coloronprimary_32dp)
+        }
+    }
+
+    private fun setNavigationMenu() {
+        drawerLayout = findViewById(R.id.drawer_layout)
+        navigationView = findViewById(R.id.nav_view)
+        navigationView.itemIconTintList = null
+        navigationView.setNavigationItemSelectedListener { menuItem ->
+            selectDrawerItem(menuItem)
+            return@setNavigationItemSelectedListener true
+        }
+    }
+
+    private fun selectDrawerItem(menuItem: MenuItem) {
+        when(menuItem.itemId) {
+            R.id.nav_profile -> {
+                supportFragmentManager.beginTransaction().replace(R.id.main_container,
+                    ProfileFragment()
+                ).commit()
+                toolbar.title = menuItem.title
+            }
+            R.id.nav_feed -> {
+                supportFragmentManager.beginTransaction().replace(R.id.main_container,
+                    FeedFragment()
+                ).commit()
+                toolbar.title = resources.getString(R.string.app_name)
+            }
+            R.id.nav_settings -> {
+                supportFragmentManager.beginTransaction().replace(R.id.main_container,
+                    SettingsFragment()
+                ).commit()
+                toolbar.title = resources.getString(R.string.Settings)
+            }
+            R.id.nav_logout -> {
+                handleLogout()
+            }
+        }
+        menuItem.isChecked = true
+        drawerLayout.closeDrawers()
+    }
+
     private fun setCurrentUser() {
         Thread(Runnable {
             val currLogin = prefs.getString(MainApplication.PREFS_CURR_USER_KEY, null)
@@ -105,18 +108,16 @@ class MainActivity : AppCompatActivity() {
         }).start()
     }
 
-    private fun setContent() {
-        val model = ViewModelProviders.of(this).get(PostListViewModel::class.java)
-        model.posts.observe(this, Observer<List<Post>>{ posts ->
-            post_list.layoutManager = LinearLayoutManager(this)
-            post_list.adapter = PostAdapter(posts!!, this)
-        })
-    }
-
     private fun handleLogout() {
         prefs.edit().remove(MainApplication.PREFS_CURR_USER_KEY).apply()
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    private fun setDefaultFragment() {
+        supportFragmentManager.beginTransaction().replace(R.id.main_container, FeedFragment()).commit()
+        toolbar.title = resources.getString(R.string.app_name)
+        navigationView.setCheckedItem(R.id.nav_feed)
     }
 }

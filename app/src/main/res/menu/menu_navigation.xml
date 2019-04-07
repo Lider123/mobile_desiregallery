@@ -9,6 +9,11 @@
                 android:icon="@drawable/ic_person_colorsecondary_32dp"
                 android:title="@string/Profile" />
         <item
+                android:id="@+id/nav_feed"
+                android:icon="@drawable/ic_home_colorsecondary_32dp"
+                android:title="@string/Feed"
+        />
+        <item
                 android:id="@+id/nav_settings"
                 android:icon="@drawable/ic_settings_colorsecondary_32dp"
                 android:title="@string/Settings" />
