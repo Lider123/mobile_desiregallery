@@ -10,8 +10,8 @@ import com.example.desiregallery.ui.activities.FullScreenImageActivity;
 import com.example.desiregallery.ui.views.PostView;
 
 public class PostPresenter {
-    private PostView view;
-    private Post post;
+    private final PostView view;
+    private final Post post;
 
     public PostPresenter(PostView view) {
         this.view = view;

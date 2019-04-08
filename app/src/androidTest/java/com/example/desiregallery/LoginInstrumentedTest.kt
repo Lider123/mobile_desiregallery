@@ -12,7 +12,7 @@ import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import com.example.desiregallery.ui.activities.LoginActivity
 import org.junit.runner.RunWith
-import com.example.desiregallery.ui.activities.SignupActivity
+import com.example.desiregallery.ui.activities.SignUpActivity
 import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
@@ -57,8 +57,8 @@ class LoginInstrumentedTest {
 
     @Test
     fun startSignUpActivity_isCorrect() {
-        Espresso.onView(withId(R.id.link_signup)).perform(click())
-        intended(hasComponent(SignupActivity::class.java.name))
+        Espresso.onView(withId(R.id.link_sign_up)).perform(click())
+        intended(hasComponent(SignUpActivity::class.java.name))
     }
 
     @After

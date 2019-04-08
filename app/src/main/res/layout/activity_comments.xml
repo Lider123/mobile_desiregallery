@@ -8,7 +8,7 @@
         tools:context=".ui.activities.CommentsActivity">
 
     <include
-            android:id="@+id/commnets_app_bar"
+            android:id="@+id/comments_app_bar"
             layout="@layout/toolbar_comments" />
 
     <android.support.v7.widget.RecyclerView

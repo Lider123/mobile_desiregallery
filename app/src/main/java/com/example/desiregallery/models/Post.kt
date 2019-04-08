@@ -6,58 +6,58 @@ import java.net.URL
 
 class Post : Serializable {
 
-    private var id : String = ""
-    private var imageUrl : URL? = null
-    private var rating : Float = 0.0f
+    private var id: String = ""
+    private var imageUrl: URL? = null
+    private var rating: Float = 0.0f
     private var numOfRates: Int = 0
-    private var comments : List<String> = ArrayList()
+    private var comments: List<String> = ArrayList()
 
-    fun getId() : String {
+    fun getId(): String {
         return id
     }
 
-    fun setId(id : String) {
+    fun setId(id: String) {
         this.id = id
     }
 
-    fun getImageUrl() : URL? {
+    fun getImageUrl(): URL? {
         return imageUrl
     }
 
-    fun setImageUrl(imageUrl : URL) {
+    fun setImageUrl(imageUrl: URL) {
         this.imageUrl = imageUrl
     }
 
-    fun setImageUrl(imageUrl : String) {
+    fun setImageUrl(imageUrl: String) {
         try {
             this.imageUrl = URL(imageUrl)
         }
-        catch(e : MalformedURLException) {
+        catch(e: MalformedURLException) {
             e.printStackTrace()
         }
     }
 
-    fun getRating() : Float {
+    fun getRating(): Float {
         return rating
     }
 
-    fun setRating(rating : Float) {
+    fun setRating(rating: Float) {
         this.rating = rating
     }
 
-    fun getNumOfRates() : Int {
+    fun getNumOfRates(): Int {
         return numOfRates
     }
 
-    fun setNumOfRates(numOfRates : Int) {
+    fun setNumOfRates(numOfRates: Int) {
         this.numOfRates = numOfRates
     }
 
-    fun getComments() : List<String> {
+    fun getComments(): List<String> {
         return comments
     }
 
-    fun setComments(comments : List<String>) {
+    fun setComments(comments: List<String>) {
         this.comments = comments
     }
 
