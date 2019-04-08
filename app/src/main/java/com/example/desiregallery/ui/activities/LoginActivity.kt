@@ -57,8 +57,8 @@ class LoginActivity : AppCompatActivity() {
             val password = input_password.text.toString()
             login(login, password)
         }
-        link_signup.setOnClickListener {
-            val intent = Intent(this, SignupActivity::class.java)
+        link_sign_up.setOnClickListener {
+            val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
         }
     }
@@ -70,12 +70,12 @@ class LoginActivity : AppCompatActivity() {
     private fun login(login: String, password: String) {
         DGNetwork.getService().getUser(login).enqueue(object: Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
-                if (response.body() == null) {
+                val user = response.body()
+                if (user == null) {
                     Toast.makeText(applicationContext, R.string.invalid_login, Toast.LENGTH_SHORT).show()
                     return
                 }
-                val user = response.body()
-                if (user?.getPassword() != password) {
+                if (user.getPassword() != password) {
                     Toast.makeText(applicationContext, R.string.invalid_password, Toast.LENGTH_SHORT).show()
                     return
                 }

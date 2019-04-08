@@ -97,8 +97,10 @@ class MainActivity : AppCompatActivity() {
     private fun setCurrentUser() {
         Thread(Runnable {
             val currLogin = prefs.getString(MainApplication.PREFS_CURR_USER_KEY, null)
-            currUser = DGDatabase.getUser(currLogin!!)
-            Log.d(TAG, String.format("Current user is %s", currUser?.getLogin()))
+            if (currLogin != null) {
+                currUser = DGDatabase.getUser(currLogin)
+                Log.d(TAG, String.format("Current user is %s", currUser?.getLogin()))
+            }
         }).start()
     }
 
