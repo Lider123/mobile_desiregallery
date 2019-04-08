@@ -22,7 +22,7 @@ class FeedFragment : android.support.v4.app.Fragment() {
 
     private fun setContent() {
         val model = ViewModelProviders.of(this).get(PostListViewModel::class.java)
-        model.posts.observe(this, Observer<List<Post>>{ posts ->
+        model.getPosts().observe(this, Observer<List<Post>>{ posts ->
             post_list.layoutManager = LinearLayoutManager(activity)
             post_list.adapter = PostAdapter(posts!!, activity!!)
         })
