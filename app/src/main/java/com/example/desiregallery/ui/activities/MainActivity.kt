@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.NavigationView
+import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBar
@@ -68,36 +69,29 @@ class MainActivity : AppCompatActivity() {
         navigationView.itemIconTintList = null
         navigationView.setNavigationItemSelectedListener { menuItem ->
             selectDrawerItem(menuItem)
+            menuItem.isChecked = true
+            drawerLayout.closeDrawers()
             return@setNavigationItemSelectedListener true
         }
     }
 
     private fun selectDrawerItem(menuItem: MenuItem) {
         when(menuItem.itemId) {
-            R.id.nav_profile -> {
-                supportFragmentManager.beginTransaction().replace(R.id.main_container,
-                    ProfileFragment()
-                ).commit()
-                toolbar.title = menuItem.title
-            }
-            R.id.nav_feed -> {
-                supportFragmentManager.beginTransaction().replace(R.id.main_container,
-                    FeedFragment()
-                ).commit()
-                toolbar.title = resources.getString(R.string.app_name)
-            }
-            R.id.nav_settings -> {
-                supportFragmentManager.beginTransaction().replace(R.id.main_container,
-                    SettingsFragment()
-                ).commit()
-                toolbar.title = resources.getString(R.string.Settings)
-            }
-            R.id.nav_logout -> {
-                handleLogout()
-            }
+            R.id.nav_profile -> replaceFragment(ProfileFragment(), menuItem.title)
+            R.id.nav_feed -> replaceFragment(FeedFragment(), R.string.app_name)
+            R.id.nav_settings -> replaceFragment(SettingsFragment(), menuItem.title)
+            R.id.nav_logout -> handleLogout()
         }
-        menuItem.isChecked = true
-        drawerLayout.closeDrawers()
+    }
+
+    private fun replaceFragment(fragment: Fragment, title: CharSequence) {
+        supportFragmentManager.beginTransaction().replace(R.id.main_container, fragment).commit()
+        toolbar.title = title
+    }
+
+    private fun replaceFragment(fragment: Fragment, id: Int) {
+        supportFragmentManager.beginTransaction().replace(R.id.main_container, fragment).commit()
+        toolbar.title = resources.getString(id)
     }
 
     private fun setCurrentUser() {
@@ -116,8 +110,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setDefaultFragment() {
-        supportFragmentManager.beginTransaction().replace(R.id.main_container, FeedFragment()).commit()
-        toolbar.title = resources.getString(R.string.app_name)
+        replaceFragment(FeedFragment(), R.string.app_name)
         navigationView.setCheckedItem(R.id.nav_feed)
     }
 }
