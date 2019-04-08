@@ -2,9 +2,7 @@ package com.example.desiregallery.network;
 
 import com.example.desiregallery.models.Post;
 import com.example.desiregallery.models.User;
-import com.example.desiregallery.network.serializers.PostDeserializer;
-import com.example.desiregallery.network.serializers.PostListDeserializer;
-import com.example.desiregallery.network.serializers.UserDeserializer;
+import com.example.desiregallery.network.serializers.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -29,10 +27,13 @@ public class DGNetwork {
     private static Gson getGson() {
         if (gson == null) {
             Type postListType = new TypeToken<List<Post>>() {}.getType();
+            Type userListType = new TypeToken<List<User>>() {}.getType();
             GsonBuilder gsonBuilder = new GsonBuilder()
                     .registerTypeAdapter(Post.class, new PostDeserializer())
                     .registerTypeAdapter(postListType, new PostListDeserializer())
-                    .registerTypeAdapter(User.class, new UserDeserializer());
+                    .registerTypeAdapter(User.class, new UserDeserializer())
+                    .registerTypeAdapter(User.class, new UserSerializer())
+                    .registerTypeAdapter(userListType, new UserListDeserializer());
             gson = gsonBuilder.create();
         }
         return gson;

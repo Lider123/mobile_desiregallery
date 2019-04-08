@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -12,13 +12,16 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
     <style name="CustomButton" parent="Widget.AppCompat.Button.Colored">
         <item name="android:background">@drawable/button_background</item>
-        <item name="android:textColor">@color/colorOnPrimary</item>
+        <item name="android:textColor">@drawable/button_text_color</item>
     </style>
     <style name="CustomEditText" parent="Widget.AppCompat.EditText">
         <item name="android:textColor">@color/colorOnBackground</item>
-        <item name="android:textColorHint">@color/colorSecondaryDark</item>
+        <item name="android:textColorHint">@color/colorHint</item>
         <item name="android:background">@drawable/comment_input_text_background</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:padding">@dimen/comments_input_view_padding</item>
