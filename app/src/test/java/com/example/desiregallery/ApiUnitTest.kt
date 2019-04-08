@@ -2,7 +2,6 @@ package com.example.desiregallery
 
 import com.example.desiregallery.helpers.ModelGenerator
 import com.example.desiregallery.network.DGNetwork
-import junit.framework.TestCase
 import org.junit.Assert
 import org.junit.Test
 
