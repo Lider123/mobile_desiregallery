@@ -68,12 +68,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun fieldIsValid(field: String): Boolean {
-        if (field.isEmpty())
-            return false
-        if (field != field.replace(" ", ""))
-            return false
-
-        return true
+        return Regex("\\w+").matches(field)
     }
 
     private fun registerUser(user: User) {

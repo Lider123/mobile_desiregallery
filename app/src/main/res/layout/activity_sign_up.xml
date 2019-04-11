@@ -8,6 +8,7 @@
         tools:context=".ui.activities.SignUpActivity">
 
     <LinearLayout
+            android:id="@+id/sign_up_input_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
