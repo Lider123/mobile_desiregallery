@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBar
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.MenuItem
+import android.widget.TextView
 import com.example.desiregallery.*
 import com.example.desiregallery.database.DGDatabase
 import com.example.desiregallery.models.User
@@ -73,6 +74,11 @@ class MainActivity : AppCompatActivity() {
             drawerLayout.closeDrawers()
             return@setNavigationItemSelectedListener true
         }
+        if (currUser != null) {
+            val headerView = navigationView.getHeaderView(0)
+            val headerTextView = headerView.findViewById<TextView>(R.id.nav_header_login)
+            headerTextView.text = currUser!!.getLogin()
+        }
     }
 
     private fun selectDrawerItem(menuItem: MenuItem) {
@@ -95,13 +101,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setCurrentUser() {
-        Thread(Runnable {
-            val currLogin = prefs.getString(MainApplication.PREFS_CURR_USER_KEY, null)
-            if (currLogin != null) {
-                currUser = DGDatabase.getUser(currLogin)
-                Log.d(TAG, String.format("Current user is %s", currUser?.getLogin()))
-            }
-        }).start()
+        val currLogin = prefs.getString(MainApplication.PREFS_CURR_USER_KEY, null)
+        if (currLogin != null) {
+            currUser = DGDatabase.getUser(currLogin)
+            Log.d(TAG, String.format("Current user is %s", currUser?.getLogin()))
+        }
     }
 
     private fun handleLogout() {
@@ -114,5 +118,9 @@ class MainActivity : AppCompatActivity() {
     private fun setDefaultFragment() {
         replaceFragment(FeedFragment(), R.string.app_name)
         navigationView.setCheckedItem(R.id.nav_feed)
+    }
+
+    fun getCurrUser(): User? {
+        return currUser
     }
 }

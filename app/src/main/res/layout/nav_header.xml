@@ -9,6 +9,7 @@
         android:background="@color/colorSecondary"
         android:theme="@style/ThemeOverlay.AppCompat.Dark">
     <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/nav_header_image"
             android:layout_width="96dp"
             android:layout_height="96dp"
             android:padding="4dp"
@@ -19,6 +20,7 @@
             app:civ_border_color="@color/colorOnSecondary"/>
 
     <TextView
+            android:id="@+id/nav_header_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/login"
