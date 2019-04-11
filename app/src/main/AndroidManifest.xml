@@ -15,9 +15,7 @@
             android:theme="@style/AppTheme">
         <activity android:name=".ui.activities.SignUpActivity">
         </activity>
-        <activity
-                android:name=".ui.activities.SplashScreenActivity"
-                android:theme="@style/Theme.AppCompat.NoActionBar">
+        <activity android:name=".ui.activities.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -27,8 +25,7 @@
         <activity android:name=".ui.activities.MainActivity"/>
         <activity
                 android:name=".ui.activities.CommentsActivity"
-                android:label="@string/comments"
-                android:theme="@style/AppTheme.NoActionBar"/>
+                android:label="@string/comments"/>
         <activity
                 android:name=".ui.activities.FullScreenImageActivity"
                 android:theme="@style/Theme.AppCompat.NoActionBar"/>
