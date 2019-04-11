@@ -26,4 +26,7 @@
     <string name="Feed">Feed</string>
     <string name="Settings">Settings</string>
     <string name="LogOut">Log out</string>
+
+    <string name="Download">Download</string>
+    <string name="Share">Share</string>
 </resources>
