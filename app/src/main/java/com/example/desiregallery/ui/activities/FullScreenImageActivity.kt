@@ -1,5 +1,6 @@
 package com.example.desiregallery.ui.activities
 
+import android.Manifest
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
@@ -13,12 +14,18 @@ import android.widget.Toast
 import com.example.desiregallery.R
 import com.example.desiregallery.Utils
 import kotlinx.android.synthetic.main.activity_full_screen_image.*
+import android.content.pm.PackageManager
+import android.support.v4.app.ActivityCompat
+import android.util.Log
 
 
 class FullScreenImageActivity : AppCompatActivity() {
     companion object {
         const val EXTRA_IMAGE = "bytesImage"
     }
+
+    private val TAG = FullScreenImageActivity::class.java.simpleName
+    private val WRITE_REQUEST_CODE = 101
 
     private lateinit var toolbar: Toolbar
 
@@ -48,8 +55,8 @@ class FullScreenImageActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when(item?.itemId) {
             R.id.image_download -> {
-                // TODO
-                Toast.makeText(this, "Download item have been clicked", Toast.LENGTH_SHORT).show()
+                val permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                ActivityCompat.requestPermissions(this, permissions, WRITE_REQUEST_CODE)
                 true
             }
             R.id.image_share -> {
@@ -58,6 +65,17 @@ class FullScreenImageActivity : AppCompatActivity() {
                 true
             }
             else -> false
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            WRITE_REQUEST_CODE -> if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Utils.downloadBitmap(image, this)
+            } else {
+                Log.e(TAG, "There is no permission to write to external storage")
+                Toast.makeText(this, R.string.no_access_to_storage, Toast.LENGTH_LONG).show()
+            }
         }
     }
 }
