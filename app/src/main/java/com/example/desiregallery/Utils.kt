@@ -16,6 +16,8 @@ import java.util.*
 
 class Utils {
     companion object {
+        private const val DOWNLOAD_FOLDER_DEFAULT = "DesireDownloads/"
+
         fun bitmapToBytes(bmp: Bitmap): ByteArray {
             val stream = ByteArrayOutputStream()
             bmp.compress(Bitmap.CompressFormat.PNG, 100, stream)
@@ -33,7 +35,9 @@ class Utils {
 
         fun downloadBitmap(bitmap: Bitmap, activity: Activity) {
             val tag = activity::class.java.simpleName
-            val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+            val root = Environment.getExternalStorageDirectory()
+            val path = File(root, DOWNLOAD_FOLDER_DEFAULT)
+            path.mkdir()
             val n = Random().nextInt(1e10.toInt()).toString().padStart(10, '0')
             val file = File(path, "$n.jpg")
             try {
