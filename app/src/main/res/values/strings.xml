@@ -31,4 +31,5 @@
     <string name="Share">Share</string>
     <string name="no_access_to_storage">Unable to download image. Have you granted access to storage?</string>
     <string name="download_error">Something went wrong while downloading image</string>
+    <string name="share_image">Share image</string>
 </resources>

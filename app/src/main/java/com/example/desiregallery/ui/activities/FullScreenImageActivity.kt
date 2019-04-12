@@ -17,6 +17,12 @@ import kotlinx.android.synthetic.main.activity_full_screen_image.*
 import android.content.pm.PackageManager
 import android.support.v4.app.ActivityCompat
 import android.util.Log
+import android.content.Intent
+import android.os.Environment
+import java.io.FileOutputStream
+import java.io.File
+import java.io.IOException
+import android.net.Uri
 
 
 class FullScreenImageActivity : AppCompatActivity() {
@@ -60,8 +66,7 @@ class FullScreenImageActivity : AppCompatActivity() {
                 true
             }
             R.id.image_share -> {
-                // TODO
-                Toast.makeText(this, "Share item have been clicked", Toast.LENGTH_SHORT).show()
+                shareImage()
                 true
             }
             else -> false
@@ -77,5 +82,40 @@ class FullScreenImageActivity : AppCompatActivity() {
                 Toast.makeText(this, R.string.no_access_to_storage, Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    private fun shareImage() {
+        val bmpUri = getLocalBitmapUri(image)
+        if (bmpUri != null) {
+            val shareIntent = Intent()
+            shareIntent.action = Intent.ACTION_SEND
+            shareIntent.putExtra(Intent.EXTRA_STREAM, bmpUri)
+            shareIntent.type = "image/*"
+            startActivity(Intent.createChooser(shareIntent, getString(R.string.share_image)))
+        }
+    }
+
+    /**
+     * Method returns the URI path to given bitmap
+     *
+     * @param bmp Bitmap to save temporarily in storage and get URI
+     * @return URI path of given bitmap
+    * */
+    private fun getLocalBitmapUri(bmp: Bitmap): Uri? {
+        var bmpUri: Uri? = null
+        try {
+            val file = File(
+                getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                "share_image_" + System.currentTimeMillis() + ".png"
+            )
+            val out = FileOutputStream(file)
+            bmp.compress(Bitmap.CompressFormat.PNG, 90, out)
+            out.close()
+            bmpUri = Uri.fromFile(file)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        return bmpUri
     }
 }
