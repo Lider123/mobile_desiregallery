@@ -5,7 +5,7 @@
     <dimen name="item_status_padding">8dp</dimen>
     <dimen name="item_rating_font_size">18sp</dimen>
 
-    <dimen name="comments_input_view_padding">8dp</dimen>
+    <dimen name="comments_input_view_padding">10dp</dimen>
     <dimen name="item_comment_margin">8dp</dimen>
     <dimen name="item_comment_corners_radius">4dp</dimen>
 

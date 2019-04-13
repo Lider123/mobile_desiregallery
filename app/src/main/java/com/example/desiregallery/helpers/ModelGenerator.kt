@@ -99,28 +99,28 @@ class ModelGenerator {
 
         private fun initUsers(): List<User> {
             val users = ArrayList<User>()
-            users.add(User("login1", "pass1"))
-            users.add(User("login2", "pass2"))
-            users.add(User("login3", "pass3"))
-            users.add(User("login4", "pass4"))
-            users.add(User("login5", "pass5"))
+
+            var u = User("login1", "pass1")
+            u.setEmail("login1@example.com")
+            u.setGender("male")
+            u.setBirthday("01.01.1970")
+            users.add(u)
+
+            u = User("login2", "pass2")
+            u.setEmail("login2@example.com")
+            u.setGender("female")
+            u.setBirthday("21.12.2012")
+            users.add(u)
+
             return users
         }
 
-        fun getUsers(): List<User> {
-            return users
-        }
+        fun getUsers() = users
 
-        fun getUser(login: String): User? {
-            return users.findLast{ it.getLogin() == login }
-        }
+        fun getUser(login: String): User? = users.findLast{ it.getLogin() == login }
 
-        fun getPosts(): List<Post> {
-            return posts
-        }
+        fun getPosts() = posts
 
-        fun getPost(id: String): Post? {
-            return posts.findLast{ it.getId() == id }
-        }
+        fun getPost(id: String): Post? = posts.findLast{ it.getId() == id }
     }
 }

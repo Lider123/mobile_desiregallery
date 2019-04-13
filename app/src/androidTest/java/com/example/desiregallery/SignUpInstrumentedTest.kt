@@ -26,7 +26,7 @@ import org.junit.Before
 @RunWith(AndroidJUnit4::class)
 class SignUpInstrumentedTest {
     private val inputCorrect = "Input123"
-    private val inputsWrong = arrayOf("", " ", "in put", " input ", "in?put")
+    private val inputsWrong = arrayOf("", " ", "in put", " input ")
     private val inputFieldIds = ArrayList<Int>()
 
     @Rule
