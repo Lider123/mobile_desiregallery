@@ -14,9 +14,18 @@ class UserSerializer : JsonSerializer<User> {
         val result = JsonObject()
         val fields = JsonObject()
         val password = JsonObject()
+        val email = JsonObject()
+        val gender = JsonObject()
+        val birthday = JsonObject()
 
         password.addProperty("stringValue", src.getPassword())
+        email.addProperty("stringValue", src.getEmail())
+        gender.addProperty("stringValue", src.getGender())
+        birthday.addProperty("stringValue", src.getBirthday())
         fields.add("password", password)
+        fields.add("email", email)
+        fields.add("gender", gender)
+        fields.add("birthday", birthday)
         result.add("fields", fields)
 
         return result

@@ -16,6 +16,16 @@ class UserDeserializer : JsonDeserializer<User> {
 
         val password = fieldsObject.getAsJsonObject("password").get("stringValue").asString
 
-        return User(login, password)
+        val email = fieldsObject.getAsJsonObject("email").get("stringValue").asString
+
+        val gender = fieldsObject.getAsJsonObject("gender").get("stringValue").asString
+
+        val birthday = fieldsObject.getAsJsonObject("birthday").get("stringValue").asString
+
+        val user = User(login, password)
+        user.setEmail(email)
+        user.setGender(gender)
+        user.setBirthday(birthday)
+        return user
     }
 }

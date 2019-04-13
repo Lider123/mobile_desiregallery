@@ -40,10 +40,16 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun initListeners() {
         sign_up_input_login.addTextChangedListener(inputTextWatcher)
+        sign_up_input_email.addTextChangedListener(inputTextWatcher)
+        sign_up_input_gender.addTextChangedListener(inputTextWatcher)
+        sign_up_input_birthday.addTextChangedListener(inputTextWatcher)
         sign_up_input_password.addTextChangedListener(inputTextWatcher)
         sign_up_input_confirm.addTextChangedListener(inputTextWatcher)
         sign_up_button.setOnClickListener {
             val login = sign_up_input_login.text.toString()
+            val email = sign_up_input_email.text.toString()
+            val gender = sign_up_input_gender.text.toString()
+            val birthday = sign_up_input_birthday.text.toString()
             val password = sign_up_input_password.text.toString()
             val passwordConfirm = sign_up_input_confirm.text.toString()
 
@@ -53,22 +59,28 @@ class SignUpActivity : AppCompatActivity() {
             }
 
             if (CheckLoginTask().execute(login).get()) {
-                val newUser = User()
-                newUser.setLogin(login)
-                newUser.setPassword(password)
+                val newUser = User(login, password)
+                newUser.setEmail(email)
+                newUser.setGender(gender)
+                newUser.setBirthday(birthday)
                 registerUser(newUser)
             }
         }
     }
 
     private fun checkForEmptyFields() {
-        sign_up_button.isEnabled = fieldIsValid(sign_up_input_confirm.text.toString())
-                && fieldIsValid(sign_up_input_password.text.toString())
-                && fieldIsValid(sign_up_input_login.text.toString())
+        sign_up_button.isEnabled = arrayOf(
+            sign_up_input_confirm.text.toString(),
+            sign_up_input_password.text.toString(),
+            sign_up_input_birthday.text.toString(),
+            sign_up_input_gender.text.toString(),
+            sign_up_input_email.text.toString(),
+            sign_up_input_login.text.toString()
+        ).all { fieldIsValid(it) }
     }
 
     private fun fieldIsValid(field: String): Boolean {
-        return Regex("\\w+").matches(field)
+        return Regex("\\S+").matches(field)
     }
 
     private fun registerUser(user: User) {
