@@ -31,7 +31,8 @@ class DGDatabase {
         }
 
         fun getUser(login: String): User? {
-            return getRealm().where(User::class.java).equalTo("login", login).findFirst()
+            val user = getRealm().where(User::class.java).equalTo("login", login).findFirst()
+            return if (user != null) getRealm().copyFromRealm(user) else null
         }
     }
 }

@@ -35,4 +35,16 @@
     <string name="no_access_to_storage">Unable to download image. Have you granted access to storage?</string>
     <string name="download_error">Something went wrong while downloading image</string>
     <string name="share_image">Share image</string>
+
+    <string name="not_specified">not specified</string>
+
+    <string name="date_format">%1$02d.%2$02d.%3$d</string>
+    <string name="OK">OK</string>
+    <string name="Cancel">Отмена</string>
+    <string name="email_dialog_title">Email</string>
+    <string name="gender_dialog_title">Gender</string>
+    <string-array name="gender">
+        <item name="male">male</item>
+        <item name="female">female</item>
+    </string-array>
 </resources>
