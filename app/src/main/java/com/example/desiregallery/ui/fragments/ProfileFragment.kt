@@ -27,7 +27,8 @@ import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
 import android.widget.EditText
-import kotlinx.android.synthetic.main.activity_full_screen_image.*
+import android.widget.ImageView
+import com.example.desiregallery.Utils
 
 
 class ProfileFragment : Fragment() {
@@ -40,9 +41,11 @@ class ProfileFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_profile, container, false)
         val toolbarProfile = root.findViewById<Toolbar>(R.id.profile_toolbar)
+        val imageView = root.findViewById<ImageView>(R.id.profile_image_backdrop)
         val fab = root.findViewById<FloatingActionButton>(R.id.profile_fab)
 
         val user = (activity as MainActivity).getCurrUser()
+        Log.d(TAG, user?.getPhoto())
         if (user != null) {
             toolbarProfile.title = user.getLogin()
             fab.setOnClickListener {
@@ -57,6 +60,8 @@ class ProfileFragment : Fragment() {
             root.profile_email.text = if (!user.getEmail().isEmpty()) user.getEmail() else notSpecified
             root.profile_gender.text = if (!user.getGender().isEmpty()) user.getGender() else notSpecified
             root.profile_birthday.text = if (!user.getBirthday().isEmpty()) user.getBirthday() else notSpecified
+            if (!user.getPhoto().isEmpty())
+                imageView.setImageBitmap(Utils.base64ToBitmap(user.getPhoto()))
 
             root.profile_email_view.setOnClickListener {
                 editEmail()
@@ -100,7 +105,9 @@ class ProfileFragment : Fragment() {
             val bundle = data.extras
             if (bundle != null) {
                 val imageBitmap = bundle.get("data") as Bitmap
+                user?.setPhoto(Utils.bitmapToBase64(imageBitmap))
                 profile_image_backdrop.setImageBitmap(imageBitmap)
+                infoChanged = true
             }
         }
     }

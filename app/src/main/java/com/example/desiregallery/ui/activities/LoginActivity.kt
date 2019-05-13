@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import com.example.desiregallery.R
 import kotlinx.android.synthetic.main.activity_login.*
@@ -68,6 +69,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun login(login: String, password: String) {
+        login_progress.visibility = View.VISIBLE
         DGNetwork.getService().getUser(login).enqueue(object: Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 val user = response.body()
@@ -82,7 +84,9 @@ class LoginActivity : AppCompatActivity() {
 
                 prefs.edit().putString(MainApplication.PREFS_CURR_USER_KEY, login).apply()
                 Log.d(TAG, String.format("User %s logged in", login))
-                DGDatabase.updateUser(user)
+                DGDatabase.createUser(user)
+
+                login_progress.visibility = View.GONE
                 goToMainActivity()
             }
 

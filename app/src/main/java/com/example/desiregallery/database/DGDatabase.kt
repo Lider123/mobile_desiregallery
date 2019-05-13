@@ -30,6 +30,14 @@ class DGDatabase {
             })
         }
 
+        fun createUser(user: User) {
+            val realm = getRealm()
+            realm.executeTransaction {
+                it.copyToRealmOrUpdate(user)
+                Log.i(TAG, String.format("User %s has been added to the database", user.getLogin()))
+            }
+        }
+
         fun getUser(login: String): User? {
             val user = getRealm().where(User::class.java).equalTo("login", login).findFirst()
             return if (user != null) getRealm().copyFromRealm(user) else null
