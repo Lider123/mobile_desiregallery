@@ -12,6 +12,7 @@ open class User(
     private var email = ""
     private var gender = ""
     private var birthday = ""
+    private var photo = ""
 
     fun getLogin() = login
 
@@ -42,6 +43,12 @@ open class User(
     fun setBirthday(birthday: String) {
         this.birthday = birthday
     }
+
+    fun setPhoto(photo: String) {
+        this.photo = photo
+    }
+
+    fun getPhoto() = photo
 
     override fun equals(other: Any?): Boolean {
         if (this === other)

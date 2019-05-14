@@ -20,8 +20,8 @@
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 android:fitsSystemWindows="true"
                 app:contentScrim="@color/colorPrimaryLight"
-                app:expandedTitleMarginStart="48dp"
-                app:expandedTitleMarginEnd="64dp">
+                app:expandedTitleMarginStart="24dp"
+                app:expandedTitleMarginEnd="32dp">
             <ImageView
                     android:id="@+id/profile_image_backdrop"
                     android:layout_width="match_parent"
@@ -44,21 +44,91 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <!--TODO: replace with profile info-->
-        <TextView
+        <LinearLayout
+                android:id="@+id/profile_content"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:lineSpacingExtra="8dp"
-                android:text="lorem ipsum"
-                android:padding="8dp"/>
+                android:layout_height="match_parent"
+                android:padding="8dp"
+                android:orientation="vertical">
+
+            <LinearLayout
+                    android:id="@+id/profile_email_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:orientation="vertical">
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorSecondaryLight"
+                        android:text="@string/email"/>
+                <TextView
+                        android:id="@+id/profile_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:text="@string/not_specified"/>
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/colorPrimaryLight"/>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:id="@+id/profile_gender_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:orientation="vertical">
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorSecondaryLight"
+                        android:text="@string/gender"/>
+                <TextView
+                        android:id="@+id/profile_gender"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:text="@string/not_specified"/>
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/colorPrimaryLight"/>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:id="@+id/profile_birthday_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:orientation="vertical">
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorSecondaryLight"
+                        android:text="@string/birthday"/>
+                <TextView
+                        android:id="@+id/profile_birthday"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:text="@string/not_specified"/>
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/colorPrimaryLight"/>
+            </LinearLayout>
+
+        </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
+            android:id="@+id/profile_fab"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_margin="8dp"
-            android:src="@drawable/ic_create_coloronsecondary_32dp"
+            android:src="@drawable/ic_photo_camera_black_32dp"
             app:layout_anchor="@id/profile_appbar"
             app:layout_anchorGravity="bottom|right|end"
     />

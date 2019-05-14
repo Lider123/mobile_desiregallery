@@ -22,4 +22,7 @@ public interface IDGApi {
 
     @POST("users")
     Call<User> createUser(@Query("documentId") String login, @Body User user);
+
+    @PATCH("users/{login}")
+    Call<User> updateUser(@Path("login") String login, @Body User user);
 }
