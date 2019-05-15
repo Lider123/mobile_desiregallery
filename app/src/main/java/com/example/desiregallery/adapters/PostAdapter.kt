@@ -2,7 +2,7 @@ package com.example.desiregallery.adapters
 
 import android.content.Context
 import android.graphics.drawable.BitmapDrawable
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.item_post.view.*
 class PostAdapter(
     private val items: List<Post>,
     private val context: Context
-) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
+) : androidx.recyclerview.widget.RecyclerView.Adapter<PostAdapter.ViewHolder>() {
     override fun getItemCount(): Int {
         return items.size
     }
@@ -35,7 +35,7 @@ class PostAdapter(
         holder.bind(context, presenter)
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view), PostView {
+    class ViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view), PostView {
         private val imageView: SquareImageView = view.item_post_image
         private val ratingTextView: TextView = view.item_post_rating
         private val commentView: ImageView = view.item_post_comment

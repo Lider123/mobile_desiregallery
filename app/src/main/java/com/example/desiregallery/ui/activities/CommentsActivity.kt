@@ -1,8 +1,8 @@
 package com.example.desiregallery.ui.activities
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.desiregallery.R
 import com.example.desiregallery.Utils
 import com.example.desiregallery.adapters.CommentsAdapter
@@ -31,7 +31,7 @@ class CommentsActivity : AppCompatActivity() {
 
         post = intent.getSerializableExtra(EXTRA_POST) as Post
 
-        comments_list.layoutManager = LinearLayoutManager(this)
+        comments_list.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         adapter = CommentsAdapter(post.getComments(), this)
         comments_list.adapter = adapter
     }

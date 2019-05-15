@@ -1,14 +1,27 @@
 package com.example.desiregallery.ui.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
 import com.example.desiregallery.R
+import com.example.desiregallery.ui.dialogs.ChangePasswordDialog
 
 
-class SettingsFragment : android.support.v4.app.Fragment() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_settings, container, false)
+class SettingsFragment : PreferenceFragmentCompat() {
+
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        addPreferencesFromResource(R.xml.prefs)
+    }
+
+    override fun onPreferenceTreeClick(preference: Preference): Boolean {
+        return when (preference.key) {
+            getString(R.string.pref_change_password_key) -> {
+                ChangePasswordDialog(activity!!).show()
+                true
+            }
+            else -> {
+                super.onPreferenceTreeClick(preference)
+            }
+        }
     }
 }

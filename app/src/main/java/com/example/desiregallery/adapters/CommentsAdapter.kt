@@ -1,7 +1,7 @@
 package com.example.desiregallery.adapters
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.item_comment.view.*
 class CommentsAdapter(
     private val items: List<String>,
     private val context: Context
-) : RecyclerView.Adapter<CommentsAdapter.ViewHolder>() {
+) : androidx.recyclerview.widget.RecyclerView.Adapter<CommentsAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): CommentsAdapter.ViewHolder {
         return CommentsAdapter.ViewHolder(
             LayoutInflater.from(context).inflate(R.layout.item_comment, parent, false)
@@ -27,7 +27,7 @@ class CommentsAdapter(
         holder.bind(item)
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         private val textView = view.item_comment_text_view
 
         fun bind(item: String) {
