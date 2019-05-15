@@ -4,8 +4,8 @@ import android.Manifest
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -15,7 +15,7 @@ import com.example.desiregallery.R
 import com.example.desiregallery.Utils
 import kotlinx.android.synthetic.main.activity_full_screen_image.*
 import android.content.pm.PackageManager
-import android.support.v4.app.ActivityCompat
+import androidx.core.app.ActivityCompat
 import android.util.Log
 import android.content.Intent
 import android.os.Environment

@@ -7,9 +7,8 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
-import android.support.design.widget.FloatingActionButton
-import android.support.v4.app.Fragment
-import android.support.v7.widget.Toolbar
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import androidx.appcompat.widget.Toolbar
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +18,6 @@ import com.example.desiregallery.database.DGDatabase
 import com.example.desiregallery.models.User
 import com.example.desiregallery.network.DGNetwork
 import com.example.desiregallery.ui.activities.MainActivity
-import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.fragment_profile.view.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -28,7 +26,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.widget.EditText
 import android.widget.ImageView
+import androidx.fragment.app.Fragment
 import com.example.desiregallery.Utils
+import kotlinx.android.synthetic.main.fragment_profile.*
 
 
 class ProfileFragment : Fragment() {
@@ -100,9 +100,9 @@ class ProfileFragment : Fragment() {
         infoChanged = false
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            val bundle = data.extras
+            val bundle = data?.extras
             if (bundle != null) {
                 val imageBitmap = bundle.get("data") as Bitmap
                 user?.setPhoto(Utils.bitmapToBase64(imageBitmap))

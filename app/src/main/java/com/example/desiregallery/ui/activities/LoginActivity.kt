@@ -3,7 +3,7 @@ package com.example.desiregallery.ui.activities
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -75,10 +75,12 @@ class LoginActivity : AppCompatActivity() {
                 val user = response.body()
                 if (user == null) {
                     Toast.makeText(applicationContext, R.string.invalid_login, Toast.LENGTH_SHORT).show()
+                    login_progress.visibility = View.GONE
                     return
                 }
                 if (user.getPassword() != password) {
                     Toast.makeText(applicationContext, R.string.invalid_password, Toast.LENGTH_SHORT).show()
+                    login_progress.visibility = View.GONE
                     return
                 }
 

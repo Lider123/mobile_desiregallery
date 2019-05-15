@@ -40,11 +40,19 @@
 
     <string name="date_format">%1$02d.%2$02d.%3$d</string>
     <string name="OK">OK</string>
-    <string name="Cancel">Отмена</string>
+    <string name="Cancel">Cancel</string>
     <string name="email_dialog_title">Email</string>
     <string name="gender_dialog_title">Gender</string>
     <string-array name="gender">
         <item name="male">male</item>
         <item name="female">female</item>
     </string-array>
+
+    <string name="pref_change_password_key">pref_change_password_key</string>
+    <string name="change_password">Change password</string>
+    <string name="old_password">old password</string>
+    <string name="new_password">new password</string>
+    <string name="current_password_wrong">You have entered wrong password</string>
+    <string name="fields_are_empty">All fields must be filled</string>
+    <string name="password_changed">Password has been changed</string>
 </resources>
