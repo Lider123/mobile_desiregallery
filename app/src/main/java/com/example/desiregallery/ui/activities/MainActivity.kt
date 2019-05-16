@@ -13,6 +13,7 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.Toolbar
 import android.util.Log
 import android.view.MenuItem
+import android.widget.ImageView
 import android.widget.TextView
 import com.example.desiregallery.*
 import com.example.desiregallery.database.DGDatabase
@@ -77,7 +78,10 @@ class MainActivity : AppCompatActivity() {
         if (currUser != null) {
             val headerView = navigationView.getHeaderView(0)
             val headerTextView = headerView.findViewById<TextView>(R.id.nav_header_login)
+            val headerImageView = headerView.findViewById<ImageView>(R.id.nav_header_image)
             headerTextView.text = currUser!!.getLogin()
+            if (currUser!!.getPhoto().isNotEmpty())
+                headerImageView.setImageBitmap(Utils.base64ToBitmap(currUser!!.getPhoto()))
         }
     }
 
