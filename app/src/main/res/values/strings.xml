@@ -55,4 +55,8 @@
     <string name="current_password_wrong">You have entered wrong password</string>
     <string name="fields_are_empty">All fields must be filled</string>
     <string name="password_changed">Password has been changed</string>
+
+    <string name="choose_from_gallery">Choose from gallery</string>
+    <string name="make_a_photo">Make a photo</string>
+    <string name="choose_from_gallery_error">Unable to load image</string>
 </resources>
