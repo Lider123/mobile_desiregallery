@@ -69,18 +69,18 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun login(login: String, password: String) {
-        login_progress.visibility = View.VISIBLE
+        showProgress()
         DGNetwork.getService().getUser(login).enqueue(object: Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 val user = response.body()
                 if (user == null) {
                     Toast.makeText(applicationContext, R.string.invalid_login, Toast.LENGTH_SHORT).show()
-                    login_progress.visibility = View.GONE
+                    hideProgress()
                     return
                 }
                 if (user.getPassword() != password) {
                     Toast.makeText(applicationContext, R.string.invalid_password, Toast.LENGTH_SHORT).show()
-                    login_progress.visibility = View.GONE
+                    hideProgress()
                     return
                 }
 
@@ -88,7 +88,7 @@ class LoginActivity : AppCompatActivity() {
                 Log.d(TAG, String.format("User %s logged in", login))
                 DGDatabase.createUser(user)
 
-                login_progress.visibility = View.GONE
+                hideProgress()
                 goToMainActivity()
             }
 
@@ -103,5 +103,21 @@ class LoginActivity : AppCompatActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    private fun showProgress() {
+        login_progress.visibility = View.VISIBLE
+        input_login.isEnabled = false
+        input_password.isEnabled = false
+        link_sign_up.isEnabled = false
+        button_login.isEnabled = false
+    }
+
+    private fun hideProgress() {
+        login_progress.visibility = View.GONE
+        input_login.isEnabled = true
+        input_password.isEnabled = true
+        link_sign_up.isEnabled = true
+        button_login.isEnabled = true
     }
 }

@@ -6,9 +6,7 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.android.material.navigation.NavigationView
-import androidx.fragment.app.Fragment
 import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.Toolbar
 import android.util.Log
@@ -21,6 +19,7 @@ import com.example.desiregallery.models.User
 import com.example.desiregallery.ui.fragments.FeedFragment
 import com.example.desiregallery.ui.fragments.ProfileFragment
 import com.example.desiregallery.ui.fragments.SettingsFragment
+import kotlinx.android.synthetic.main.nav_header.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -28,6 +27,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var drawerLayout: androidx.drawerlayout.widget.DrawerLayout
     private lateinit var navigationView: NavigationView
+    private lateinit var headerImageView: ImageView
     private lateinit var toolbar: Toolbar
 
     private lateinit var prefs: SharedPreferences
@@ -78,10 +78,10 @@ class MainActivity : AppCompatActivity() {
         if (currUser != null) {
             val headerView = navigationView.getHeaderView(0)
             val headerTextView = headerView.findViewById<TextView>(R.id.nav_header_login)
-            val headerImageView = headerView.findViewById<ImageView>(R.id.nav_header_image)
+            headerImageView = headerView.findViewById(R.id.nav_header_image)
             headerTextView.text = currUser!!.getLogin()
             if (currUser!!.getPhoto().isNotEmpty())
-                headerImageView.setImageBitmap(Utils.base64ToBitmap(currUser!!.getPhoto()))
+                updateNavHeaderPhoto()
         }
     }
 
@@ -126,5 +126,9 @@ class MainActivity : AppCompatActivity() {
 
     fun getCurrUser(): User? {
         return currUser
+    }
+
+    fun updateNavHeaderPhoto() {
+        headerImageView.setImageBitmap(Utils.base64ToBitmap(currUser!!.getPhoto()))
     }
 }

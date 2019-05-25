@@ -4,10 +4,8 @@ import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.provider.MediaStore
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.appcompat.widget.Toolbar
 import android.util.Log
@@ -27,20 +25,14 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.PopupMenu
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.desiregallery.Utils
+import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.fragment_profile.*
-import java.io.FileNotFoundException
 
 
 class ProfileFragment : Fragment() {
     private val TAG = ProfileFragment::class.java.simpleName
-    private val REQUEST_IMAGE_CAPTURE = 1
-    private val REQUEST_IMAGE_PICK = 2
-
-    private lateinit var choosePhotoMenu: PopupMenu
 
     private var infoChanged = false
     private var user: User? = null
@@ -51,34 +43,11 @@ class ProfileFragment : Fragment() {
         val imageView = root.findViewById<ImageView>(R.id.profile_image_backdrop)
         val fab = root.findViewById<FloatingActionButton>(R.id.profile_fab)
 
-        choosePhotoMenu = PopupMenu(activity, fab)
-        choosePhotoMenu.inflate(R.menu.menu_choose_photo)
-        choosePhotoMenu.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.menu_choose_photo_gallery -> {
-                    val photoPickerIntent = Intent(Intent.ACTION_PICK)
-                    photoPickerIntent.type = "image/*"
-                    startActivityForResult(photoPickerIntent, REQUEST_IMAGE_PICK)
-                    true
-                }
-                R.id.menu_choose_photo_camera -> {
-                    Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-                        takePictureIntent.resolveActivity((activity as MainActivity).packageManager)?.also {
-                            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
-                        }
-                    }
-                    true
-                }
-                else -> false
-            }
-        }
-
         val user = (activity as MainActivity).getCurrUser()
-        Log.d(TAG, user?.getPhoto())
         if (user != null) {
             toolbarProfile.title = user.getLogin()
             fab.setOnClickListener {
-                choosePhotoMenu.show()
+                CropImage.activity().start(context!!, this)
             }
 
             val notSpecified = getString(R.string.not_specified)
@@ -126,27 +95,14 @@ class ProfileFragment : Fragment() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            val bundle = data?.extras
-            if (bundle != null) {
-                val imageBitmap = bundle.get("data") as Bitmap
-                user?.setPhoto(Utils.bitmapToBase64(imageBitmap))
-                profile_image_backdrop.setImageBitmap(imageBitmap)
-                infoChanged = true
-            }
-        }
-        else if (requestCode == REQUEST_IMAGE_PICK && resultCode == RESULT_OK) {
-            try {
-                val imageUri = data!!.data
-                val istream = activity!!.contentResolver.openInputStream(imageUri)
-                val selectedImage = BitmapFactory.decodeStream(istream)
-                user?.setPhoto(Utils.bitmapToBase64(selectedImage))
-                profile_image_backdrop.setImageBitmap(selectedImage)
-                infoChanged = true
-            } catch (e: FileNotFoundException) {
-                e.printStackTrace()
-                Toast.makeText(activity, R.string.choose_from_gallery_error, Toast.LENGTH_LONG).show()
-            }
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            val imageUri = CropImage.getActivityResult(data).uri
+            val istream = activity!!.contentResolver.openInputStream(imageUri)
+            val selectedImage = BitmapFactory.decodeStream(istream)
+            user?.setPhoto(Utils.bitmapToBase64(selectedImage))
+            profile_image_backdrop.setImageBitmap(selectedImage)
+            (activity as MainActivity).updateNavHeaderPhoto()
+            infoChanged = true
         }
     }
 
