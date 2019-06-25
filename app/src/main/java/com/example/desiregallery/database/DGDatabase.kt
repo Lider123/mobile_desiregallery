@@ -23,9 +23,9 @@ class DGDatabase {
             realm.executeTransactionAsync({
                 it.copyToRealmOrUpdate(user)
             }, {
-                Log.i(TAG, String.format("User %s has been added to the database", user.getLogin()))
+                Log.i(TAG, String.format("User %s has been updated in database", user.getLogin()))
             }, {
-                Log.e(TAG, String.format("Error when adding user %s to the database", user.getLogin()))
+                Log.e(TAG, String.format("Error when updating user %s in database", user.getLogin()))
                 it.printStackTrace()
             })
         }
