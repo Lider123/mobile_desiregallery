@@ -25,4 +25,7 @@ public interface IDGApi {
 
     @PATCH("users/{login}")
     Call<User> updateUser(@Path("login") String login, @Body User user);
+
+    @PATCH("posts/{id}")
+    Call<Post> updatePost(@Path("id") String id, @Body Post post);
 }

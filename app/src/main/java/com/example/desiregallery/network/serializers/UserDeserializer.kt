@@ -24,11 +24,11 @@ class UserDeserializer : JsonDeserializer<User> {
 
         val photo = fieldsObject.getAsJsonObject("photo").get("stringValue").asString
 
-        val user = User(login, password)
-        user.setEmail(email)
-        user.setGender(gender)
-        user.setBirthday(birthday)
-        user.setPhoto(photo)
-        return user
+        return User(login, password).apply {
+            setEmail(email)
+            setGender(gender)
+            setBirthday(birthday)
+            setPhoto(photo)
+        }
     }
 }

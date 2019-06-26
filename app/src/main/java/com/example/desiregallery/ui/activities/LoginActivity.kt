@@ -33,9 +33,7 @@ class LoginActivity : AppCompatActivity() {
 
         prefs = getSharedPreferences(MainApplication.APP_PREFERENCES, Context.MODE_PRIVATE)
         val currUser = prefs.getString(MainApplication.PREFS_CURR_USER_KEY, null)
-        if (currUser != null) {
-            goToMainActivity()
-        }
+        currUser?.let { goToMainActivity() }
 
         inputTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {}
@@ -65,7 +63,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun checkForEmptyFields() {
-        button_login.isEnabled = !(input_login.text.toString().trim().isEmpty() || input_password.text.toString().trim().isEmpty())
+        button_login.isEnabled = input_login.text.toString().trim().isNotEmpty() && input_password.text.toString().trim().isNotEmpty()
     }
 
     private fun login(login: String, password: String) {
@@ -73,7 +71,7 @@ class LoginActivity : AppCompatActivity() {
         DGNetwork.getService().getUser(login).enqueue(object: Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 val user = response.body()
-                if (user == null) {
+               user ?: run {
                     Toast.makeText(applicationContext, R.string.invalid_login, Toast.LENGTH_SHORT).show()
                     hideProgress()
                     return

@@ -86,10 +86,10 @@ class FullScreenImageActivity : AppCompatActivity() {
 
     private fun shareImage() {
         val bmpUri = getLocalBitmapUri(image)
-        if (bmpUri != null) {
+        bmpUri?.let {
             val shareIntent = Intent()
             shareIntent.action = Intent.ACTION_SEND
-            shareIntent.putExtra(Intent.EXTRA_STREAM, bmpUri)
+            shareIntent.putExtra(Intent.EXTRA_STREAM, it)
             shareIntent.type = "image/*"
             startActivity(Intent.createChooser(shareIntent, getString(R.string.share_image)))
         }

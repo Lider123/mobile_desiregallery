@@ -76,17 +76,17 @@ class ProfileFragment : Fragment() {
         if (!infoChanged)
             return
 
-        if (user != null) {
-            DGDatabase.updateUser(user!!)
-            DGNetwork.getService().updateUser(user!!.getLogin(), user).enqueue(object: Callback<User> {
+        user?.let {
+            DGDatabase.updateUser(it)
+            DGNetwork.getService().updateUser(it.getLogin(), it).enqueue(object: Callback<User> {
                 override fun onFailure(call: Call<User>, t: Throwable) {
-                    Log.e(TAG, "Unable to update user")
+                    Log.e(TAG, "Unable to update user ${it.getLogin()}")
                     t.printStackTrace()
                 }
 
                 override fun onResponse(call: Call<User>, response: Response<User>) {
                     if (response.isSuccessful)
-                        Log.i(TAG, "User has been successfully updated")
+                        Log.i(TAG, "User ${it.getLogin()} has been successfully updated")
                 }
 
             })
