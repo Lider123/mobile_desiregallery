@@ -25,13 +25,13 @@ class CommentsActivity : AppCompatActivity() {
         comments_button_back.setOnClickListener { onBackPressed() }
         comments_button_send.setOnClickListener {
             val commentText = comments_input.text.trim()
-            if (!commentText.isEmpty())
+            if (commentText.isNotEmpty())
                 handleSend(commentText.toString())
         }
 
         post = intent.getSerializableExtra(EXTRA_POST) as Post
 
-        comments_list.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        comments_list.layoutManager = LinearLayoutManager(this)
         adapter = CommentsAdapter(post.getComments(), this)
         comments_list.adapter = adapter
     }
@@ -44,6 +44,6 @@ class CommentsActivity : AppCompatActivity() {
         val comments = post.getComments() as ArrayList
         comments.add(text)
         post.setComments(comments)
-        adapter.notifyItemInserted(comments.size-1)
+        adapter.notifyItemInserted(comments.lastIndex)
     }
 }

@@ -59,11 +59,11 @@ class SignUpActivity : AppCompatActivity() {
             }
 
             if (CheckLoginTask().execute(login).get()) {
-                val newUser = User(login, password)
-                newUser.setEmail(email)
-                newUser.setGender(gender)
-                newUser.setBirthday(birthday)
-                registerUser(newUser)
+                registerUser(User(login, password).apply {
+                    setEmail(email)
+                    setGender(gender)
+                    setBirthday(birthday)
+                })
             }
         }
     }
@@ -79,9 +79,7 @@ class SignUpActivity : AppCompatActivity() {
         ).all { fieldIsValid(it) }
     }
 
-    private fun fieldIsValid(field: String): Boolean {
-        return Regex("\\S+").matches(field)
-    }
+    private fun fieldIsValid(field: String) = Regex("\\S+").matches(field)
 
     private fun registerUser(user: User) {
         DGNetwork.getService().createUser(user.getLogin(), user).enqueue(object: Callback<User> {
@@ -101,11 +99,11 @@ class SignUpActivity : AppCompatActivity() {
     internal inner class CheckLoginTask : AsyncTask<String, Void, Boolean>() {
 
         override fun doInBackground(vararg params: String?): Boolean {
-            val response: Response<List<User>> = DGNetwork.getService().getUsers().execute()
+            val response = DGNetwork.getService().users.execute()
             if (response.isSuccessful) {
                 val users = response.body()
-                if (users != null) {
-                    val logins = users.map { it.getLogin() }
+                users?.let {
+                    val logins = it.map { x -> x.getLogin() }
                     if (params[0] in logins) {
                         Toast.makeText(applicationContext, R.string.non_unique_login, Toast.LENGTH_SHORT).show()
                         return false

@@ -24,13 +24,15 @@ class UserSerializer : JsonSerializer<User> {
         gender.addProperty("stringValue", src.getGender())
         birthday.addProperty("stringValue", src.getBirthday())
         photo.addProperty("stringValue", src.getPhoto())
-        fields.add("password", password)
-        fields.add("email", email)
-        fields.add("gender", gender)
-        fields.add("birthday", birthday)
-        fields.add("photo", photo)
-        result.add("fields", fields)
 
+        with (fields) {
+            add("password", password)
+            add("email", email)
+            add("gender", gender)
+            add("birthday", birthday)
+            add("photo", photo)
+        }
+        result.add("fields", fields)
         return result
     }
 }

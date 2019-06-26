@@ -28,12 +28,12 @@ class PostDeserializer : JsonDeserializer<Post> {
 
         val comments = commentsObject?.map { it.asJsonObject.get("stringValue").asString } ?: ArrayList<String>()
 
-        val post = Post()
-        post.setId(id)
-        post.setImageUrl(imageUrl)
-        post.setRating(rating)
-        post.setNumOfRates(numOfRates)
-        post.setComments(comments)
-        return post
+        return Post().apply {
+            setId(id)
+            setImageUrl(imageUrl)
+            setRating(rating)
+            setNumOfRates(numOfRates)
+            setComments(comments)
+        }
     }
 }

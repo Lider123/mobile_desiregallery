@@ -30,6 +30,7 @@ public class DGNetwork {
             Type userListType = new TypeToken<List<User>>() {}.getType();
             GsonBuilder gsonBuilder = new GsonBuilder()
                     .registerTypeAdapter(Post.class, new PostDeserializer())
+                    .registerTypeAdapter(Post.class, new PostSerializer())
                     .registerTypeAdapter(postListType, new PostListDeserializer())
                     .registerTypeAdapter(User.class, new UserDeserializer())
                     .registerTypeAdapter(User.class, new UserSerializer())

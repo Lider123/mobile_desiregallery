@@ -20,17 +20,16 @@ import kotlinx.android.synthetic.main.item_post.view.*
 class PostAdapter(
     private val items: List<Post>,
     private val context: Context
-) : androidx.recyclerview.widget.RecyclerView.Adapter<PostAdapter.ViewHolder>() {
-    override fun getItemCount(): Int {
-        return items.size
-    }
+) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
+    override fun getItemCount() = items.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_post, parent, false))
+        val view = LayoutInflater.from(context).inflate(R.layout.item_post, parent, false)
+        return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item: Post = items[position]
+        val item = items[position]
         val presenter = PostPresenter(holder, item)
         holder.bind(context, presenter)
     }
