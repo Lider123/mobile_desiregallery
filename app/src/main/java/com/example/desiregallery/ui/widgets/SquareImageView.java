@@ -3,6 +3,9 @@ package com.example.desiregallery.ui.widgets;
 import android.content.Context;
 import android.util.AttributeSet;
 
+/**
+ * @author babaetskv
+ * */
 public class SquareImageView extends androidx.appcompat.widget.AppCompatImageView {
 
     public SquareImageView(Context context) {
@@ -21,7 +24,7 @@ public class SquareImageView extends androidx.appcompat.widget.AppCompatImageVie
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        int width = getMeasuredWidth();
-        setMeasuredDimension(width, width);
+        int size = getMeasuredWidth();
+        setMeasuredDimension(size, size);
     }
 }

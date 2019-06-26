@@ -30,7 +30,9 @@ import com.example.desiregallery.Utils
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.fragment_profile.*
 
-
+/**
+ * @author babaetskv
+ * */
 class ProfileFragment : Fragment() {
     private val TAG = ProfileFragment::class.java.simpleName
 

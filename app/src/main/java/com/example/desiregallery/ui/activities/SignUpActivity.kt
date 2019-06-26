@@ -15,7 +15,9 @@ import com.example.desiregallery.R
 import android.text.Editable
 import android.text.TextWatcher
 
-
+/**
+ * @author babaetskv
+ * */
 class SignUpActivity : AppCompatActivity() {
     private val TAG = SignUpActivity::class.java.simpleName
 
@@ -79,9 +81,7 @@ class SignUpActivity : AppCompatActivity() {
         ).all { fieldIsValid(it) }
     }
 
-    private fun fieldIsValid(field: String): Boolean {
-        return Regex("\\S+").matches(field)
-    }
+    private fun fieldIsValid(field: String) = Regex("\\S+").matches(field)
 
     private fun registerUser(user: User) {
         DGNetwork.getService().createUser(user.getLogin(), user).enqueue(object: Callback<User> {

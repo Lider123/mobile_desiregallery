@@ -19,7 +19,9 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-
+/**
+ * @author babaetskv
+ * */
 @RunWith(AndroidJUnit4::class)
 class LoginInstrumentedTest {
     @Rule

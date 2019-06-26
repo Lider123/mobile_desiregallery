@@ -5,7 +5,9 @@ import com.example.desiregallery.network.DGNetwork
 import org.junit.Assert
 import org.junit.Test
 
-
+/**
+ * @author babaetskv
+ * */
 class ApiUnitTest {
     @Test
     fun gettingPosts_responseOk() {

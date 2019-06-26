@@ -5,6 +5,9 @@ import com.example.desiregallery.models.User
 
 import java.util.ArrayList
 
+/**
+ * @author babaetskv
+ * */
 class ModelGenerator {
     companion object {
         private val posts = initPosts()

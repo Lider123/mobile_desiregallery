@@ -18,11 +18,8 @@ import org.hamcrest.Matchers.*
 import org.junit.Before
 
 /**
- *
- * @project DesireGallery
- * @author babaetskv on 10.04.19
+ * @author babaetskv
  */
-
 @RunWith(AndroidJUnit4::class)
 class SignUpInstrumentedTest {
     private val inputCorrect = "Input123"

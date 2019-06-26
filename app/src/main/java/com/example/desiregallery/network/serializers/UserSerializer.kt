@@ -8,7 +8,9 @@ import com.google.gson.JsonSerializer
 
 import java.lang.reflect.Type
 
-
+/**
+ * @author babaetskv
+ * */
 class UserSerializer : JsonSerializer<User> {
     override fun serialize(src: User, typeOfSrc: Type, context: JsonSerializationContext): JsonElement {
         val result = JsonObject()

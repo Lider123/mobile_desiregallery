@@ -2,11 +2,11 @@ package com.example.desiregallery.adapters
 
 import android.content.Context
 import android.graphics.drawable.BitmapDrawable
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.recyclerview.widget.RecyclerView
 import com.example.desiregallery.ui.dialogs.ImageRateDialog
 import com.example.desiregallery.R
 import com.example.desiregallery.models.Post
@@ -17,16 +17,20 @@ import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_post.view.*
 
+/**
+ * @author babaetskv
+ * */
 class PostAdapter(
     private val items: List<Post>,
     private val context: Context
-) : androidx.recyclerview.widget.RecyclerView.Adapter<PostAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
     override fun getItemCount(): Int {
         return items.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_post, parent, false))
+        val view = LayoutInflater.from(context).inflate(R.layout.item_post, parent, false)
+        return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -35,7 +39,7 @@ class PostAdapter(
         holder.bind(context, presenter)
     }
 
-    class ViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view), PostView {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view), PostView {
         private val imageView: SquareImageView = view.item_post_image
         private val ratingTextView: TextView = view.item_post_rating
         private val commentView: ImageView = view.item_post_comment
@@ -88,9 +92,7 @@ class PostAdapter(
                 rateDialog = ImageRateDialog(context, handleRate)
                 rateDialog.show()
             }
-            commentView.setOnClickListener{
-                presenter.goToCommentActivity(context)
-            }
+            commentView.setOnClickListener{ presenter.goToCommentActivity(context) }
         }
     }
 }

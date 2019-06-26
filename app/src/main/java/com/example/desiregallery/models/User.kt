@@ -3,15 +3,43 @@ package com.example.desiregallery.models
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 
+/**
+ * Class that represents user
+ *
+ * Contains user's login, password and additional info
+ *
+ * @author babaetskv
+ * */
 open class User(
+    /**
+     * Users's login. Unique identifier of user
+     * */
     @PrimaryKey
     private var login: String = "",
+
+    /**
+     * User's password
+     * */
     private var password: String = ""
 ): RealmObject() {
-
+    /**
+     * User's email. Is used for password reset
+     * */
     private var email = ""
+
+    /**
+     * User's gender. Is used for statistics
+     * */
     private var gender = ""
+
+    /**
+     * User's birthday. Is used for statistics
+     * */
     private var birthday = ""
+
+    /**
+     * User's photo in base64 string
+     * */
     private var photo = ""
 
     fun getLogin() = login

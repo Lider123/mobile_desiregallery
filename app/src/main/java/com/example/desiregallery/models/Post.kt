@@ -4,25 +4,46 @@ import java.io.Serializable
 import java.net.MalformedURLException
 import java.net.URL
 
+/**
+ * Class that represents post
+ *
+ * Post contains image, rating in stars and comments
+ *
+ * @author babaetskv
+ * */
 class Post : Serializable {
-
+    /**
+     * Post's unique identifier
+     * */
     private var id: String = ""
+
+    /**
+     * URL of post's image
+     * */
     private var imageUrl: URL? = null
+
+    /**
+     * Rating of the image in stars (from 0 to 5)
+     * */
     private var rating: Float = 0.0f
+
+    /**
+     * Number of rates. Is needed for rating updates
+     * */
     private var numOfRates: Int = 0
+
+    /**
+     * List of comments
+     * */
     private var comments: List<String> = ArrayList()
 
-    fun getId(): String {
-        return id
-    }
+    fun getId() = id
 
     fun setId(id: String) {
         this.id = id
     }
 
-    fun getImageUrl(): URL? {
-        return imageUrl
-    }
+    fun getImageUrl() = imageUrl
 
     fun setImageUrl(imageUrl: URL) {
         this.imageUrl = imageUrl
@@ -37,25 +58,19 @@ class Post : Serializable {
         }
     }
 
-    fun getRating(): Float {
-        return rating
-    }
+    fun getRating() = rating
 
     fun setRating(rating: Float) {
         this.rating = rating
     }
 
-    fun getNumOfRates(): Int {
-        return numOfRates
-    }
+    fun getNumOfRates() = numOfRates
 
     fun setNumOfRates(numOfRates: Int) {
         this.numOfRates = numOfRates
     }
 
-    fun getComments(): List<String> {
-        return comments
-    }
+    fun getComments() = comments
 
     fun setComments(comments: List<String>) {
         this.comments = comments
@@ -89,6 +104,4 @@ class Post : Serializable {
         result = 31 * result + comments.hashCode()
         return result
     }
-
-
 }

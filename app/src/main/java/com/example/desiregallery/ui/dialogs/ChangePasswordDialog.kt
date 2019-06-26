@@ -17,12 +17,21 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-
+/**
+ * Class that represents dialog for password change
+ *
+ * @author babaetskv
+ * */
 class ChangePasswordDialog(private val activity: Activity) : AlertDialog(activity) {
     private val TAG = ChangePasswordDialog::class.java.simpleName
 
     private var currentPassword: String? = null
 
+    /**
+     * Method that creates dialog modal window
+     *
+     * Method sets window interface and current password
+     * */
     override fun onCreate(savedInstanceState: Bundle?) {
         val content = LayoutInflater.from(context).inflate(R.layout.dialog_change_password, null)
         setView(content)
@@ -40,6 +49,9 @@ class ChangePasswordDialog(private val activity: Activity) : AlertDialog(activit
         super.onCreate(savedInstanceState)
     }
 
+    /**
+     * Method that handles dialog confirm
+     * */
     private fun handleConfirm() {
         if (dialog_password_current.text.isEmpty()
             || dialog_password_new.text.isEmpty()
@@ -60,10 +72,15 @@ class ChangePasswordDialog(private val activity: Activity) : AlertDialog(activit
         dismiss()
     }
 
+    /**
+     * Method that updates password on the database and server
+     * */
     private fun updatePassword() {
         val user = (activity as MainActivity).getCurrUser()
-        user?.setPassword(dialog_password_new.text.toString())
-        DGDatabase.updateUser(user!!)
+        user ?: return
+
+        user.setPassword(dialog_password_new.text.toString())
+        DGDatabase.updateUser(user)
         DGNetwork.getService().updateUser(user.getLogin(), user).enqueue(object: Callback<User> {
             override fun onFailure(call: Call<User>, t: Throwable) {
                 Log.e(TAG, "Unable to update user")
@@ -78,7 +95,8 @@ class ChangePasswordDialog(private val activity: Activity) : AlertDialog(activit
         })
     }
 
-    private fun handleCancel() {
-        dismiss()
-    }
+    /**
+     * Method that handles dialog cancel
+     * */
+    private fun handleCancel() = dismiss()
 }

@@ -12,6 +12,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import java.lang.reflect.Type;
 import java.util.List;
 
+/**
+ * @author babaetskv
+ * */
 public class DGNetwork {
     private static final String BASE_API = "https://firestore.googleapis.com/v1/projects/desiregallery-8072a/databases/(default)/documents/";
 

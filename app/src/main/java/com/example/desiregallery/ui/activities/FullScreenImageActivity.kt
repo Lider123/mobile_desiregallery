@@ -17,14 +17,10 @@ import kotlinx.android.synthetic.main.activity_full_screen_image.*
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import android.util.Log
-import android.content.Intent
-import android.os.Environment
-import java.io.FileOutputStream
-import java.io.File
-import java.io.IOException
-import android.net.Uri
 
-
+/**
+ * @author babaetskv
+ * */
 class FullScreenImageActivity : AppCompatActivity() {
     companion object {
         const val EXTRA_IMAGE = "bytesImage"
@@ -35,7 +31,7 @@ class FullScreenImageActivity : AppCompatActivity() {
 
     private lateinit var toolbar: Toolbar
 
-    private lateinit var image: Bitmap
+    private lateinit var currImage: Bitmap
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,8 +45,8 @@ class FullScreenImageActivity : AppCompatActivity() {
         toolbar.title = ""
         setSupportActionBar(toolbar)
 
-        image = Utils.bytesToBitmap(intent.getByteArrayExtra(EXTRA_IMAGE))
-        image_view_full_screen.setImageBitmap(image)
+        currImage = Utils.bytesToBitmap(intent.getByteArrayExtra(EXTRA_IMAGE))
+        image_view_full_screen.setImageBitmap(currImage)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -66,7 +62,7 @@ class FullScreenImageActivity : AppCompatActivity() {
                 true
             }
             R.id.image_share -> {
-                shareImage()
+                Utils.shareImage(currImage, this)
                 true
             }
             else -> false
@@ -76,46 +72,11 @@ class FullScreenImageActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             WRITE_REQUEST_CODE -> if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Utils.downloadBitmap(image, this)
+                Utils.downloadBitmap(currImage, this)
             } else {
                 Log.e(TAG, "There is no permission to write to external storage")
                 Toast.makeText(this, R.string.no_access_to_storage, Toast.LENGTH_LONG).show()
             }
         }
-    }
-
-    private fun shareImage() {
-        val bmpUri = getLocalBitmapUri(image)
-        if (bmpUri != null) {
-            val shareIntent = Intent()
-            shareIntent.action = Intent.ACTION_SEND
-            shareIntent.putExtra(Intent.EXTRA_STREAM, bmpUri)
-            shareIntent.type = "image/*"
-            startActivity(Intent.createChooser(shareIntent, getString(R.string.share_image)))
-        }
-    }
-
-    /**
-     * Method returns the URI path to given bitmap
-     *
-     * @param bmp Bitmap to save temporarily in storage and get URI
-     * @return URI path of given bitmap
-    * */
-    private fun getLocalBitmapUri(bmp: Bitmap): Uri? {
-        var bmpUri: Uri? = null
-        try {
-            val file = File(
-                getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                "share_image_" + System.currentTimeMillis() + ".png"
-            )
-            val out = FileOutputStream(file)
-            bmp.compress(Bitmap.CompressFormat.PNG, 90, out)
-            out.close()
-            bmpUri = Uri.fromFile(file)
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-        return bmpUri
     }
 }

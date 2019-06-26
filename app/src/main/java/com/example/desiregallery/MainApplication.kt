@@ -3,6 +3,9 @@ package com.example.desiregallery
 import android.app.Application
 import io.realm.Realm
 
+/**
+ * @author babaetskv
+ * */
 class MainApplication : Application() {
     companion object {
         const val APP_PREFERENCES = "app_prefs"

@@ -8,6 +8,9 @@ import android.os.Handler
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 
+/**
+ * @author babaetskv
+ * */
 class SplashScreenActivity : AppCompatActivity() {
 
     private var TIMEOUT = 3000L

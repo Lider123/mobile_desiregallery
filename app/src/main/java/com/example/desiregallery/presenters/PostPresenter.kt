@@ -9,6 +9,9 @@ import com.example.desiregallery.ui.activities.CommentsActivity
 import com.example.desiregallery.ui.activities.FullScreenImageActivity
 import com.example.desiregallery.ui.views.PostView
 
+/**
+ * @author babaetskv
+ * */
 class PostPresenter(
     private val view: PostView,
     private val post: Post = Post()

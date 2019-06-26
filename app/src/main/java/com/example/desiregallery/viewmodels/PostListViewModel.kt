@@ -10,6 +10,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+/**
+ * @author babaetskv
+ * */
 class PostListViewModel : ViewModel() {
     private val TAG = PostListViewModel::class.java.simpleName
 

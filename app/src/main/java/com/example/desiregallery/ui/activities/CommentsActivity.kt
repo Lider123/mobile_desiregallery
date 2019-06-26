@@ -10,7 +10,11 @@ import com.example.desiregallery.models.Post
 import kotlinx.android.synthetic.main.activity_comments.*
 import kotlinx.android.synthetic.main.toolbar_comments.*
 
-
+/**
+ * Activity for watching and sending comments for posts
+ *
+ * @author babaetskv
+ * */
 class CommentsActivity : AppCompatActivity() {
     companion object {
         const val EXTRA_POST = "post"
@@ -19,6 +23,9 @@ class CommentsActivity : AppCompatActivity() {
     private lateinit var post: Post
     private lateinit var adapter: CommentsAdapter
 
+    /**
+     * Method that creates user interface and list of comments
+     * */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_comments)
@@ -31,11 +38,14 @@ class CommentsActivity : AppCompatActivity() {
 
         post = intent.getSerializableExtra(EXTRA_POST) as Post
 
-        comments_list.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        comments_list.layoutManager = LinearLayoutManager(this)
         adapter = CommentsAdapter(post.getComments(), this)
         comments_list.adapter = adapter
     }
 
+    /**
+     * Method for handling comments send
+     * */
     private fun handleSend(text: String) {
         comments_input.setText("")
         comments_input.clearFocus()

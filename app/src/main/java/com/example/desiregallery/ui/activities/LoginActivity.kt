@@ -20,7 +20,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-
+/**
+ * @author babaetskv
+ * */
 class LoginActivity : AppCompatActivity() {
     private val TAG = LoginActivity::class.java.simpleName
 

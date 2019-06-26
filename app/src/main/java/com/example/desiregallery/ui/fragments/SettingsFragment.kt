@@ -6,7 +6,9 @@ import androidx.preference.PreferenceFragmentCompat
 import com.example.desiregallery.R
 import com.example.desiregallery.ui.dialogs.ChangePasswordDialog
 
-
+/**
+ * @author babaetskv
+ * */
 class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {

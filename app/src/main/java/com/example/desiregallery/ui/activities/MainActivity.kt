@@ -13,19 +13,22 @@ import android.util.Log
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import com.example.desiregallery.*
 import com.example.desiregallery.database.DGDatabase
 import com.example.desiregallery.models.User
 import com.example.desiregallery.ui.fragments.FeedFragment
 import com.example.desiregallery.ui.fragments.ProfileFragment
 import com.example.desiregallery.ui.fragments.SettingsFragment
-import kotlinx.android.synthetic.main.nav_header.*
 
-
+/**
+ * @author babaetskv
+ * */
 class MainActivity : AppCompatActivity() {
     private val TAG = MainActivity::class.java.simpleName
 
-    private lateinit var drawerLayout: androidx.drawerlayout.widget.DrawerLayout
+    private lateinit var drawerLayout: DrawerLayout
     private lateinit var navigationView: NavigationView
     private lateinit var headerImageView: ImageView
     private lateinit var toolbar: Toolbar
@@ -79,7 +82,7 @@ class MainActivity : AppCompatActivity() {
             val headerView = navigationView.getHeaderView(0)
             val headerTextView = headerView.findViewById<TextView>(R.id.nav_header_login)
             headerImageView = headerView.findViewById(R.id.nav_header_image)
-            headerTextView.text = currUser!!.getLogin()
+            headerTextView.text = currUser?.getLogin()
             if (currUser!!.getPhoto().isNotEmpty())
                 updateNavHeaderPhoto()
         }
@@ -94,20 +97,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun replaceFragment(fragment: androidx.fragment.app.Fragment, title: CharSequence) {
+    private fun replaceFragment(fragment: Fragment, title: CharSequence) {
         supportFragmentManager.beginTransaction().replace(R.id.main_container, fragment).commit()
         toolbar.title = title
     }
 
-    private fun replaceFragment(fragment: androidx.fragment.app.Fragment, id: Int) {
+    private fun replaceFragment(fragment: Fragment, id: Int) {
         supportFragmentManager.beginTransaction().replace(R.id.main_container, fragment).commit()
         toolbar.title = resources.getString(id)
     }
 
     private fun setCurrentUser() {
         val currLogin = prefs.getString(MainApplication.PREFS_CURR_USER_KEY, null)
-        if (currLogin != null) {
-            currUser = DGDatabase.getUser(currLogin)
+        currLogin?.let {
+            currUser = DGDatabase.getUser(it)
             Log.d(TAG, String.format("Current user is %s", currUser?.getLogin()))
         }
     }
@@ -124,11 +127,9 @@ class MainActivity : AppCompatActivity() {
         navigationView.setCheckedItem(R.id.nav_feed)
     }
 
-    fun getCurrUser(): User? {
-        return currUser
-    }
+    fun getCurrUser() = currUser
 
     fun updateNavHeaderPhoto() {
-        headerImageView.setImageBitmap(Utils.base64ToBitmap(currUser!!.getPhoto()))
+        currUser?.let { headerImageView.setImageBitmap(Utils.base64ToBitmap(it.getPhoto())) }
     }
 }
