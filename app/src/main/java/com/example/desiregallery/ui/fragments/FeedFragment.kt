@@ -23,8 +23,8 @@ class FeedFragment : androidx.fragment.app.Fragment() {
     private fun setContent() {
         val model = ViewModelProviders.of(this).get(PostListViewModel::class.java)
         model.getPosts().observe(this, Observer<List<Post>>{ posts ->
-            post_list.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
-            post_list.adapter = PostAdapter(posts!!, activity!!)
+            post_list.layoutManager = LinearLayoutManager(activity)
+            post_list.adapter = PostAdapter(posts, activity!!)
         })
     }
 }

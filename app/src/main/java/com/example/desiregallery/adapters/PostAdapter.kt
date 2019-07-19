@@ -20,10 +20,8 @@ import kotlinx.android.synthetic.main.item_post.view.*
 class PostAdapter(
     private val items: List<Post>,
     private val context: Context
-) : androidx.recyclerview.widget.RecyclerView.Adapter<PostAdapter.ViewHolder>() {
-    override fun getItemCount(): Int {
-        return items.size
-    }
+) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
+    override fun getItemCount() = items.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_post, parent, false))
@@ -35,7 +33,7 @@ class PostAdapter(
         holder.bind(context, presenter)
     }
 
-    class ViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view), PostView {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view), PostView {
         private val imageView: SquareImageView = view.item_post_image
         private val ratingTextView: TextView = view.item_post_rating
         private val commentView: ImageView = view.item_post_comment
@@ -81,16 +79,15 @@ class PostAdapter(
 
         private fun initListeners() {
             imageView.setOnClickListener {
-                val bmpImage = (imageView.drawable as BitmapDrawable).bitmap
+                it as ImageView
+                val bmpImage = (it.drawable as BitmapDrawable).bitmap
                 presenter.goToImageFullScreen(context, bmpImage)
             }
             ratingTextView.setOnClickListener{
                 rateDialog = ImageRateDialog(context, handleRate)
                 rateDialog.show()
             }
-            commentView.setOnClickListener{
-                presenter.goToCommentActivity(context)
-            }
+            commentView.setOnClickListener{ presenter.goToCommentActivity(context) }
         }
     }
 }

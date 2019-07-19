@@ -12,7 +12,7 @@ class UserDeserializer : JsonDeserializer<User> {
         val fieldsObject = rootObject.getAsJsonObject("fields")
 
         val name = rootObject.get("name").asString.split("/")
-        val login = name[name.size-1]
+        val login = name.last()
 
         val password = fieldsObject.getAsJsonObject("password").get("stringValue").asString
 

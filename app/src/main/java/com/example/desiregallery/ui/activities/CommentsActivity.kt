@@ -2,7 +2,6 @@ package com.example.desiregallery.ui.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.desiregallery.R
 import com.example.desiregallery.Utils
 import com.example.desiregallery.adapters.CommentsAdapter
@@ -25,7 +24,7 @@ class CommentsActivity : AppCompatActivity() {
         comments_button_back.setOnClickListener { onBackPressed() }
         comments_button_send.setOnClickListener {
             val commentText = comments_input.text.trim()
-            if (!commentText.isEmpty())
+            if (commentText.isNotEmpty())
                 handleSend(commentText.toString())
         }
 
@@ -41,9 +40,9 @@ class CommentsActivity : AppCompatActivity() {
         comments_input.clearFocus()
         Utils.hideSoftKeyboard(this)
 
-        val comments = post.getComments() as ArrayList
+        val comments = post.getComments() as MutableList
         comments.add(text)
         post.setComments(comments)
-        adapter.notifyItemInserted(comments.size-1)
+        adapter.notifyItemInserted(comments.lastIndex)
     }
 }

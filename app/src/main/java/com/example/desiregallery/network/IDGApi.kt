@@ -1,0 +1,26 @@
+package com.example.desiregallery.network
+
+import com.example.desiregallery.models.Post
+import com.example.desiregallery.models.User
+import retrofit2.Call
+import retrofit2.http.*
+
+interface IDGApi {
+    @GET("posts")
+    fun getPosts(): Call<List<Post>>
+
+    @GET("users")
+    fun getUsers(): Call<List<User>>
+
+    @GET("posts/{id}")
+    fun getPost(@Path("id") id: String): Call<Post>
+
+    @GET("users/{login}")
+    fun getUser(@Path("login") login: String): Call<User>
+
+    @POST("users")
+    fun createUser(@Query("documentId") login: String, @Body user: User): Call<User>
+
+    @PATCH("users/{login}")
+    fun updateUser(@Path("login") login: String, @Body user: User): Call<User>
+}

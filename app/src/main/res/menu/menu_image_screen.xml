@@ -3,9 +3,9 @@
     <item
             android:id="@+id/image_download"
             android:title="@string/Download"
-            android:icon="@drawable/ic_file_download_colorsecondary_32dp"/>
+            android:icon="@drawable/ic_file_download_secondary_32dp"/>
     <item
             android:id="@+id/image_share"
             android:title="@string/Share"
-            android:icon="@drawable/ic_share_colorsecondary_32dp"/>
+            android:icon="@drawable/ic_share_secondary_32dp"/>
 </menu>

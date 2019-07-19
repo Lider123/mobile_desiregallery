@@ -27,11 +27,10 @@ import android.net.Uri
 
 class FullScreenImageActivity : AppCompatActivity() {
     companion object {
+        private const val WRITE_REQUEST_CODE = 101
         const val EXTRA_IMAGE = "bytesImage"
+        private val TAG = FullScreenImageActivity::class.java.simpleName
     }
-
-    private val TAG = FullScreenImageActivity::class.java.simpleName
-    private val WRITE_REQUEST_CODE = 101
 
     private lateinit var toolbar: Toolbar
 

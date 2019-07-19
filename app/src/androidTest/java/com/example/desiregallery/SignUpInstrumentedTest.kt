@@ -2,7 +2,6 @@ package com.example.desiregallery
 
 import androidx.test.espresso.Espresso
 import androidx.test.rule.ActivityTestRule
-import androidx.test.runner.AndroidJUnit4
 import com.example.desiregallery.ui.activities.SignUpActivity
 import org.junit.Rule
 import org.junit.Test
@@ -14,6 +13,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import android.widget.LinearLayout
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.hamcrest.Matchers.*
 import org.junit.Before
 

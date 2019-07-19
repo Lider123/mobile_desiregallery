@@ -32,7 +32,9 @@ import kotlinx.android.synthetic.main.fragment_profile.*
 
 
 class ProfileFragment : Fragment() {
-    private val TAG = ProfileFragment::class.java.simpleName
+    companion object {
+        private val TAG = ProfileFragment::class.java.simpleName
+    }
 
     private var infoChanged = false
     private var user: User? = null
@@ -44,28 +46,20 @@ class ProfileFragment : Fragment() {
         val fab = root.findViewById<FloatingActionButton>(R.id.profile_fab)
 
         val user = (activity as MainActivity).getCurrUser()
-        if (user != null) {
-            toolbarProfile.title = user.getLogin()
-            fab.setOnClickListener {
-                CropImage.activity().start(context!!, this)
-            }
+        user?.let {
+            toolbarProfile.title = it.getLogin()
+            fab.setOnClickListener { CropImage.activity().start(context!!, this) }
 
             val notSpecified = getString(R.string.not_specified)
-            root.profile_email.text = if (!user.getEmail().isEmpty()) user.getEmail() else notSpecified
-            root.profile_gender.text = if (!user.getGender().isEmpty()) user.getGender() else notSpecified
-            root.profile_birthday.text = if (!user.getBirthday().isEmpty()) user.getBirthday() else notSpecified
-            if (!user.getPhoto().isEmpty())
-                imageView.setImageBitmap(Utils.base64ToBitmap(user.getPhoto()))
+            root.profile_email.text = if (it.getEmail().isNotEmpty()) it.getEmail() else notSpecified
+            root.profile_gender.text = if (it.getGender().isNotEmpty()) it.getGender() else notSpecified
+            root.profile_birthday.text = if (it.getBirthday().isNotEmpty()) it.getBirthday() else notSpecified
+            if (it.getPhoto().isNotEmpty())
+                imageView.setImageBitmap(Utils.base64ToBitmap(it.getPhoto()))
 
-            root.profile_email_view.setOnClickListener {
-                editEmail()
-            }
-            root.profile_gender_view.setOnClickListener {
-                editGender()
-            }
-            root.profile_birthday_view.setOnClickListener {
-                editBirthday()
-            }
+            root.profile_email_view.setOnClickListener { editEmail() }
+            root.profile_gender_view.setOnClickListener { editGender() }
+            root.profile_birthday_view.setOnClickListener { editBirthday() }
         }
         this.user = user
         return root
@@ -76,9 +70,9 @@ class ProfileFragment : Fragment() {
         if (!infoChanged)
             return
 
-        if (user != null) {
-            DGDatabase.updateUser(user!!)
-            DGNetwork.getService().updateUser(user!!.getLogin(), user).enqueue(object: Callback<User> {
+        user?.let {
+            DGDatabase.updateUser(it)
+            DGNetwork.getService().updateUser(it.getLogin(), it).enqueue(object: Callback<User> {
                 override fun onFailure(call: Call<User>, t: Throwable) {
                     Log.e(TAG, "Unable to update user")
                     t.printStackTrace()
@@ -88,7 +82,6 @@ class ProfileFragment : Fragment() {
                     if (response.isSuccessful)
                         Log.i(TAG, "User has been successfully updated")
                 }
-
             })
         }
         infoChanged = false
@@ -123,9 +116,7 @@ class ProfileFragment : Fragment() {
             }
             dialog.dismiss()
         }
-        builder.setNegativeButton(getString(R.string.Cancel)) { dialog, _ ->
-            dialog.dismiss()
-        }
+        builder.setNegativeButton(getString(R.string.Cancel)) { dialog, _ -> dialog.dismiss() }
         val emailDialog = builder.create()
         emailDialog.show()
     }
@@ -133,7 +124,7 @@ class ProfileFragment : Fragment() {
     private fun editBirthday() {
         val currBirthday = user?.getBirthday()
         val cal = Calendar.getInstance()
-        if (currBirthday != null && !currBirthday.isEmpty()) {
+        if (currBirthday != null && currBirthday.isNotEmpty()) {
             val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
             cal.time = sdf.parse(currBirthday)
         }
@@ -158,7 +149,7 @@ class ProfileFragment : Fragment() {
         val builder = AlertDialog.Builder(activity)
         builder.setTitle(R.string.gender_dialog_title)
         val values = resources.getStringArray(R.array.gender)
-        val checkedItem = if (gender != null && !gender.isEmpty()) values.indexOf(gender) else -1
+        val checkedItem = if (gender != null && gender.isNotEmpty()) values.indexOf(gender) else -1
 
         builder.setSingleChoiceItems(values, checkedItem) { dialog, item ->
             user?.setGender(values[item])
