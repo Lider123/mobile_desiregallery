@@ -11,7 +11,9 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class PostListViewModel : ViewModel() {
-    private val TAG = PostListViewModel::class.java.simpleName
+    companion object {
+        private val TAG = PostListViewModel::class.java.simpleName
+    }
 
     private var posts = MutableLiveData<List<Post>>()
 
@@ -36,8 +38,7 @@ class PostListViewModel : ViewModel() {
             }
 
             override fun onFailure(call: Call<List<Post>>, t: Throwable) {
-                Log.e(TAG, "Unable to load posts")
-                t.printStackTrace()
+                Log.e(TAG, "Unable to load posts: ${t.message}")
             }
         })
     }

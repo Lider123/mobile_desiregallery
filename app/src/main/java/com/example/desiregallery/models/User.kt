@@ -16,10 +16,6 @@ open class User(
 
     fun getLogin() = login
 
-    fun setLogin(login: String) {
-        this.login = login
-    }
-
     fun getPassword() = password
 
     fun setPassword(password: String) {

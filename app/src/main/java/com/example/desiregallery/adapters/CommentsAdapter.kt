@@ -12,14 +12,15 @@ class CommentsAdapter(
     private val items: List<String>,
     private val context: Context
 ) : RecyclerView.Adapter<CommentsAdapter.ViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, p1: Int): CommentsAdapter.ViewHolder {
+
+    override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_comment, parent, false)
-        return CommentsAdapter.ViewHolder(view)
+        return ViewHolder(view)
     }
 
     override fun getItemCount() = items.size
 
-    override fun onBindViewHolder(holder: CommentsAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
         holder.bind(item)
     }
