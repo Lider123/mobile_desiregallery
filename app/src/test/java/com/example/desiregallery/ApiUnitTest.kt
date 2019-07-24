@@ -23,9 +23,9 @@ class ApiUnitTest {
 
     @Test
     fun gettingPost_isCorrect() {
-        val postGen = ModelGenerator.getPost("6")
+        val postGen = ModelGenerator.getPost("1")
         val api = DGNetwork.getService()
-        val response = api.getPost("6").execute()
+        val response = api.getPost("1").execute()
         Assert.assertTrue(response.isSuccessful)
         Assert.assertNotNull(response.body())
         Assert.assertEquals(postGen, response.body())

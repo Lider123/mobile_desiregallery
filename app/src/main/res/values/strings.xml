@@ -57,6 +57,11 @@
     <string name="fields_are_empty">All fields must be filled</string>
     <string name="password_changed">Password has been changed</string>
 
+    <!-- Create post dialog -->
+    <string name="post_creation">Post creation</string>
+    <string name="Publish">Publish</string>
+    <string name="post_image_upload_failure">There was an error while creating post</string>
+
     <!-- Preferences -->
     <string name="pref_change_password_key" translatable="false">pref_change_password_key</string>
 
