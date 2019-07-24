@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "851478795051",
+    "firebase_url": "https://desiregallery-8072a.firebaseio.com",
+    "project_id": "desiregallery-8072a",
+    "storage_bucket": "desiregallery-8072a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:851478795051:android:eac8a7046e93a770",
+        "android_client_info": {
+          "package_name": "com.example.desiregallery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "851478795051-ejff0bn239ojlde7sucuuc0jji8810gf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.desiregallery",
+            "certificate_hash": "2105eb044e29f0147d007b4f4120e4ca6d94915d"
+          }
+        },
+        {
+          "client_id": "851478795051-5pm30etntp6m06213rigfsg31e71m97c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTixzyZZXkkWJnlu-yHBricZybJYnhyAo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "851478795051-5pm30etntp6m06213rigfsg31e71m97c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

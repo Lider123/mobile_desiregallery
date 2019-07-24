@@ -18,9 +18,7 @@ class PostSerializer : JsonSerializer<Post> {
 
         if (src.getComments().isNotEmpty()) {
             for (c in src.getComments()) {
-                commentsArray.add(JsonObject().apply {
-                    addProperty("stringValue", c)
-                })
+                commentsArray.add(JsonObject().apply { addProperty("stringValue", c) })
             }
             commentsObject.add("values", commentsArray)
         }

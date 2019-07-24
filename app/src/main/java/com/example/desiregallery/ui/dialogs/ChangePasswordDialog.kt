@@ -2,11 +2,11 @@ package com.example.desiregallery.ui.dialogs
 
 import androidx.appcompat.app.AlertDialog
 import com.example.desiregallery.R
-import android.view.LayoutInflater
 import android.app.Activity
 import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import com.example.desiregallery.database.DGDatabase
 import com.example.desiregallery.models.User
@@ -19,20 +19,18 @@ import retrofit2.Response
 
 
 class ChangePasswordDialog(private val activity: Activity) : AlertDialog(activity) {
-    private val TAG = ChangePasswordDialog::class.java.simpleName
+    companion object {
+        private val TAG = ChangePasswordDialog::class.java.simpleName
+    }
 
     private var currentPassword: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val content = LayoutInflater.from(context).inflate(R.layout.dialog_change_password, null)
+        val content = View.inflate(context, R.layout.dialog_change_password, null)
         setView(content)
         setTitle(R.string.change_password)
-        setButton(DialogInterface.BUTTON_POSITIVE, context.getString(R.string.OK)) { dialog, which ->
-            handleConfirm()
-        }
-        setButton(DialogInterface.BUTTON_NEGATIVE, context.getString(R.string.Cancel)) { dialog, which ->
-            handleCancel()
-        }
+        setButton(DialogInterface.BUTTON_POSITIVE, context.getString(R.string.OK)) { _, _ -> handleConfirm() }
+        setButton(DialogInterface.BUTTON_NEGATIVE, context.getString(R.string.Cancel)) { _, _ -> handleCancel() }
         setCancelable(false)
 
         currentPassword = (activity as MainActivity).getCurrUser()?.getPassword()
@@ -62,23 +60,21 @@ class ChangePasswordDialog(private val activity: Activity) : AlertDialog(activit
 
     private fun updatePassword() {
         val user = (activity as MainActivity).getCurrUser()
-        user?.setPassword(dialog_password_new.text.toString())
-        DGDatabase.updateUser(user!!)
-        DGNetwork.getService().updateUser(user.getLogin(), user).enqueue(object: Callback<User> {
-            override fun onFailure(call: Call<User>, t: Throwable) {
-                Log.e(TAG, "Unable to update user ${user.getLogin()}")
-                t.printStackTrace()
-            }
+        user?.let {
+            it.setPassword(dialog_password_new.text.toString())
+            DGDatabase.updateUser(it)
+            DGNetwork.getService().updateUser(it.getLogin(), it).enqueue(object: Callback<User> {
+                override fun onFailure(call: Call<User>, t: Throwable) {
+                    Log.e(TAG, "Unable to update user ${it.getLogin()}: ${t.message}")
+                }
 
-            override fun onResponse(call: Call<User>, response: Response<User>) {
-                if (response.isSuccessful)
-                    Log.i(TAG, "User ${user.getLogin()} has been successfully updated")
-            }
-
-        })
+                override fun onResponse(call: Call<User>, response: Response<User>) {
+                    if (response.isSuccessful)
+                        Log.i(TAG, "User ${it.getLogin()} has been successfully updated")
+                }
+            })
+        }
     }
 
-    private fun handleCancel() {
-        dismiss()
-    }
+    private fun handleCancel() = dismiss()
 }

@@ -17,8 +17,7 @@ class PostDeserializer : JsonDeserializer<Post> {
             .getAsJsonObject("arrayValue")
             .getAsJsonArray("values")
 
-        val name = rootObject.get("name").asString.split("/")
-        val id = name[name.size-1]
+        val id = rootObject.get("name").asString.split("/").last()
 
         val imageUrl = fieldsObject.getAsJsonObject("imageUrl").get("stringValue").asString
 

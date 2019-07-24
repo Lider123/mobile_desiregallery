@@ -9,8 +9,9 @@ import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 
 class SplashScreenActivity : AppCompatActivity() {
-
-    private var TIMEOUT = 3000L
+    companion object {
+        private var TIMEOUT = 3000L
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

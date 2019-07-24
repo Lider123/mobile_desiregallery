@@ -128,7 +128,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_margin="8dp"
-            android:src="@drawable/ic_photo_camera_black_32dp"
+            app:srcCompat="@drawable/ic_photo_camera_black_32dp"
             app:layout_anchor="@id/profile_appbar"
             app:layout_anchorGravity="bottom|right|end"
     />

@@ -22,7 +22,9 @@ import retrofit2.Response
 
 
 class LoginActivity : AppCompatActivity() {
-    private val TAG = LoginActivity::class.java.simpleName
+    companion object {
+        private val TAG = LoginActivity::class.java.simpleName
+    }
 
     private lateinit var prefs: SharedPreferences
     private lateinit var inputTextWatcher: TextWatcher
@@ -71,7 +73,7 @@ class LoginActivity : AppCompatActivity() {
         DGNetwork.getService().getUser(login).enqueue(object: Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 val user = response.body()
-               user ?: run {
+                user ?: run {
                     Toast.makeText(applicationContext, R.string.invalid_login, Toast.LENGTH_SHORT).show()
                     hideProgress()
                     return
@@ -92,7 +94,7 @@ class LoginActivity : AppCompatActivity() {
 
             override fun onFailure(call: Call<User>, t: Throwable) {
                 Toast.makeText(applicationContext, R.string.login_error, Toast.LENGTH_LONG).show()
-                Log.e(TAG, "Unable to log in")
+                Log.e(TAG, "Unable to log in: ${t.message}")
             }
         })
     }

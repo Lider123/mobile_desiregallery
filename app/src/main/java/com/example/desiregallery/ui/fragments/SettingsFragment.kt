@@ -19,9 +19,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 ChangePasswordDialog(activity!!).show()
                 true
             }
-            else -> {
-                super.onPreferenceTreeClick(preference)
-            }
+            else -> super.onPreferenceTreeClick(preference)
         }
     }
 }

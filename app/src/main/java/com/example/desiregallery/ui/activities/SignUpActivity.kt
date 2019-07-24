@@ -1,5 +1,6 @@
 package com.example.desiregallery.ui.activities
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -14,11 +15,10 @@ import android.os.AsyncTask
 import com.example.desiregallery.R
 import android.text.Editable
 import android.text.TextWatcher
+import java.lang.ref.WeakReference
 
 
 class SignUpActivity : AppCompatActivity() {
-    private val TAG = SignUpActivity::class.java.simpleName
-
     private lateinit var inputTextWatcher: TextWatcher
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +58,7 @@ class SignUpActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            if (CheckLoginTask().execute(login).get()) {
+            if (CheckLoginTask(applicationContext).execute(login).get()) {
                 registerUser(User(login, password).apply {
                     setEmail(email)
                     setGender(gender)
@@ -90,32 +90,36 @@ class SignUpActivity : AppCompatActivity() {
 
             override fun onFailure(call: Call<User>, t: Throwable) {
                 Toast.makeText(applicationContext, R.string.sign_up_error, Toast.LENGTH_LONG).show()
-                Log.e(TAG, "Unable to sign up")
-                t.printStackTrace()
+                Log.e(TAG, "Unable to sign up: ${t.message}")
             }
         })
     }
 
-    internal inner class CheckLoginTask : AsyncTask<String, Void, Boolean>() {
+    companion object {
+        private val TAG = SignUpActivity::class.java.simpleName
 
-        override fun doInBackground(vararg params: String?): Boolean {
-            val response = DGNetwork.getService().users.execute()
-            if (response.isSuccessful) {
-                val users = response.body()
-                users?.let {
-                    val logins = it.map { x -> x.getLogin() }
-                    if (params[0] in logins) {
-                        Toast.makeText(applicationContext, R.string.non_unique_login, Toast.LENGTH_SHORT).show()
-                        return false
+        internal class CheckLoginTask(context: Context) : AsyncTask<String, Void, Boolean>() {
+            private val contextRef = WeakReference<Context>(context)
+
+            override fun doInBackground(vararg params: String?): Boolean {
+                val response = DGNetwork.getService().getUsers().execute()
+                if (response.isSuccessful) {
+                    val users = response.body()
+                    users?.let {
+                        val logins = it.map { user -> user.getLogin() }
+                        if (params[0] in logins) {
+                            Toast.makeText(contextRef.get(), R.string.non_unique_login, Toast.LENGTH_SHORT).show()
+                            return false
+                        }
                     }
                 }
+                else {
+                    Toast.makeText(contextRef.get(), R.string.sign_up_error, Toast.LENGTH_LONG).show()
+                    Log.e(TAG, "Unable to sign up")
+                    return false
+                }
+                return true
             }
-            else {
-                Toast.makeText(applicationContext, R.string.sign_up_error, Toast.LENGTH_LONG).show()
-                Log.e(TAG, "Unable to sign up")
-                return false
-            }
-            return true
         }
     }
 }

@@ -1,15 +1,15 @@
 <resources>
     <string name="app_name">DesireGallery</string>
 
-    <string name="item_post_rating_placeholder">0.0</string>
-    <string name="item_post_rating_format">%1$.1f</string>
-
+    <!-- Comments screen -->
     <string name="comments_input_hint">Add a comment</string>
     <string name="send">Send</string>
     <string name="comments">Comments</string>
 
+    <!-- Rate post dialog -->
     <string name="dialog_rate_text">Rate this post!</string>
 
+    <!-- LogIn and SignUp screens -->
     <string name="Login">Login</string>
     <string name="login">login</string>
     <string name="SignUp">Sign Up</string>
@@ -25,20 +25,21 @@
     <string name="non_unique_login">Login is already exists</string>
     <string name="sign_up_error">Unable to sign up. Check your network connection</string>
 
+    <!-- Main menu -->
     <string name="Profile">Profile</string>
     <string name="Feed">Feed</string>
     <string name="Settings">Settings</string>
     <string name="LogOut">Log out</string>
 
+    <!-- Fullscreen image -->
     <string name="Download">Download</string>
     <string name="Share">Share</string>
     <string name="no_access_to_storage">Unable to download image. Have you granted access to storage?</string>
     <string name="download_error">Something went wrong while downloading image</string>
     <string name="share_image">Share image</string>
 
+    <!-- Profile screen -->
     <string name="not_specified">not specified</string>
-
-    <string name="date_format">%1$02d.%2$02d.%3$d</string>
     <string name="OK">OK</string>
     <string name="Cancel">Cancel</string>
     <string name="email_dialog_title">Email</string>
@@ -48,7 +49,7 @@
         <item name="female">female</item>
     </string-array>
 
-    <string name="pref_change_password_key">pref_change_password_key</string>
+    <!-- Change password dialog -->
     <string name="change_password">Change password</string>
     <string name="old_password">old password</string>
     <string name="new_password">new password</string>
@@ -56,7 +57,11 @@
     <string name="fields_are_empty">All fields must be filled</string>
     <string name="password_changed">Password has been changed</string>
 
-    <string name="choose_from_gallery">Choose from gallery</string>
-    <string name="make_a_photo">Make a photo</string>
-    <string name="choose_from_gallery_error">Unable to load image</string>
+    <!-- Preferences -->
+    <string name="pref_change_password_key" translatable="false">pref_change_password_key</string>
+
+    <!-- Templates -->
+    <string name="item_post_rating_placeholder" translatable="false">0.0</string>
+    <string name="item_post_rating_format" translatable="false">%1$.1f</string>
+    <string name="date_format" translatable="false">%1$02d.%2$02d.%3$d</string>
 </resources>

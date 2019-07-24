@@ -6,10 +6,10 @@ import java.net.URL
 
 class Post : Serializable {
 
-    private var id: String = ""
+    private var id = ""
     private var imageUrl: URL? = null
-    private var rating: Float = 0.0f
-    private var numOfRates: Int = 0
+    private var rating = 0f
+    private var numOfRates = 0
     private var comments: List<String> = ArrayList()
 
     fun getId() = id
@@ -19,10 +19,6 @@ class Post : Serializable {
     }
 
     fun getImageUrl() = imageUrl
-
-    fun setImageUrl(imageUrl: URL) {
-        this.imageUrl = imageUrl
-    }
 
     fun setImageUrl(imageUrl: String) {
         try {
@@ -57,16 +53,23 @@ class Post : Serializable {
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+        if (this === other)
+            return true
+        if (javaClass != other?.javaClass)
+            return false
 
         other as Post
 
-        if (id != other.id) return false
-        if (imageUrl != other.imageUrl) return false
-        if (rating != other.rating) return false
-        if (numOfRates != other.numOfRates) return false
-        if (comments != other.comments) return false
+        if (id != other.id)
+            return false
+        if (imageUrl != other.imageUrl)
+            return false
+        if (rating != other.rating)
+            return false
+        if (numOfRates != other.numOfRates)
+            return false
+        if (comments != other.comments)
+            return false
 
         return true
     }
@@ -79,6 +82,4 @@ class Post : Serializable {
         result = 31 * result + comments.hashCode()
         return result
     }
-
-
 }

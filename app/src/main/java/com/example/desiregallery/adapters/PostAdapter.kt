@@ -21,6 +21,7 @@ class PostAdapter(
     private val items: List<Post>,
     private val context: Context
 ) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
+
     override fun getItemCount() = items.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -34,7 +35,7 @@ class PostAdapter(
         holder.bind(context, presenter)
     }
 
-    class ViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view), PostView {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view), PostView {
         private val imageView: SquareImageView = view.item_post_image
         private val ratingTextView: TextView = view.item_post_rating
         private val commentView: ImageView = view.item_post_comment

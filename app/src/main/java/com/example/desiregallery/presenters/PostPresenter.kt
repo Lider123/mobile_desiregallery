@@ -18,7 +18,9 @@ class PostPresenter(
     private val view: PostView,
     private val post: Post = Post()
 ) {
-    private val TAG = PostPresenter::class.java.simpleName
+    companion object {
+        private val TAG = PostPresenter::class.java.simpleName
+    }
 
     fun setRating() {
         view.updateRating(post.getRating())
@@ -29,8 +31,7 @@ class PostPresenter(
         view.updateRating(post.getRating())
         DGNetwork.getService().updatePost(post.getId(), post).enqueue(object: Callback<Post> {
             override fun onFailure(call: Call<Post>, t: Throwable) {
-                Log.e(TAG, "Unable to update post ${post.getId()}")
-                t.printStackTrace()
+                Log.e(TAG, "Unable to update post ${post.getId()}: ${t.message}")
             }
 
             override fun onResponse(call: Call<Post>, response: Response<Post>) {

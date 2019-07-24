@@ -23,7 +23,9 @@ import com.example.desiregallery.ui.fragments.SettingsFragment
 
 
 class MainActivity : AppCompatActivity() {
-    private val TAG = MainActivity::class.java.simpleName
+    companion object {
+        private val TAG = MainActivity::class.java.simpleName
+    }
 
     private lateinit var drawerLayout: androidx.drawerlayout.widget.DrawerLayout
     private lateinit var navigationView: NavigationView
