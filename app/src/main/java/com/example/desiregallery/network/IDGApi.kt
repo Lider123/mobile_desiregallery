@@ -21,6 +21,9 @@ interface IDGApi {
     @POST("users")
     fun createUser(@Query("documentId") login: String, @Body user: User): Call<User>
 
+    @POST("posts")
+    fun createPost(@Query("documentId") id: String, @Body post: Post): Call<Post>
+
     @PATCH("users/{login}")
     fun updateUser(@Path("login") login: String, @Body user: User): Call<User>
 

@@ -3,14 +3,19 @@ package com.example.desiregallery.models
 import java.io.Serializable
 import java.net.MalformedURLException
 import java.net.URL
+import kotlin.random.Random
 
 class Post : Serializable {
 
-    private var id = ""
+    private var id: String
     private var imageUrl: URL? = null
     private var rating = 0f
     private var numOfRates = 0
     private var comments: List<String> = ArrayList()
+
+    init {
+        id = Random.nextLong(1e10.toLong()).toString()
+    }
 
     fun getId() = id
 
