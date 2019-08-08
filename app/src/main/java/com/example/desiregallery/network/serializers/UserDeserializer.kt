@@ -5,6 +5,7 @@ import com.google.gson.*
 
 import java.lang.reflect.Type
 
+
 class UserDeserializer : JsonDeserializer<User> {
     @Throws(JsonParseException::class)
     override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): User  {
@@ -23,11 +24,11 @@ class UserDeserializer : JsonDeserializer<User> {
 
         val photo = fieldsObject.getAsJsonObject("photo").get("stringValue").asString
 
-        return User(login, password).apply {
-            setEmail(email)
-            setGender(gender)
-            setBirthday(birthday)
-            setPhoto(photo)
+        return User(login, password).also {
+            it.email = email
+            it.gender = gender
+            it.birthday = birthday
+            it.photo = photo
         }
     }
 }

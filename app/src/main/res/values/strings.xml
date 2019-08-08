@@ -69,4 +69,5 @@
     <string name="item_post_rating_placeholder" translatable="false">0.0</string>
     <string name="item_post_rating_format" translatable="false">%1$.1f</string>
     <string name="date_format" translatable="false">%1$02d.%2$02d.%3$d</string>
+    <string name="datetime_format" translatable="false">dd.MM.yyyy HH:mm</string>
 </resources>

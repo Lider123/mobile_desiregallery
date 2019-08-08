@@ -1,19 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/item_comment_background"
+        android:layout_marginTop="@dimen/item_comment_margin"
+        android:layout_marginStart="@dimen/item_comment_margin"
+        android:layout_marginEnd="@dimen/item_comment_margin"
+        android:orientation="vertical">
 
     <TextView
-            android:id="@+id/item_comment_text_view"
+            android:id="@+id/item_comment_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/item_comment_background"
             android:textColor="@color/colorOnSurface"
-            android:layout_marginTop="@dimen/item_comment_margin"
-            android:layout_marginLeft="@dimen/item_comment_margin"
-            android:layout_marginRight="@dimen/item_comment_margin"
-            android:padding="16dp"
-            android:text="Comment text"/>
+            android:layout_margin="@dimen/item_comment_text_margin"
+            android:gravity="start"
+            tools:text="Comment text"/>
 
-</FrameLayout>
+    <TextView
+            android:id="@+id/item_comment_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/item_comment_time_margin"
+            android:gravity="end"
+            android:textColor="@color/colorCommentDatetime"
+            tools:text="00:00, 00.00.0000"/>
+
+</LinearLayout>

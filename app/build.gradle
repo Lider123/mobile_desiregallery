@@ -18,9 +18,13 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
+        debug {
+            resValue("bool", "FIREBASE_ANALYTICS_ENABLED", "false")
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            resValue("bool", "FIREBASE_ANALYTICS_ENABLED", "true")
         }
     }
     compileOptions {

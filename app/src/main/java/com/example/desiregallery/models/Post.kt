@@ -7,23 +7,11 @@ import kotlin.random.Random
 
 class Post : Serializable {
 
-    private var id: String
-    private var imageUrl: URL? = null
-    private var rating = 0f
-    private var numOfRates = 0
-    private var comments: List<String> = ArrayList()
-
-    init {
-        id = Random.nextLong(1e10.toLong()).toString()
-    }
-
-    fun getId() = id
-
-    fun setId(id: String) {
-        this.id = id
-    }
-
-    fun getImageUrl() = imageUrl
+    var id = Random.nextLong(1e10.toLong()).toString()
+    var imageUrl: URL? = null
+    var rating = 0f
+    var numOfRates = 0
+    var comments: List<Comment> = ArrayList()
 
     fun setImageUrl(imageUrl: String) {
         try {
@@ -32,24 +20,6 @@ class Post : Serializable {
         catch(e: MalformedURLException) {
             e.printStackTrace()
         }
-    }
-
-    fun getRating() = rating
-
-    fun setRating(rating: Float) {
-        this.rating = rating
-    }
-
-    fun getNumOfRates() = numOfRates
-
-    fun setNumOfRates(numOfRates: Int) {
-        this.numOfRates = numOfRates
-    }
-
-    fun getComments() = comments
-
-    fun setComments(comments: List<String>) {
-        this.comments = comments
     }
 
     fun updateRating(rate: Float) {

@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
             val headerTextView = headerView.findViewById<TextView>(R.id.nav_header_login)
             headerImageView = headerView.findViewById(R.id.nav_header_image)
             headerTextView.text = it.getLogin()
-            if (it.getPhoto().isNotEmpty())
+            if (it.photo.isNotEmpty())
                 updateNavHeaderPhoto()
         }
     }
@@ -129,6 +129,6 @@ class MainActivity : AppCompatActivity() {
     fun getCurrUser() = currUser
 
     fun updateNavHeaderPhoto() {
-        currUser?.let { headerImageView.setImageBitmap(Utils.base64ToBitmap(it.getPhoto())) }
+        currUser?.let { headerImageView.setImageBitmap(Utils.base64ToBitmap(it.photo)) }
     }
 }

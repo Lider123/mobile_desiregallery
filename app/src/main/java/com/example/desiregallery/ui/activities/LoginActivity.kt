@@ -78,7 +78,7 @@ class LoginActivity : AppCompatActivity() {
                     hideProgress()
                     return
                 }
-                if (user.getPassword() != password) {
+                if (user.password != password) {
                     Toast.makeText(applicationContext, R.string.invalid_password, Toast.LENGTH_SHORT).show()
                     hideProgress()
                     return

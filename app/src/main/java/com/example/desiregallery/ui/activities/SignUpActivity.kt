@@ -59,10 +59,10 @@ class SignUpActivity : AppCompatActivity() {
             }
 
             if (CheckLoginTask(applicationContext).execute(login).get()) {
-                registerUser(User(login, password).apply {
-                    setEmail(email)
-                    setGender(gender)
-                    setBirthday(birthday)
+                registerUser(User(login, password).also {
+                    it.email = email
+                    it.gender = gender
+                    it.birthday = birthday
                 })
             }
         }
