@@ -13,12 +13,6 @@ import android.widget.Toast
 import com.example.desiregallery.R
 import kotlinx.android.synthetic.main.activity_login.*
 import com.example.desiregallery.MainApplication
-import com.example.desiregallery.database.DGDatabase
-import com.example.desiregallery.models.User
-import com.example.desiregallery.network.DGNetwork
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 class LoginActivity : AppCompatActivity() {
@@ -34,8 +28,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         prefs = getSharedPreferences(MainApplication.APP_PREFERENCES, Context.MODE_PRIVATE)
-        val currUser = prefs.getString(MainApplication.PREFS_CURR_USER_KEY, null)
-        currUser?.let { goToMainActivity() }
+        // TODO: check saved token and go to MainActivity
 
         inputTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {}
@@ -51,12 +44,12 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun initListeners() {
-        input_login.addTextChangedListener(inputTextWatcher)
+        input_email.addTextChangedListener(inputTextWatcher)
         input_password.addTextChangedListener(inputTextWatcher)
         button_login.setOnClickListener {
-            val login = input_login.text.toString()
+            val email = input_email.text.toString()
             val password = input_password.text.toString()
-            login(login, password)
+            logIn(email, password)
         }
         link_sign_up.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
@@ -64,39 +57,23 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkForEmptyFields() {
-        button_login.isEnabled = input_login.text.toString().trim().isNotEmpty() && input_password.text.toString().trim().isNotEmpty()
+    private fun logIn(email: String, password: String) {
+        showProgress()
+        MainApplication.getAuth().signInWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
+            hideProgress()
+            if (task.isSuccessful) {
+                val user = MainApplication.getAuth().currentUser
+                Log.i(TAG, "User with email ${user?.email} successfully logged in")
+                goToMainActivity()
+            } else {
+                Log.w(TAG, "Failed to login: ", task.exception)
+                Toast.makeText(baseContext, getString(R.string.login_error, task.exception?.message), Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
-    private fun login(login: String, password: String) {
-        showProgress()
-        DGNetwork.getService().getUser(login).enqueue(object: Callback<User> {
-            override fun onResponse(call: Call<User>, response: Response<User>) {
-                val user = response.body()
-                user ?: run {
-                    Toast.makeText(applicationContext, R.string.invalid_login, Toast.LENGTH_SHORT).show()
-                    hideProgress()
-                    return
-                }
-                if (user.password != password) {
-                    Toast.makeText(applicationContext, R.string.invalid_password, Toast.LENGTH_SHORT).show()
-                    hideProgress()
-                    return
-                }
-
-                prefs.edit().putString(MainApplication.PREFS_CURR_USER_KEY, login).apply()
-                Log.d(TAG, String.format("User %s logged in", login))
-                DGDatabase.createUser(user)
-
-                hideProgress()
-                goToMainActivity()
-            }
-
-            override fun onFailure(call: Call<User>, t: Throwable) {
-                Toast.makeText(applicationContext, R.string.login_error, Toast.LENGTH_LONG).show()
-                Log.e(TAG, "Unable to log in: ${t.message}")
-            }
-        })
+    private fun checkForEmptyFields() {
+        button_login.isEnabled = input_email.text.toString().trim().isNotEmpty() && input_password.text.toString().trim().isNotEmpty()
     }
 
     private fun goToMainActivity() {
@@ -107,7 +84,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun showProgress() {
         login_progress.visibility = View.VISIBLE
-        input_login.isEnabled = false
+        input_email.isEnabled = false
         input_password.isEnabled = false
         link_sign_up.isEnabled = false
         button_login.isEnabled = false
@@ -115,7 +92,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun hideProgress() {
         login_progress.visibility = View.GONE
-        input_login.isEnabled = true
+        input_email.isEnabled = true
         input_password.isEnabled = true
         link_sign_up.isEnabled = true
         button_login.isEnabled = true

@@ -1,13 +1,20 @@
 package com.example.desiregallery.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.ui.dialogs.ChangePasswordDialog
 
 
 class SettingsFragment : PreferenceFragmentCompat() {
+
+    companion object {
+        private val TAG = SettingsFragment::class.java.simpleName
+    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.prefs)
@@ -16,7 +23,19 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
         return when (preference.key) {
             getString(R.string.pref_change_password_key) -> {
-                ChangePasswordDialog(activity!!).show()
+                val user = MainApplication.getAuth().currentUser
+                user?.let {
+                    MainApplication.getAuth().sendPasswordResetEmail(user.email!!).addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Log.i(TAG, "Message for password reset was sent to email ${user.email}")
+                            Toast.makeText(requireActivity(), R.string.reset_password_sent, Toast.LENGTH_LONG).show()
+                        }
+                        else {
+                            Log.i(TAG, "An error occurred while sending password reset email: ${task.exception?.message}")
+                            Toast.makeText(requireActivity(), R.string.reset_password_error, Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
                 true
             }
             else -> super.onPreferenceTreeClick(preference)

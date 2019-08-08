@@ -1,34 +1,38 @@
 package com.example.desiregallery.ui.fragments
 
 import android.app.Activity.RESULT_OK
-import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.appcompat.widget.Toolbar
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import com.example.desiregallery.R
-import com.example.desiregallery.database.DGDatabase
+import com.example.desiregallery.ui.activities.MainActivity
+import android.widget.ImageView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
+import com.example.desiregallery.MainApplication
+import com.example.desiregallery.Utils
 import com.example.desiregallery.models.User
 import com.example.desiregallery.network.DGNetwork
-import com.example.desiregallery.ui.activities.MainActivity
+import com.google.firebase.auth.UserProfileChangeRequest
+import com.squareup.picasso.Picasso
+import com.theartofdev.edmodo.cropper.CropImage
+import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.fragment_profile.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
-import android.widget.EditText
-import android.widget.ImageView
-import androidx.fragment.app.Fragment
-import com.example.desiregallery.Utils
-import com.theartofdev.edmodo.cropper.CropImage
-import kotlinx.android.synthetic.main.fragment_profile.*
 
 
 class ProfileFragment : Fragment() {
@@ -47,17 +51,15 @@ class ProfileFragment : Fragment() {
 
         val user = (activity as MainActivity).getCurrUser()
         user?.let {
-            toolbarProfile.title = it.getLogin()
-            fab.setOnClickListener { CropImage.activity().start(context!!, this) }
+            toolbarProfile.title = it.login
+            fab.setOnClickListener { CropImage.activity().start(requireContext(), this) }
 
             val notSpecified = getString(R.string.not_specified)
-            root.profile_email.text = if (it.email.isNotEmpty()) it.email else notSpecified
             root.profile_gender.text = if (it.gender.isNotEmpty()) it.gender else notSpecified
             root.profile_birthday.text = if (it.birthday.isNotEmpty()) it.birthday else notSpecified
             if (it.photo.isNotEmpty())
-                imageView.setImageBitmap(Utils.base64ToBitmap(it.photo))
+                Picasso.with(activity).load(it.photo).into(imageView)
 
-            root.profile_email_view.setOnClickListener { editEmail() }
             root.profile_gender_view.setOnClickListener { editGender() }
             root.profile_birthday_view.setOnClickListener { editBirthday() }
         }
@@ -71,18 +73,30 @@ class ProfileFragment : Fragment() {
             return
 
         user?.let {
-            DGDatabase.updateUser(it)
-            DGNetwork.getService().updateUser(it.getLogin(), it).enqueue(object: Callback<User> {
+            DGNetwork.getBaseService().updateUser(it.login, it).enqueue(object: Callback<User> {
                 override fun onFailure(call: Call<User>, t: Throwable) {
-                    Log.e(TAG, "Unable to update user ${it.getLogin()}: ${t.message}")
+                    Log.e(TAG, "Unable to update user ${it.login}: ${t.message}")
                 }
 
                 override fun onResponse(call: Call<User>, response: Response<User>) {
                     if (response.isSuccessful)
-                        Log.i(TAG, "User ${it.getLogin()} has been successfully updated")
+                        Log.i(TAG, "User ${it.login} has been successfully updated")
                 }
             })
         }
+
+        val firebaseUser = MainApplication.getAuth().currentUser
+        val profileUpdates = UserProfileChangeRequest.Builder()
+            .setDisplayName(user?.login)
+            .setPhotoUri(Uri.parse(user?.photo))
+            .build()
+        firebaseUser?.updateProfile(profileUpdates)?.addOnCompleteListener(requireActivity()) { task ->
+            if (task.isSuccessful)
+                Log.i(TAG, String.format("Data of user %s have successfully been saved to firebase auth", user?.login))
+            else
+                Log.e(TAG, "Unable to save user data to firebase auth: ${task.exception?.message}")
+        }
+
         infoChanged = false
     }
 
@@ -91,33 +105,29 @@ class ProfileFragment : Fragment() {
             val imageUri = CropImage.getActivityResult(data).uri
             val istream = activity!!.contentResolver.openInputStream(imageUri)
             val selectedImage = BitmapFactory.decodeStream(istream)
-            user?.photo = Utils.bitmapToBase64(selectedImage)
-            profile_image_backdrop.setImageBitmap(selectedImage)
-            (activity as MainActivity).updateNavHeaderPhoto()
-            infoChanged = true
-        }
-    }
 
-    private fun editEmail() {
-        val emailView = EditText(activity)
-        emailView.setText(user?.email)
+            val storage = MainApplication.getStorage()
+            val imageRef = storage.getReferenceFromUrl(MainApplication.STORAGE_URL).child("${MainApplication.STORAGE_PROFILE_IMAGES_DIR}/${user?.login}.jpg")
+            val uploadTask = imageRef.putBytes(Utils.bitmapToBytes(selectedImage))
+            uploadTask.addOnFailureListener { error ->
+                Log.e(TAG, "Failed to upload image for user ${user?.login}: ${error.message}")
+                Toast.makeText(activity, R.string.profile_image_upload_failure, Toast.LENGTH_LONG).show()
+            }.addOnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.e(TAG, "Image for user ${user?.login} has not been uploaded")
+                    Toast.makeText(activity, R.string.profile_image_upload_failure, Toast.LENGTH_LONG).show()
+                    return@addOnCompleteListener
+                }
 
-        val builder = AlertDialog.Builder(activity)
-        builder.setTitle(R.string.email_dialog_title)
-        builder.setView(emailView)
-        builder.setCancelable(true)
-        builder.setPositiveButton(getString(R.string.OK)) { dialog, _ ->
-            val email = emailView.text.toString()
-            if (email != user?.email) {
-                user?.email = email
-                profile_email.text = email
-                infoChanged = true
+                Log.i(TAG, "Image for user ${user?.login} successfully uploaded")
+                imageRef.downloadUrl.addOnCompleteListener { uriTask ->
+                    user?.photo = uriTask.result.toString()
+                    profile_image_backdrop.setImageBitmap(selectedImage)
+                    (activity as MainActivity).updateNavHeaderPhoto()
+                    infoChanged = true
+                }
             }
-            dialog.dismiss()
         }
-        builder.setNegativeButton(getString(R.string.Cancel)) { dialog, _ -> dialog.dismiss() }
-        val emailDialog = builder.create()
-        emailDialog.show()
     }
 
     private fun editBirthday() {
@@ -145,7 +155,7 @@ class ProfileFragment : Fragment() {
 
     private fun editGender() {
         val gender = user?.gender
-        val builder = AlertDialog.Builder(activity)
+        val builder = AlertDialog.Builder(requireActivity())
         builder.setTitle(R.string.gender_dialog_title)
         val values = resources.getStringArray(R.array.gender)
         val checkedItem = if (gender != null && gender.isNotEmpty()) values.indexOf(gender) else -1

@@ -5,21 +5,25 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.navigation.NavigationView
 import androidx.core.view.GravityCompat
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.Toolbar
-import android.util.Log
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.desiregallery.*
-import com.example.desiregallery.database.DGDatabase
 import com.example.desiregallery.models.User
+import com.example.desiregallery.network.DGNetwork
 import com.example.desiregallery.ui.fragments.FeedFragment
 import com.example.desiregallery.ui.fragments.ProfileFragment
 import com.example.desiregallery.ui.fragments.SettingsFragment
+import com.squareup.picasso.Picasso
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class MainActivity : AppCompatActivity() {
@@ -77,14 +81,6 @@ class MainActivity : AppCompatActivity() {
             drawerLayout.closeDrawers()
             return@setNavigationItemSelectedListener true
         }
-        currUser?.let {
-            val headerView = navigationView.getHeaderView(0)
-            val headerTextView = headerView.findViewById<TextView>(R.id.nav_header_login)
-            headerImageView = headerView.findViewById(R.id.nav_header_image)
-            headerTextView.text = it.getLogin()
-            if (it.photo.isNotEmpty())
-                updateNavHeaderPhoto()
-        }
     }
 
     private fun selectDrawerItem(menuItem: MenuItem) {
@@ -106,11 +102,33 @@ class MainActivity : AppCompatActivity() {
         toolbar.title = resources.getString(id)
     }
 
+    fun getCurrUser() = currUser
+
     private fun setCurrentUser() {
-        val currLogin = prefs.getString(MainApplication.PREFS_CURR_USER_KEY, null)
-        currLogin?.let {
-            currUser = DGDatabase.getUser(it)
-            Log.d(TAG, String.format("Current user is %s", currUser?.getLogin()))
+        MainApplication.getAuth().currentUser?.let {
+            DGNetwork.getBaseService().getUser(it.displayName!!).enqueue(object: Callback<User> {
+
+                override fun onFailure(call: Call<User>, t: Throwable) {
+                    Log.e(TAG, "Failed to get data for user ${it.displayName}: ${t.message}")
+                }
+
+                override fun onResponse(call: Call<User>, response: Response<User>) {
+                    response.body()?: run {
+                        Log.e(TAG, "Unable to get data for user ${it.displayName}: response received an empty body")
+                        return
+                    }
+
+                    currUser = response.body()
+                    Log.d(TAG, String.format("Got data for user ${it.displayName}"))
+
+                    val headerView = navigationView.getHeaderView(0)
+                    val headerTextView = headerView.findViewById<TextView>(R.id.nav_header_login)
+                    headerImageView = headerView.findViewById(R.id.nav_header_image)
+                    headerTextView.text = currUser?.login
+                    if (currUser?.photo!!.isNotEmpty())
+                        updateNavHeaderPhoto()
+                }
+            })
         }
     }
 
@@ -126,9 +144,7 @@ class MainActivity : AppCompatActivity() {
         navigationView.setCheckedItem(R.id.nav_feed)
     }
 
-    fun getCurrUser() = currUser
-
     fun updateNavHeaderPhoto() {
-        currUser?.let { headerImageView.setImageBitmap(Utils.base64ToBitmap(it.photo)) }
+        currUser?.let { Picasso.with(this).load(it.photo).into(headerImageView) }
     }
 }

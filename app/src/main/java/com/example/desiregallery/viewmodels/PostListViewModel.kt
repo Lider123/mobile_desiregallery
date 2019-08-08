@@ -24,7 +24,7 @@ class PostListViewModel : ViewModel() {
     fun getPosts() = posts
 
     fun loadPosts() {
-        val api = DGNetwork.getService()
+        val api = DGNetwork.getBaseService()
         api.getPosts().enqueue(object: Callback<List<Post>> {
             override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
                 if (response.isSuccessful) {
@@ -48,7 +48,7 @@ class PostListViewModel : ViewModel() {
         val currPosts = posts.value as MutableList
         currPosts.add(0, post)
         posts.value = currPosts
-        DGNetwork.getService().createPost(post.id, post).enqueue(object: Callback<Post> {
+        DGNetwork.getBaseService().createPost(post.id, post).enqueue(object: Callback<Post> {
             override fun onFailure(call: Call<Post>, t: Throwable) {
                 Log.e(TAG, "Unable to create post ${post.id}: ${t.message}")
             }

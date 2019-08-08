@@ -12,12 +12,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 object DGNetwork {
     private const val BASE_API = "https://firestore.googleapis.com/v1/projects/desiregallery-8072a/databases/(default)/documents/"
 
-    private var service: IDGApi? = null
+    private var baseService: IDGApi? = null
     private var gson: Gson? = null
 
-    fun getService(): IDGApi {
-        service?: run { initService() }
-        return service!!
+    fun getBaseService(): IDGApi {
+        baseService?: run { initBaseService() }
+        return baseService!!
     }
 
     private fun getGson(): Gson {
@@ -36,11 +36,11 @@ object DGNetwork {
         return gson!!
     }
 
-    private fun initService() {
+    private fun initBaseService() {
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_API)
             .addConverterFactory(GsonConverterFactory.create(getGson()))
             .build()
-        service = retrofit.create(IDGApi::class.java)
+        baseService = retrofit.create(IDGApi::class.java)
     }
 }

@@ -1,24 +1,27 @@
 package com.example.desiregallery.ui.activities
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
+import kotlinx.android.synthetic.main.activity_sign_up.*
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
+import com.example.desiregallery.MainApplication
+import com.example.desiregallery.R
 import com.example.desiregallery.models.User
 import com.example.desiregallery.network.DGNetwork
-import kotlinx.android.synthetic.main.activity_sign_up.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import android.os.AsyncTask
-import com.example.desiregallery.R
-import android.text.Editable
-import android.text.TextWatcher
-import java.lang.ref.WeakReference
+import com.google.firebase.auth.UserProfileChangeRequest
 
 
 class SignUpActivity : AppCompatActivity() {
+    companion object {
+        private val TAG = SignUpActivity::class.java.simpleName
+    }
+
     private lateinit var inputTextWatcher: TextWatcher
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +49,7 @@ class SignUpActivity : AppCompatActivity() {
         sign_up_input_password.addTextChangedListener(inputTextWatcher)
         sign_up_input_confirm.addTextChangedListener(inputTextWatcher)
         sign_up_button.setOnClickListener {
+            disableAll()
             val login = sign_up_input_login.text.toString()
             val email = sign_up_input_email.text.toString()
             val gender = sign_up_input_gender.text.toString()
@@ -55,16 +59,48 @@ class SignUpActivity : AppCompatActivity() {
 
             if (password != passwordConfirm) {
                 Toast.makeText(applicationContext, R.string.non_equal_passwords, Toast.LENGTH_SHORT).show()
+                enableAll()
                 return@setOnClickListener
             }
 
-            if (CheckLoginTask(applicationContext).execute(login).get()) {
-                registerUser(User(login, password).also {
-                    it.email = email
-                    it.gender = gender
-                    it.birthday = birthday
-                })
+            MainApplication.getAuth().createUserWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    Log.i(TAG, "User $login successfully signed up")
+                    saveUserInfo(User(email, password).also {
+                        it.login = login
+                        it.gender = gender
+                        it.birthday = birthday
+                    })
+                    enableAll()
+                    onBackPressed()
+                } else {
+                    Log.w(TAG, "Failed to sign up: ", task.exception)
+                    Toast.makeText(this, getString(R.string.sign_up_error, task.exception?.message), Toast.LENGTH_LONG).show()
+                    enableAll()
+                }
+
             }
+        }
+    }
+
+    private fun saveUserInfo(user: User) {
+        DGNetwork.getBaseService().createUser(user.login, user).enqueue(object: Callback<User> {
+            override fun onResponse(call: Call<User>, response: Response<User>) {
+                Log.i(TAG, String.format("Data of user %s have successfully been saved to firestore", user.login))
+            }
+
+            override fun onFailure(call: Call<User>, t: Throwable) {
+                Log.e(TAG, "Unable to save user data to firestore: ${t.message}")
+            }
+        })
+
+        val firebaseUser = MainApplication.getAuth().currentUser
+        val profileUpdates = UserProfileChangeRequest.Builder().setDisplayName(user.login).build()
+        firebaseUser?.updateProfile(profileUpdates)?.addOnCompleteListener(this) { task ->
+            if (task.isSuccessful)
+                Log.i(TAG, String.format("Data of user %s have successfully been saved to firebase auth", user.login))
+            else
+                Log.e(TAG, "Unable to save user data to firebase auth: ${task.exception?.message}")
         }
     }
 
@@ -79,47 +115,25 @@ class SignUpActivity : AppCompatActivity() {
         ).all { fieldIsValid(it) }
     }
 
+    private fun enableAll() {
+        sign_up_input_confirm.isEnabled = true
+        sign_up_input_password.isEnabled = true
+        sign_up_input_birthday.isEnabled = true
+        sign_up_input_gender.isEnabled = true
+        sign_up_input_email.isEnabled = true
+        sign_up_input_login.isEnabled = true
+        sign_up_button.isEnabled = true
+    }
+
+    private fun disableAll() {
+        sign_up_input_confirm.isEnabled = false
+        sign_up_input_password.isEnabled = false
+        sign_up_input_birthday.isEnabled = false
+        sign_up_input_gender.isEnabled = false
+        sign_up_input_email.isEnabled = false
+        sign_up_input_login.isEnabled = false
+        sign_up_button.isEnabled = false
+    }
+
     private fun fieldIsValid(field: String) = Regex("\\S+").matches(field)
-
-    private fun registerUser(user: User) {
-        DGNetwork.getService().createUser(user.getLogin(), user).enqueue(object: Callback<User> {
-            override fun onResponse(call: Call<User>, response: Response<User>) {
-                Log.i(TAG, String.format("User %s have successfully been signed up", user.getLogin()))
-                onBackPressed()
-            }
-
-            override fun onFailure(call: Call<User>, t: Throwable) {
-                Toast.makeText(applicationContext, R.string.sign_up_error, Toast.LENGTH_LONG).show()
-                Log.e(TAG, "Unable to sign up: ${t.message}")
-            }
-        })
-    }
-
-    companion object {
-        private val TAG = SignUpActivity::class.java.simpleName
-
-        internal class CheckLoginTask(context: Context) : AsyncTask<String, Void, Boolean>() {
-            private val contextRef = WeakReference<Context>(context)
-
-            override fun doInBackground(vararg params: String?): Boolean {
-                val response = DGNetwork.getService().getUsers().execute()
-                if (response.isSuccessful) {
-                    val users = response.body()
-                    users?.let {
-                        val logins = it.map { user -> user.getLogin() }
-                        if (params[0] in logins) {
-                            Toast.makeText(contextRef.get(), R.string.non_unique_login, Toast.LENGTH_SHORT).show()
-                            return false
-                        }
-                    }
-                }
-                else {
-                    Toast.makeText(contextRef.get(), R.string.sign_up_error, Toast.LENGTH_LONG).show()
-                    Log.e(TAG, "Unable to sign up")
-                    return false
-                }
-                return true
-            }
-        }
-    }
 }

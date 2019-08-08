@@ -30,7 +30,7 @@ class PostPresenter(
     fun updateRating(rate: Float) {
         post.updateRating(rate)
         view.updateRating(post.rating)
-        DGNetwork.getService().updatePost(post.id, post).enqueue(object: Callback<Post> {
+        DGNetwork.getBaseService().updatePost(post.id, post).enqueue(object: Callback<Post> {
             override fun onFailure(call: Call<Post>, t: Throwable) {
                 Log.e(TAG, "Unable to update post ${post.id}: ${t.message}")
             }

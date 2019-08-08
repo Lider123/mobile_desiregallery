@@ -111,14 +111,14 @@ object ModelGenerator {
     private fun initUsers(): List<User> {
         val users = ArrayList<User>()
 
-        var u = User("login1", "pass1")
-        u.email = "login1@example.com"
+        var u = User("login1@example.com", "pass1")
+        u.login = "login1"
         u.gender = "male"
         u.birthday = "01.01.1970"
         users.add(u)
 
-        u = User("login2", "pass2")
-        u.email = "login2@example.com"
+        u = User("login2@example.com", "pass2")
+        u.login = "login2"
         u.gender = "female"
         u.birthday = "21.12.2012"
         users.add(u)
@@ -126,7 +126,7 @@ object ModelGenerator {
         return users
     }
 
-    fun getUser(login: String): User? = users.findLast{ it.getLogin() == login }
+    fun getUser(login: String): User? = users.findLast{ it.login == login }
 
     fun getPost(id: String): Post? = posts.findLast{ it.id == id }
 }

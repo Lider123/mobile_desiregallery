@@ -24,8 +24,8 @@ class UserDeserializer : JsonDeserializer<User> {
 
         val photo = fieldsObject.getAsJsonObject("photo").get("stringValue").asString
 
-        return User(login, password).also {
-            it.email = email
+        return User(email, password).also {
+            it.login = login
             it.gender = gender
             it.birthday = birthday
             it.photo = photo

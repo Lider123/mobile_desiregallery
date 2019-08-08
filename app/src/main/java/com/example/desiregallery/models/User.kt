@@ -1,20 +1,14 @@
 package com.example.desiregallery.models
 
-import io.realm.RealmObject
-import io.realm.annotations.PrimaryKey
+class User(
+    val email: String,
+    val password: String
+) {
 
-open class User(
-    @PrimaryKey
-    private var login: String = "",
-    var password: String = ""
-): RealmObject() {
-
-    var email = ""
+    var login = ""
     var gender = ""
     var birthday = ""
     var photo = ""
-
-    fun getLogin() = login
 
     override fun equals(other: Any?): Boolean {
         if (this === other)
