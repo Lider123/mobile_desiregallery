@@ -49,11 +49,11 @@ class PostCreationDialog(private val activity: Activity, private val image: Bitm
         val storage = MainApplication.getStorage()
         val imageRef = storage.getReferenceFromUrl(MainApplication.STORAGE_URL).child("${MainApplication.STORAGE_POST_IMAGES_DIR}/${post.getId()}.jpg")
         val uploadTask = imageRef.putBytes(Utils.bitmapToBytes(image))
-        uploadTask.addOnFailureListener {
-            Log.e(TAG, "Failed to upload image for new post ${post.getId()}: ${it.message}")
+        uploadTask.addOnFailureListener { error ->
+            Log.e(TAG, "Failed to upload image for new post ${post.getId()}: ${error.message}")
             Toast.makeText(activity, R.string.post_image_upload_failure, Toast.LENGTH_LONG).show()
-        }.addOnCompleteListener { uploadTask ->
-            if (!uploadTask.isSuccessful) {
+        }.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
                 Log.e(TAG, "Image for new post ${post.getId()} has not been uploaded")
                 Toast.makeText(activity, R.string.post_image_upload_failure, Toast.LENGTH_LONG).show()
                 return@addOnCompleteListener

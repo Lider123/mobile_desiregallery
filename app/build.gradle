@@ -1,20 +1,16 @@
 apply plugin: 'com.android.application'
-
-apply plugin: 'kotlin-kapt'
-
-apply plugin: 'kotlin-android'
-
-apply plugin: 'kotlin-android-extensions'
-
-apply plugin: 'realm-android'
-
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'io.fabric'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.desiregallery"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -35,26 +31,28 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0-beta01'
     implementation "androidx.legacy:legacy-preference-v14:1.0.0"
-    implementation "androidx.preference:preference:1.0.0"
-    implementation 'com.google.android.material:material:1.1.0-alpha08'
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0-alpha02"
     implementation "androidx.lifecycle:lifecycle-viewmodel:2.2.0-alpha02"
-    implementation 'com.squareup.picasso:picasso:2.5.2'
-    implementation 'com.squareup.retrofit2:retrofit:2.6.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
+    implementation "androidx.preference:preference:1.0.0"
+    implementation 'androidx.recyclerview:recyclerview:1.1.0-beta02'
+    implementation 'com.google.android.material:material:1.1.0-alpha09'
     implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.google.firebase:firebase-analytics:17.0.1'
+    implementation 'com.google.firebase:firebase-core:17.0.1'
+    implementation 'com.google.firebase:firebase-storage:18.1.1'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.6.0'
     implementation 'de.hdodenhof:circleimageview:3.0.0'
-    implementation 'com.google.firebase:firebase-core:16.0.4'
-    implementation 'com.google.firebase:firebase-storage:18.1.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test:rules:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     androidTestImplementation "androidx.test.espresso:espresso-intents:3.2.0"
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
     api 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
 }
