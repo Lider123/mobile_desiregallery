@@ -51,11 +51,11 @@ class ProfileFragment : Fragment() {
             fab.setOnClickListener { CropImage.activity().start(context!!, this) }
 
             val notSpecified = getString(R.string.not_specified)
-            root.profile_email.text = if (it.getEmail().isNotEmpty()) it.getEmail() else notSpecified
-            root.profile_gender.text = if (it.getGender().isNotEmpty()) it.getGender() else notSpecified
-            root.profile_birthday.text = if (it.getBirthday().isNotEmpty()) it.getBirthday() else notSpecified
-            if (it.getPhoto().isNotEmpty())
-                imageView.setImageBitmap(Utils.base64ToBitmap(it.getPhoto()))
+            root.profile_email.text = if (it.email.isNotEmpty()) it.email else notSpecified
+            root.profile_gender.text = if (it.gender.isNotEmpty()) it.gender else notSpecified
+            root.profile_birthday.text = if (it.birthday.isNotEmpty()) it.birthday else notSpecified
+            if (it.photo.isNotEmpty())
+                imageView.setImageBitmap(Utils.base64ToBitmap(it.photo))
 
             root.profile_email_view.setOnClickListener { editEmail() }
             root.profile_gender_view.setOnClickListener { editGender() }
@@ -91,7 +91,7 @@ class ProfileFragment : Fragment() {
             val imageUri = CropImage.getActivityResult(data).uri
             val istream = activity!!.contentResolver.openInputStream(imageUri)
             val selectedImage = BitmapFactory.decodeStream(istream)
-            user?.setPhoto(Utils.bitmapToBase64(selectedImage))
+            user?.photo = Utils.bitmapToBase64(selectedImage)
             profile_image_backdrop.setImageBitmap(selectedImage)
             (activity as MainActivity).updateNavHeaderPhoto()
             infoChanged = true
@@ -100,7 +100,7 @@ class ProfileFragment : Fragment() {
 
     private fun editEmail() {
         val emailView = EditText(activity)
-        emailView.setText(user?.getEmail())
+        emailView.setText(user?.email)
 
         val builder = AlertDialog.Builder(activity)
         builder.setTitle(R.string.email_dialog_title)
@@ -108,8 +108,8 @@ class ProfileFragment : Fragment() {
         builder.setCancelable(true)
         builder.setPositiveButton(getString(R.string.OK)) { dialog, _ ->
             val email = emailView.text.toString()
-            if (email != user?.getEmail()) {
-                user?.setEmail(email)
+            if (email != user?.email) {
+                user?.email = email
                 profile_email.text = email
                 infoChanged = true
             }
@@ -121,7 +121,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun editBirthday() {
-        val currBirthday = user?.getBirthday()
+        val currBirthday = user?.birthday
         val cal = Calendar.getInstance()
         if (currBirthday != null && currBirthday.isNotEmpty()) {
             val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
@@ -130,8 +130,8 @@ class ProfileFragment : Fragment() {
 
         val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
             val birthday = getString(R.string.date_format, dayOfMonth, monthOfYear+1, year)
-            if (birthday != user?.getBirthday()) {
-                user?.setBirthday(birthday)
+            if (birthday != user?.birthday) {
+                user?.birthday = birthday
                 profile_birthday.text = birthday
                 infoChanged = true
             }
@@ -144,14 +144,14 @@ class ProfileFragment : Fragment() {
     }
 
     private fun editGender() {
-        val gender = user?.getGender()
+        val gender = user?.gender
         val builder = AlertDialog.Builder(activity)
         builder.setTitle(R.string.gender_dialog_title)
         val values = resources.getStringArray(R.array.gender)
         val checkedItem = if (gender != null && gender.isNotEmpty()) values.indexOf(gender) else -1
 
         builder.setSingleChoiceItems(values, checkedItem) { dialog, item ->
-            user?.setGender(values[item])
+            user?.gender = values[item]
             profile_gender.text = values[item]
             infoChanged = true
             dialog.dismiss()

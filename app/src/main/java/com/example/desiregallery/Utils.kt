@@ -3,15 +3,19 @@ package com.example.desiregallery
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.app.Activity
+import android.content.Context
 import android.os.Environment
 import android.util.Base64
 import android.view.inputmethod.InputMethodManager
 import android.util.Log
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -61,5 +65,11 @@ object Utils {
     fun base64ToBitmap(str: String): Bitmap {
         val decodedBytes = Base64.decode(str, Base64.DEFAULT)
         return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+    }
+
+    fun formatDate(context: Context, datetime: Long): String {
+        val format = context.getString(R.string.datetime_format)
+        val formatter = SimpleDateFormat(format, Locale.getDefault())
+        return formatter.format(datetime)
     }
 }

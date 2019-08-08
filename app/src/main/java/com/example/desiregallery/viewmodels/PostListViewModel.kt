@@ -9,6 +9,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+
 class PostListViewModel : ViewModel() {
     companion object {
         private val TAG = PostListViewModel::class.java.simpleName
@@ -47,16 +48,16 @@ class PostListViewModel : ViewModel() {
         val currPosts = posts.value as MutableList
         currPosts.add(0, post)
         posts.value = currPosts
-        DGNetwork.getService().createPost(post.getId(), post).enqueue(object: Callback<Post> {
+        DGNetwork.getService().createPost(post.id, post).enqueue(object: Callback<Post> {
             override fun onFailure(call: Call<Post>, t: Throwable) {
-                Log.e(TAG, "Unable to create post ${post.getId()}: ${t.message}")
+                Log.e(TAG, "Unable to create post ${post.id}: ${t.message}")
             }
 
             override fun onResponse(call: Call<Post>, response: Response<Post>) {
                 if (!response.isSuccessful)
-                    Log.e(TAG, "Unable to create post ${post.getId()}: received response with code ${response.code()}")
+                    Log.e(TAG, "Unable to create post ${post.id}: received response with code ${response.code()}")
                 else
-                    Log.i(TAG, "Post ${post.getId()} successfully created")
+                    Log.i(TAG, "Post ${post.id} successfully created")
             }
         })
     }

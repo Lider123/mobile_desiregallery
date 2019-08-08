@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.desiregallery.R
 import com.example.desiregallery.Utils
 import com.example.desiregallery.adapters.CommentsAdapter
+import com.example.desiregallery.models.Comment
 import com.example.desiregallery.models.Post
 import kotlinx.android.synthetic.main.activity_comments.*
 import kotlinx.android.synthetic.main.toolbar_comments.*
@@ -32,7 +33,7 @@ class CommentsActivity : AppCompatActivity() {
         post = intent.getSerializableExtra(EXTRA_POST) as Post
 
         comments_list.layoutManager = LinearLayoutManager(this)
-        adapter = CommentsAdapter(post.getComments(), this)
+        adapter = CommentsAdapter(post.comments, this)
         comments_list.adapter = adapter
     }
 
@@ -41,9 +42,9 @@ class CommentsActivity : AppCompatActivity() {
         comments_input.clearFocus()
         Utils.hideSoftKeyboard(this)
 
-        val comments = post.getComments() as ArrayList
-        comments.add(text)
-        post.setComments(comments)
+        val comments = post.comments as ArrayList
+        comments.add(Comment(text))
+        post.comments = comments
         adapter.notifyItemInserted(comments.lastIndex)
     }
 }

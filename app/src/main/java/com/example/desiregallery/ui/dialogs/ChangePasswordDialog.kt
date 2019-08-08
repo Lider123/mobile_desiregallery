@@ -33,7 +33,7 @@ class ChangePasswordDialog(private val activity: Activity) : AlertDialog(activit
         setButton(DialogInterface.BUTTON_NEGATIVE, context.getString(R.string.Cancel)) { _, _ -> handleCancel() }
         setCancelable(false)
 
-        currentPassword = (activity as MainActivity).getCurrUser()?.getPassword()
+        currentPassword = (activity as MainActivity).getCurrUser()?.password
 
         super.onCreate(savedInstanceState)
     }
@@ -61,7 +61,7 @@ class ChangePasswordDialog(private val activity: Activity) : AlertDialog(activit
     private fun updatePassword() {
         val user = (activity as MainActivity).getCurrUser()
         user?.let {
-            it.setPassword(dialog_password_new.text.toString())
+            it.password = dialog_password_new.text.toString()
             DGDatabase.updateUser(it)
             DGNetwork.getService().updateUser(it.getLogin(), it).enqueue(object: Callback<User> {
                 override fun onFailure(call: Call<User>, t: Throwable) {

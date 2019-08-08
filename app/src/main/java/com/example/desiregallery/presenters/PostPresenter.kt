@@ -14,6 +14,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+
 class PostPresenter(
     private val view: PostView,
     private val post: Post = Post()
@@ -23,26 +24,26 @@ class PostPresenter(
     }
 
     fun setRating() {
-        view.updateRating(post.getRating())
+        view.updateRating(post.rating)
     }
 
     fun updateRating(rate: Float) {
         post.updateRating(rate)
-        view.updateRating(post.getRating())
-        DGNetwork.getService().updatePost(post.getId(), post).enqueue(object: Callback<Post> {
+        view.updateRating(post.rating)
+        DGNetwork.getService().updatePost(post.id, post).enqueue(object: Callback<Post> {
             override fun onFailure(call: Call<Post>, t: Throwable) {
-                Log.e(TAG, "Unable to update post ${post.getId()}: ${t.message}")
+                Log.e(TAG, "Unable to update post ${post.id}: ${t.message}")
             }
 
             override fun onResponse(call: Call<Post>, response: Response<Post>) {
                 if (response.isSuccessful)
-                    Log.i(TAG, "Post ${post.getId()} has been successfully updated")
+                    Log.i(TAG, "Post ${post.id} has been successfully updated")
             }
         })
     }
 
     fun setImageView() {
-        view.updateImage(post.getImageUrl().toString())
+        view.updateImage(post.imageUrl.toString())
     }
 
     fun goToCommentActivity(context: Context) {

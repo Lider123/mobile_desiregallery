@@ -6,8 +6,10 @@
     <dimen name="item_rating_font_size">18sp</dimen>
 
     <dimen name="comments_input_view_padding">10dp</dimen>
-    <dimen name="item_comment_margin">8dp</dimen>
+    <dimen name="item_comment_margin">16dp</dimen>
     <dimen name="item_comment_corners_radius">4dp</dimen>
+    <dimen name="item_comment_text_margin">12dp</dimen>
+    <dimen name="item_comment_time_margin">4dp</dimen>
 
     <dimen name="button_corners_radius">4dp</dimen>
     <dimen name="edit_text_corners_radius">4dp</dimen>

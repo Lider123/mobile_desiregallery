@@ -47,19 +47,19 @@ class PostCreationDialog(private val activity: Activity, private val image: Bitm
         content.dialog_post_progress.visibility = View.VISIBLE
         val post = Post()
         val storage = MainApplication.getStorage()
-        val imageRef = storage.getReferenceFromUrl(MainApplication.STORAGE_URL).child("${MainApplication.STORAGE_POST_IMAGES_DIR}/${post.getId()}.jpg")
+        val imageRef = storage.getReferenceFromUrl(MainApplication.STORAGE_URL).child("${MainApplication.STORAGE_POST_IMAGES_DIR}/${post.id}.jpg")
         val uploadTask = imageRef.putBytes(Utils.bitmapToBytes(image))
         uploadTask.addOnFailureListener { error ->
-            Log.e(TAG, "Failed to upload image for new post ${post.getId()}: ${error.message}")
+            Log.e(TAG, "Failed to upload image for new post ${post.id}: ${error.message}")
             Toast.makeText(activity, R.string.post_image_upload_failure, Toast.LENGTH_LONG).show()
         }.addOnCompleteListener { task ->
             if (!task.isSuccessful) {
-                Log.e(TAG, "Image for new post ${post.getId()} has not been uploaded")
+                Log.e(TAG, "Image for new post ${post.id} has not been uploaded")
                 Toast.makeText(activity, R.string.post_image_upload_failure, Toast.LENGTH_LONG).show()
                 return@addOnCompleteListener
             }
 
-            Log.i(TAG, "Image for new post ${post.getId()} successfully uploaded")
+            Log.i(TAG, "Image for new post ${post.id} successfully uploaded")
             imageRef.downloadUrl.addOnCompleteListener { uriTask ->
                 post.setImageUrl(uriTask.result.toString())
                 onPublish(post)

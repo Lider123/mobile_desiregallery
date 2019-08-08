@@ -6,45 +6,15 @@ import io.realm.annotations.PrimaryKey
 open class User(
     @PrimaryKey
     private var login: String = "",
-    private var password: String = ""
+    var password: String = ""
 ): RealmObject() {
 
-    private var email = ""
-    private var gender = ""
-    private var birthday = ""
-    private var photo = ""
+    var email = ""
+    var gender = ""
+    var birthday = ""
+    var photo = ""
 
     fun getLogin() = login
-
-    fun getPassword() = password
-
-    fun setPassword(password: String) {
-        this.password = password
-    }
-
-    fun getEmail() = email
-
-    fun setEmail(email: String) {
-        this.email = email
-    }
-
-    fun getGender() = gender
-
-    fun setGender(gender: String) {
-        this.gender = gender
-    }
-
-    fun getBirthday() = birthday
-
-    fun setBirthday(birthday: String) {
-        this.birthday = birthday
-    }
-
-    fun setPhoto(photo: String) {
-        this.photo = photo
-    }
-
-    fun getPhoto() = photo
 
     override fun equals(other: Any?): Boolean {
         if (this === other)
