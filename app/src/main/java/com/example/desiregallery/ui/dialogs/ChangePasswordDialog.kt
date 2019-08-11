@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.example.desiregallery.database.DGDatabase
-import com.example.desiregallery.models.User
 import com.example.desiregallery.network.DGNetwork
 import com.example.desiregallery.ui.activities.MainActivity
 import kotlinx.android.synthetic.main.dialog_change_password.*
@@ -18,6 +17,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
+@Deprecated("Restore password via email")
 class ChangePasswordDialog(private val activity: Activity) : AlertDialog(activity) {
     companion object {
         private val TAG = ChangePasswordDialog::class.java.simpleName
@@ -33,7 +33,7 @@ class ChangePasswordDialog(private val activity: Activity) : AlertDialog(activit
         setButton(DialogInterface.BUTTON_NEGATIVE, context.getString(R.string.Cancel)) { _, _ -> handleCancel() }
         setCancelable(false)
 
-        currentPassword = (activity as MainActivity).getCurrUser()?.password
+        //currentPassword = (activity as MainActivity).getCurrUser()?.password
 
         super.onCreate(savedInstanceState)
     }
@@ -59,11 +59,11 @@ class ChangePasswordDialog(private val activity: Activity) : AlertDialog(activit
     }
 
     private fun updatePassword() {
-        val user = (activity as MainActivity).getCurrUser()
+        /*val user = (activity as MainActivity).getCurrUser()
         user?.let {
             it.password = dialog_password_new.text.toString()
             DGDatabase.updateUser(it)
-            DGNetwork.getService().updateUser(it.getLogin(), it).enqueue(object: Callback<User> {
+            DGNetwork.getBaseService().updateUser(it.getLogin(), it).enqueue(object: Callback<User> {
                 override fun onFailure(call: Call<User>, t: Throwable) {
                     Log.e(TAG, "Unable to update user ${it.getLogin()}: ${t.message}")
                 }
@@ -73,7 +73,7 @@ class ChangePasswordDialog(private val activity: Activity) : AlertDialog(activit
                         Log.i(TAG, "User ${it.getLogin()} has been successfully updated")
                 }
             })
-        }
+        }*/
     }
 
     private fun handleCancel() = dismiss()
