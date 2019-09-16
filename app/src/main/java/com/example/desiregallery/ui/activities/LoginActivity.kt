@@ -1,8 +1,6 @@
 package com.example.desiregallery.ui.activities
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -13,6 +11,13 @@ import android.widget.Toast
 import com.example.desiregallery.R
 import kotlinx.android.synthetic.main.activity_login.*
 import com.example.desiregallery.MainApplication
+import com.example.desiregallery.auth.AuthMethod
+import com.example.desiregallery.sharedprefs.PreferencesHelper
+import com.vk.sdk.VKAccessToken
+import com.vk.sdk.VKCallback
+import com.vk.sdk.VKScope
+import com.vk.sdk.VKSdk
+import com.vk.sdk.api.VKError
 
 
 class LoginActivity : AppCompatActivity() {
@@ -20,15 +25,11 @@ class LoginActivity : AppCompatActivity() {
         private val TAG = LoginActivity::class.java.simpleName
     }
 
-    private lateinit var prefs: SharedPreferences
     private lateinit var inputTextWatcher: TextWatcher
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
-        prefs = getSharedPreferences(MainApplication.APP_PREFERENCES, Context.MODE_PRIVATE)
-        // TODO: check saved token and go to MainActivity
 
         inputTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {}
@@ -43,6 +44,23 @@ class LoginActivity : AppCompatActivity() {
         initListeners()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (!VKSdk.onActivityResult(requestCode, resultCode, data, object: VKCallback<VKAccessToken> {
+
+                override fun onResult(res: VKAccessToken?) {
+                    Log.i(TAG, "Successfully logged in with vk")
+                    PreferencesHelper(this@LoginActivity).setAuthMethod(AuthMethod.VK)
+                    goToMainActivity()
+                }
+
+                override fun onError(error: VKError?) {
+                    Log.e(TAG, "Failed to log in with vk")
+                }
+            })) {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
     private fun initListeners() {
         input_email.addTextChangedListener(inputTextWatcher)
         input_password.addTextChangedListener(inputTextWatcher)
@@ -51,6 +69,7 @@ class LoginActivity : AppCompatActivity() {
             val password = input_password.text.toString()
             logIn(email, password)
         }
+        button_login_vk.setOnClickListener { VKSdk.login(this, VKScope.FRIENDS, VKScope.OFFLINE) }
         link_sign_up.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
@@ -63,7 +82,8 @@ class LoginActivity : AppCompatActivity() {
             hideProgress()
             if (task.isSuccessful) {
                 val user = MainApplication.getAuth().currentUser
-                Log.i(TAG, "User with email ${user?.email} successfully logged in")
+                Log.i(TAG, "VKUser with email ${user?.email} successfully logged in")
+                PreferencesHelper(this).setAuthMethod(AuthMethod.EMAIL)
                 goToMainActivity()
             } else {
                 Log.w(TAG, "Failed to login: ", task.exception)

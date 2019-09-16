@@ -4,8 +4,10 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="32dp"
-        android:paddingRight="32dp"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:background="@color/colorPrimaryDark"
         tools:context=".ui.activities.LoginActivity">
     <LinearLayout
@@ -40,12 +42,12 @@
 
         <Button
                 android:id="@+id/button_login"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/Login"
                 style="@style/CustomButton"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="16dp"/>
 
         <TextView
                 android:text="@string/SignUp"
@@ -58,6 +60,17 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:layout_marginBottom="32dp"/>
+
+        <Button
+                android:id="@+id/button_login_vk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/Login_with_VK"
+                android:drawableStart="@drawable/vk"
+                android:drawableLeft="@drawable/vk"
+                android:layout_marginBottom="8dp"
+                style="@style/VKButton"/>
     </LinearLayout>
     <ProgressBar
             android:id="@+id/login_progress"

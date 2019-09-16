@@ -1,8 +1,6 @@
 package com.example.desiregallery.ui.activities
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -15,16 +13,23 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.desiregallery.*
+import com.example.desiregallery.auth.AuthMethod
+import com.example.desiregallery.auth.EmailAccount
+import com.example.desiregallery.auth.IAccount
+import com.example.desiregallery.auth.VKAccount
 import com.example.desiregallery.models.User
 import com.example.desiregallery.network.DGNetwork
+import com.example.desiregallery.sharedprefs.PreferencesHelper
 import com.example.desiregallery.ui.fragments.FeedFragment
 import com.example.desiregallery.ui.fragments.ProfileFragment
 import com.example.desiregallery.ui.fragments.SettingsFragment
 import com.squareup.picasso.Picasso
+import com.vk.sdk.api.*
+import com.vk.sdk.api.model.VKApiUser
+import com.vk.sdk.api.model.VKList
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
 
 class MainActivity : AppCompatActivity() {
     companion object {
@@ -36,13 +41,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var headerImageView: ImageView
     private lateinit var toolbar: Toolbar
 
-    private lateinit var prefs: SharedPreferences
-    private var currUser: User? = null
+    private lateinit var currAccount: IAccount
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        prefs = getSharedPreferences(MainApplication.APP_PREFERENCES, Context.MODE_PRIVATE)
 
         setCurrentUser()
         setToolbar()
@@ -102,9 +105,16 @@ class MainActivity : AppCompatActivity() {
         toolbar.title = resources.getString(id)
     }
 
-    fun getCurrUser() = currUser
+    fun getCurrAccount() = currAccount
 
     private fun setCurrentUser() {
+        when (PreferencesHelper(this).getAuthMethod()) {
+            AuthMethod.EMAIL -> setCurrentEmailUser()
+            AuthMethod.VK -> setCurrentVKUser()
+        }
+    }
+
+    private fun setCurrentEmailUser() {
         MainApplication.getAuth().currentUser?.let {
             DGNetwork.getBaseService().getUser(it.displayName!!).enqueue(object: Callback<User> {
 
@@ -113,27 +123,57 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onResponse(call: Call<User>, response: Response<User>) {
-                    response.body()?: run {
+                    val user = response.body()
+                    user?: run {
                         Log.e(TAG, "Unable to get data for user ${it.displayName}: response received an empty body")
                         return
                     }
 
-                    currUser = response.body()
-                    Log.d(TAG, String.format("Got data for user ${it.displayName}"))
+                    currAccount = EmailAccount(user)
+                    Log.d(TAG, String.format("Got data for user ${currAccount.getDisplayName()}"))
 
                     val headerView = navigationView.getHeaderView(0)
                     val headerTextView = headerView.findViewById<TextView>(R.id.nav_header_login)
                     headerImageView = headerView.findViewById(R.id.nav_header_image)
-                    headerTextView.text = currUser?.login
-                    if (currUser?.photo!!.isNotEmpty())
+                    headerTextView.text = currAccount.getDisplayName()
+                    if (currAccount.getPhotoUrl().isNotEmpty())
                         updateNavHeaderPhoto()
                 }
             })
         }
     }
 
+    private fun setCurrentVKUser() {
+        VKApi.users().get(VKParameters.from(VKApiConst.FIELDS, "photo_max,sex,bdate")).executeWithListener(object: VKRequest.VKRequestListener() {
+
+            override fun onComplete(response: VKResponse?) {
+                super.onComplete(response)
+                response?: run {
+                    Log.e(TAG, "Failed to get response for user info")
+                    return
+                }
+
+                val user: VKApiUser = (response.parsedModel as VKList<*>)[0] as VKApiUser
+                currAccount = VKAccount(user)
+                Log.d(TAG, String.format("Got data for user ${currAccount.getDisplayName()}"))
+
+                val headerView = navigationView.getHeaderView(0)
+                val headerTextView = headerView.findViewById<TextView>(R.id.nav_header_login)
+                headerImageView = headerView.findViewById(R.id.nav_header_image)
+                headerTextView.text = currAccount.getDisplayName()
+                if (currAccount.getPhotoUrl().isNotEmpty())
+                    updateNavHeaderPhoto()
+            }
+
+            override fun onError(error: VKError?) {
+                super.onError(error)
+                Log.e(TAG, "There was an error with code ${error?.errorCode} while getting user info: ${error?.errorMessage}")
+            }
+        })
+    }
+
     private fun handleLogout() {
-        prefs.edit().remove(MainApplication.PREFS_CURR_USER_KEY).apply()
+        PreferencesHelper(this).clearAuthMethod()
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         finish()
@@ -145,6 +185,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun updateNavHeaderPhoto() {
-        currUser?.let { Picasso.with(this).load(it.photo).into(headerImageView) }
+        Picasso.with(this).load(currAccount.getPhotoUrl()).into(headerImageView)
     }
 }

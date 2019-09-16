@@ -9,13 +9,11 @@ import android.util.Base64
 import android.view.inputmethod.InputMethodManager
 import android.util.Log
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 

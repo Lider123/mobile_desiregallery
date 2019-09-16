@@ -7,6 +7,10 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
 
+def vkPropertiesFile = rootProject.file("app/vk.properties")
+def vkProperties = new Properties()
+vkProperties.load(new FileInputStream(vkPropertiesFile))
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -22,11 +26,13 @@ android {
     buildTypes {
         debug {
             resValue("bool", "FIREBASE_ANALYTICS_ENABLED", "false")
+            resValue("integer", "VK_APP_ID", vkProperties["APP_ID"])
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             resValue("bool", "FIREBASE_ANALYTICS_ENABLED", "true")
+            resValue("integer", "VK_APP_ID", vkProperties["APP_ID"])
         }
     }
     compileOptions {
@@ -55,6 +61,7 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
     implementation 'com.squareup.retrofit2:retrofit:2.6.0'
+    implementation 'com.vk:androidsdk:1.6.5'
     implementation 'de.hdodenhof:circleimageview:3.0.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     testImplementation 'junit:junit:4.12'
