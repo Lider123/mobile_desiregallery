@@ -65,7 +65,7 @@ class SignUpActivity : AppCompatActivity() {
 
             MainApplication.getAuth().createUserWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    Log.i(TAG, "User $login successfully signed up")
+                    Log.i(TAG, "VKUser $login successfully signed up")
                     saveUserInfo(User(email, password).also {
                         it.login = login
                         it.gender = gender

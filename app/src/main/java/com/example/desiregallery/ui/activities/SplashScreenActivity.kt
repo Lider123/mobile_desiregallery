@@ -1,31 +1,38 @@
 package com.example.desiregallery.ui.activities
 
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
+import com.example.desiregallery.sharedprefs.PreferencesHelper
 
 class SplashScreenActivity : AppCompatActivity() {
     companion object {
-        private var TIMEOUT = 3000L
+        private var TIMEOUT = 2500L
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
-        val prefs = getSharedPreferences(MainApplication.APP_PREFERENCES, Context.MODE_PRIVATE)
-        if (prefs.contains(MainApplication.PREFS_CURR_USER_KEY))
-            TIMEOUT = 1000L
-
-        val r = Runnable {
-            val i = Intent(applicationContext, LoginActivity::class.java)
-            startActivity(i)
-            finish()
+        if (PreferencesHelper(this).hasAuthMethod())
+            goToMainActivity()
+        else {
+            val r = Runnable(this::goToLoginActivity)
+            Handler().postDelayed(r, TIMEOUT)
         }
-        Handler().postDelayed(r, TIMEOUT)
+    }
+
+    private fun goToLoginActivity() {
+        val intent = Intent(applicationContext, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun goToMainActivity() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }

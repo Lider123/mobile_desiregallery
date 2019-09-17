@@ -12,7 +12,6 @@ import androidx.appcompat.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import com.example.desiregallery.R
 import com.example.desiregallery.ui.activities.MainActivity
 import android.widget.ImageView
@@ -21,6 +20,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.Utils
+import com.example.desiregallery.auth.EmailAccount
+import com.example.desiregallery.auth.IAccount
 import com.example.desiregallery.models.User
 import com.example.desiregallery.network.DGNetwork
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -41,7 +42,7 @@ class ProfileFragment : Fragment() {
     }
 
     private var infoChanged = false
-    private var user: User? = null
+    private lateinit var account: IAccount
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_profile, container, false)
@@ -49,21 +50,23 @@ class ProfileFragment : Fragment() {
         val imageView = root.findViewById<ImageView>(R.id.profile_image_backdrop)
         val fab = root.findViewById<FloatingActionButton>(R.id.profile_fab)
 
-        val user = (activity as MainActivity).getCurrUser()
-        user?.let {
-            toolbarProfile.title = it.login
+        account = (activity as MainActivity).getCurrAccount()
+        toolbarProfile.title = account.getDisplayName()
+
+        val notSpecified = getString(R.string.not_specified)
+        root.profile_gender.text = if (account.getGender().isNotEmpty()) account.getGender() else notSpecified
+        root.profile_birthday.text = if (account.getBirthday().isNotEmpty()) account.getBirthday() else notSpecified
+        if (account.getPhotoUrl().isNotEmpty())
+            Picasso.with(activity).load(account.getPhotoUrl()).into(imageView)
+
+        if (account is EmailAccount) {
             fab.setOnClickListener { CropImage.activity().start(requireContext(), this) }
-
-            val notSpecified = getString(R.string.not_specified)
-            root.profile_gender.text = if (it.gender.isNotEmpty()) it.gender else notSpecified
-            root.profile_birthday.text = if (it.birthday.isNotEmpty()) it.birthday else notSpecified
-            if (it.photo.isNotEmpty())
-                Picasso.with(activity).load(it.photo).into(imageView)
-
             root.profile_gender_view.setOnClickListener { editGender() }
             root.profile_birthday_view.setOnClickListener { editBirthday() }
         }
-        this.user = user
+        else
+            fab.visibility = View.GONE
+
         return root
     }
 
@@ -72,29 +75,30 @@ class ProfileFragment : Fragment() {
         if (!infoChanged)
             return
 
-        user?.let {
-            DGNetwork.getBaseService().updateUser(it.login, it).enqueue(object: Callback<User> {
+        if (account is EmailAccount) {
+            val emailUser = (account as EmailAccount).user
+            DGNetwork.getBaseService().updateUser(emailUser.login, emailUser).enqueue(object: Callback<User> {
                 override fun onFailure(call: Call<User>, t: Throwable) {
-                    Log.e(TAG, "Unable to update user ${it.login}: ${t.message}")
+                    Log.e(TAG, "Unable to update user ${emailUser.login}: ${t.message}")
                 }
 
                 override fun onResponse(call: Call<User>, response: Response<User>) {
                     if (response.isSuccessful)
-                        Log.i(TAG, "User ${it.login} has been successfully updated")
+                        Log.i(TAG, "VKUser ${emailUser.login} has been successfully updated")
                 }
             })
-        }
 
-        val firebaseUser = MainApplication.getAuth().currentUser
-        val profileUpdates = UserProfileChangeRequest.Builder()
-            .setDisplayName(user?.login)
-            .setPhotoUri(Uri.parse(user?.photo))
-            .build()
-        firebaseUser?.updateProfile(profileUpdates)?.addOnCompleteListener(requireActivity()) { task ->
-            if (task.isSuccessful)
-                Log.i(TAG, String.format("Data of user %s have successfully been saved to firebase auth", user?.login))
-            else
-                Log.e(TAG, "Unable to save user data to firebase auth: ${task.exception?.message}")
+            val firebaseUser = MainApplication.getAuth().currentUser
+            val profileUpdates = UserProfileChangeRequest.Builder()
+                .setDisplayName(emailUser.login)
+                .setPhotoUri(Uri.parse(emailUser.photo))
+                .build()
+            firebaseUser?.updateProfile(profileUpdates)?.addOnCompleteListener(requireActivity()) { task ->
+                if (task.isSuccessful)
+                    Log.i(TAG, String.format("Data of user %s have successfully been saved to firebase auth", emailUser.login))
+                else
+                    Log.e(TAG, "Unable to save user data to firebase auth: ${task.exception?.message}")
+            }
         }
 
         infoChanged = false
@@ -102,26 +106,31 @@ class ProfileFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            if (account !is EmailAccount)
+                return
+
+            val emailUser = (account as EmailAccount).user
+
             val imageUri = CropImage.getActivityResult(data).uri
             val istream = activity!!.contentResolver.openInputStream(imageUri)
             val selectedImage = BitmapFactory.decodeStream(istream)
 
             val storage = MainApplication.getStorage()
-            val imageRef = storage.getReferenceFromUrl(MainApplication.STORAGE_URL).child("${MainApplication.STORAGE_PROFILE_IMAGES_DIR}/${user?.login}.jpg")
+            val imageRef = storage.getReferenceFromUrl(MainApplication.STORAGE_URL).child("${MainApplication.STORAGE_PROFILE_IMAGES_DIR}/${emailUser.login}.jpg")
             val uploadTask = imageRef.putBytes(Utils.bitmapToBytes(selectedImage))
             uploadTask.addOnFailureListener { error ->
-                Log.e(TAG, "Failed to upload image for user ${user?.login}: ${error.message}")
+                Log.e(TAG, "Failed to upload image for user ${emailUser.login}: ${error.message}")
                 Toast.makeText(activity, R.string.profile_image_upload_failure, Toast.LENGTH_LONG).show()
             }.addOnCompleteListener { task ->
                 if (!task.isSuccessful) {
-                    Log.e(TAG, "Image for user ${user?.login} has not been uploaded")
+                    Log.e(TAG, "Image for user ${emailUser.login} has not been uploaded")
                     Toast.makeText(activity, R.string.profile_image_upload_failure, Toast.LENGTH_LONG).show()
                     return@addOnCompleteListener
                 }
 
-                Log.i(TAG, "Image for user ${user?.login} successfully uploaded")
+                Log.i(TAG, "Image for user ${emailUser.login} successfully uploaded")
                 imageRef.downloadUrl.addOnCompleteListener { uriTask ->
-                    user?.photo = uriTask.result.toString()
+                    emailUser.photo = uriTask.result.toString()
                     profile_image_backdrop.setImageBitmap(selectedImage)
                     (activity as MainActivity).updateNavHeaderPhoto()
                     infoChanged = true
@@ -131,17 +140,22 @@ class ProfileFragment : Fragment() {
     }
 
     private fun editBirthday() {
-        val currBirthday = user?.birthday
+        if (account !is EmailAccount)
+            return
+
+        val emailUser = (account as EmailAccount).user
+
+        val currBirthday = emailUser.birthday
         val cal = Calendar.getInstance()
-        if (currBirthday != null && currBirthday.isNotEmpty()) {
+        if (currBirthday.isNotEmpty()) {
             val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
             cal.time = sdf.parse(currBirthday)
         }
 
         val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
             val birthday = getString(R.string.date_format, dayOfMonth, monthOfYear+1, year)
-            if (birthday != user?.birthday) {
-                user?.birthday = birthday
+            if (birthday != emailUser.birthday) {
+                emailUser.birthday = birthday
                 profile_birthday.text = birthday
                 infoChanged = true
             }
@@ -154,14 +168,18 @@ class ProfileFragment : Fragment() {
     }
 
     private fun editGender() {
-        val gender = user?.gender
+        if (account !is EmailAccount)
+            return
+
+        val emailUser = (account as EmailAccount).user
+        val gender = emailUser.gender
         val builder = AlertDialog.Builder(requireActivity())
         builder.setTitle(R.string.gender_dialog_title)
         val values = resources.getStringArray(R.array.gender)
-        val checkedItem = if (gender != null && gender.isNotEmpty()) values.indexOf(gender) else -1
+        val checkedItem = if (gender.isNotEmpty()) values.indexOf(gender) else -1
 
         builder.setSingleChoiceItems(values, checkedItem) { dialog, item ->
-            user?.gender = values[item]
+            emailUser.gender = values[item]
             profile_gender.text = values[item]
             infoChanged = true
             dialog.dismiss()

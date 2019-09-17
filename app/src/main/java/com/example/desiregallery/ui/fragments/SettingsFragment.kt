@@ -7,8 +7,6 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
-import com.example.desiregallery.ui.dialogs.ChangePasswordDialog
-
 
 class SettingsFragment : PreferenceFragmentCompat() {
 

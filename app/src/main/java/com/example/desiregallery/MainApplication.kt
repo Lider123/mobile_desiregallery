@@ -4,12 +4,11 @@ import android.app.Application
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
+import com.vk.sdk.VKSdk
 import io.realm.Realm
 
 class MainApplication : Application() {
     companion object {
-        const val APP_PREFERENCES = "app_prefs"
-        const val PREFS_CURR_USER_KEY = "currUser"
         const val STORAGE_URL = "gs://desiregallery-8072a.appspot.com"
         const val STORAGE_POST_IMAGES_DIR = "postImages"
         const val STORAGE_PROFILE_IMAGES_DIR = "profileImages"
@@ -47,5 +46,6 @@ class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         Realm.init(this)
+        VKSdk.initialize(applicationContext)
     }
 }

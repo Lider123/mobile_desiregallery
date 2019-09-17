@@ -5,17 +5,9 @@ import com.example.desiregallery.R
 import android.app.Activity
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
-import com.example.desiregallery.database.DGDatabase
-import com.example.desiregallery.network.DGNetwork
-import com.example.desiregallery.ui.activities.MainActivity
 import kotlinx.android.synthetic.main.dialog_change_password.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-
 
 @Deprecated("Restore password via email")
 class ChangePasswordDialog(private val activity: Activity) : AlertDialog(activity) {
@@ -63,14 +55,14 @@ class ChangePasswordDialog(private val activity: Activity) : AlertDialog(activit
         user?.let {
             it.password = dialog_password_new.text.toString()
             DGDatabase.updateUser(it)
-            DGNetwork.getBaseService().updateUser(it.getLogin(), it).enqueue(object: Callback<User> {
-                override fun onFailure(call: Call<User>, t: Throwable) {
+            DGNetwork.getBaseService().updateUser(it.getLogin(), it).enqueue(object: Callback<VKUser> {
+                override fun onFailure(call: Call<VKUser>, t: Throwable) {
                     Log.e(TAG, "Unable to update user ${it.getLogin()}: ${t.message}")
                 }
 
-                override fun onResponse(call: Call<User>, response: Response<User>) {
+                override fun onResponse(call: Call<VKUser>, response: Response<VKUser>) {
                     if (response.isSuccessful)
-                        Log.i(TAG, "User ${it.getLogin()} has been successfully updated")
+                        Log.i(TAG, "VKUser ${it.getLogin()} has been successfully updated")
                 }
             })
         }*/

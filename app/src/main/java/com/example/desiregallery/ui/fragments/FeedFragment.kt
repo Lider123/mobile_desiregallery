@@ -11,17 +11,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.desiregallery.R
-import com.example.desiregallery.Utils
 import com.example.desiregallery.adapters.PostAdapter
 import com.example.desiregallery.models.Post
-import com.example.desiregallery.ui.activities.MainActivity
 import com.example.desiregallery.ui.dialogs.PostCreationDialog
 import com.example.desiregallery.viewmodels.PostListViewModel
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.fragment_feed.*
 import kotlinx.android.synthetic.main.fragment_feed.view.*
-import kotlinx.android.synthetic.main.fragment_profile.*
-
 
 class FeedFragment : androidx.fragment.app.Fragment() {
     private lateinit var model: PostListViewModel
