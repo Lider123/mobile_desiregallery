@@ -54,6 +54,7 @@ class PostPresenter(
     fun goToImageFullScreen(context: Context, bmpImage: Bitmap) {
         val intent = Intent(context, FullScreenImageActivity::class.java).apply {
             putExtra(FullScreenImageActivity.EXTRA_IMAGE, Utils.bitmapToBytes(bmpImage))
+            putExtra(FullScreenImageActivity.EXTRA_POST_ID, post.id)
         }
         context.startActivity(intent)
     }

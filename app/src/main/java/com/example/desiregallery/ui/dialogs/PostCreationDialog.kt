@@ -46,8 +46,7 @@ class PostCreationDialog(private val activity: Activity, private val image: Bitm
     private fun handlePublish() {
         content.dialog_post_progress.visibility = View.VISIBLE
         val post = Post()
-        val storage = MainApplication.getStorage()
-        val imageRef = storage.getReferenceFromUrl(MainApplication.STORAGE_URL).child("${MainApplication.STORAGE_POST_IMAGES_DIR}/${post.id}.jpg")
+        val imageRef = MainApplication.storage.getReferenceFromUrl(MainApplication.STORAGE_URL).child("${MainApplication.STORAGE_POST_IMAGES_DIR}/${post.id}.jpg")
         val uploadTask = imageRef.putBytes(Utils.bitmapToBytes(image))
         uploadTask.addOnFailureListener { error ->
             Log.e(TAG, "Failed to upload image for new post ${post.id}: ${error.message}")

@@ -10,6 +10,7 @@ import android.text.TextWatcher
 import android.util.Log
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
+import com.example.desiregallery.auth.AuthMethod
 import com.example.desiregallery.models.User
 import com.example.desiregallery.network.DGNetwork
 import retrofit2.Call
@@ -50,7 +51,7 @@ class SignUpActivity : AppCompatActivity() {
         sign_up_input_password.addTextChangedListener(inputTextWatcher)
         sign_up_input_confirm.addTextChangedListener(inputTextWatcher)
 
-        gender_radio_group.setOnCheckedChangeListener { group, checkedId -> checkForEmptyFields() }
+        gender_radio_group.setOnCheckedChangeListener { _, _ -> checkForEmptyFields() }
 
         sign_up_input_birthday.setOnClickListener {
             val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
@@ -85,7 +86,7 @@ class SignUpActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            MainApplication.getAuth().createUserWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
+            MainApplication.auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     Log.i(TAG, "VKUser $login successfully signed up")
                     saveUserInfo(User(email, password).also {
@@ -94,6 +95,7 @@ class SignUpActivity : AppCompatActivity() {
                         it.birthday = birthday
                     })
                     enableAll()
+                    MainApplication.analyticsTracker.trackSignUp(AuthMethod.EMAIL)
                     onBackPressed()
                 } else {
                     Log.w(TAG, "Failed to sign up: ", task.exception)
@@ -116,7 +118,7 @@ class SignUpActivity : AppCompatActivity() {
             }
         })
 
-        val firebaseUser = MainApplication.getAuth().currentUser
+        val firebaseUser = MainApplication.auth.currentUser
         val profileUpdates = UserProfileChangeRequest.Builder().setDisplayName(user.login).build()
         firebaseUser?.updateProfile(profileUpdates)?.addOnCompleteListener(this) { task ->
             if (task.isSuccessful)

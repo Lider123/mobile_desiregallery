@@ -87,7 +87,7 @@ class ProfileFragment : Fragment() {
                 }
             })
 
-            val firebaseUser = MainApplication.getAuth().currentUser
+            val firebaseUser = MainApplication.auth.currentUser
             val profileUpdates = UserProfileChangeRequest.Builder()
                 .setDisplayName(emailUser.login)
                 .setPhotoUri(Uri.parse(emailUser.photo))
@@ -113,8 +113,7 @@ class ProfileFragment : Fragment() {
             val istream = activity!!.contentResolver.openInputStream(imageUri)
             val selectedImage = BitmapFactory.decodeStream(istream)
 
-            val storage = MainApplication.getStorage()
-            val imageRef = storage.getReferenceFromUrl(MainApplication.STORAGE_URL).child("${MainApplication.STORAGE_PROFILE_IMAGES_DIR}/${emailUser.login}.jpg")
+            val imageRef = MainApplication.storage.getReferenceFromUrl(MainApplication.STORAGE_URL).child("${MainApplication.STORAGE_PROFILE_IMAGES_DIR}/${emailUser.login}.jpg")
             val uploadTask = imageRef.putBytes(Utils.bitmapToBytes(selectedImage))
             uploadTask.addOnFailureListener { error ->
                 Log.e(TAG, "Failed to upload image for user ${emailUser.login}: ${error.message}")

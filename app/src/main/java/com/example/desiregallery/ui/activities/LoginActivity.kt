@@ -55,6 +55,7 @@ class LoginActivity : AppCompatActivity() {
                 override fun onResult(res: VKAccessToken?) {
                     Log.i(TAG, "Successfully logged in with vk")
                     PreferencesHelper(this@LoginActivity).setAuthMethod(AuthMethod.VK)
+                    MainApplication.analyticsTracker.trackLogin(AuthMethod.VK)
                     goToMainActivity()
                 }
 
@@ -78,6 +79,7 @@ class LoginActivity : AppCompatActivity() {
             val account = completedTask.getResult(ApiException::class.java)
             Log.i(TAG, "Successfully signed in google account ${account?.displayName}")
             PreferencesHelper(this).setAuthMethod(AuthMethod.GOOGLE)
+            MainApplication.analyticsTracker.trackLogin(AuthMethod.GOOGLE)
             goToMainActivity()
         }
         catch (e: ApiException) {
@@ -109,12 +111,13 @@ class LoginActivity : AppCompatActivity() {
 
     private fun logIn(email: String, password: String) {
         showProgress()
-        MainApplication.getAuth().signInWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
+        MainApplication.auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
             hideProgress()
             if (task.isSuccessful) {
-                val user = MainApplication.getAuth().currentUser
-                Log.i(TAG, "VKUser with email ${user?.email} successfully logged in")
+                val user = MainApplication.auth.currentUser
+                Log.i(TAG, "uUer with email ${user?.email} successfully logged in")
                 PreferencesHelper(this).setAuthMethod(AuthMethod.EMAIL)
+                MainApplication.analyticsTracker.trackLogin(AuthMethod.EMAIL)
                 goToMainActivity()
             } else {
                 Log.w(TAG, "Failed to login: ", task.exception)

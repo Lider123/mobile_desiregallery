@@ -14,6 +14,6 @@ class EmailAccount(val user: User) : IAccount {
     override val birthday = user.birthday
 
     override fun logOut() {
-        MainApplication.getAuth().signOut()
+        MainApplication.auth.signOut()
     }
 }

@@ -1,15 +1,14 @@
 package com.example.desiregallery.ui.activities
 
 import android.Manifest
+import android.app.Activity
 import android.graphics.Bitmap
-import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.WindowManager
 import android.widget.Toast
 import com.example.desiregallery.R
 import com.example.desiregallery.Utils
@@ -23,25 +22,26 @@ import java.io.FileOutputStream
 import java.io.File
 import java.io.IOException
 import android.net.Uri
-
+import com.example.desiregallery.MainApplication
 
 class FullScreenImageActivity : AppCompatActivity() {
     companion object {
         private const val WRITE_REQUEST_CODE = 101
+        private const val SHARING_REQUEST_CODE = 201
         private val TAG = FullScreenImageActivity::class.java.simpleName
+
         const val EXTRA_IMAGE = "bytesImage"
+        const val EXTRA_POST_ID = "postId"
     }
 
     private lateinit var toolbar: Toolbar
 
     private lateinit var image: Bitmap
+    private lateinit var postId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (Build.VERSION.SDK_INT < 16)
-            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        else
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
         setContentView(R.layout.activity_full_screen_image)
 
         toolbar = findViewById(R.id.image_screen_toolbar)
@@ -49,6 +49,7 @@ class FullScreenImageActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         image = Utils.bytesToBitmap(intent.getByteArrayExtra(EXTRA_IMAGE))
+        postId = intent.getStringExtra(EXTRA_POST_ID)
         image_view_full_screen.setImageBitmap(image)
     }
 
@@ -83,6 +84,14 @@ class FullScreenImageActivity : AppCompatActivity() {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == SHARING_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK)
+                MainApplication.analyticsTracker.trackSharePhoto(postId)
+        }
+    }
+
     private fun shareImage() {
         val bmpUri = getLocalBitmapUri(image)
         bmpUri?.let {
@@ -90,7 +99,7 @@ class FullScreenImageActivity : AppCompatActivity() {
             shareIntent.action = Intent.ACTION_SEND
             shareIntent.putExtra(Intent.EXTRA_STREAM, it)
             shareIntent.type = "image/*"
-            startActivity(Intent.createChooser(shareIntent, getString(R.string.share_image)))
+            startActivityForResult(Intent.createChooser(shareIntent, getString(R.string.share_image)), SHARING_REQUEST_CODE)
         }
     }
 
