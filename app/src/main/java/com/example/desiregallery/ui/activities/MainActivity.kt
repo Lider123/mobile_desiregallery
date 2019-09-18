@@ -130,13 +130,13 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     currAccount = EmailAccount(user)
-                    Log.d(TAG, String.format("Got data for user ${currAccount.getDisplayName()}"))
+                    Log.d(TAG, String.format("Got data for user ${currAccount.displayName}"))
 
                     val headerView = navigationView.getHeaderView(0)
                     val headerTextView = headerView.findViewById<TextView>(R.id.nav_header_login)
                     headerImageView = headerView.findViewById(R.id.nav_header_image)
-                    headerTextView.text = currAccount.getDisplayName()
-                    if (currAccount.getPhotoUrl().isNotEmpty())
+                    headerTextView.text = currAccount.displayName
+                    if (currAccount.photoUrl.isNotEmpty())
                         updateNavHeaderPhoto()
                 }
             })
@@ -155,13 +155,13 @@ class MainActivity : AppCompatActivity() {
 
                 val user: VKApiUser = (response.parsedModel as VKList<*>)[0] as VKApiUser
                 currAccount = VKAccount(user)
-                Log.d(TAG, String.format("Got data for user ${currAccount.getDisplayName()}"))
+                Log.d(TAG, String.format("Got data for user ${currAccount.displayName}"))
 
                 val headerView = navigationView.getHeaderView(0)
                 val headerTextView = headerView.findViewById<TextView>(R.id.nav_header_login)
                 headerImageView = headerView.findViewById(R.id.nav_header_image)
-                headerTextView.text = currAccount.getDisplayName()
-                if (currAccount.getPhotoUrl().isNotEmpty())
+                headerTextView.text = currAccount.displayName
+                if (currAccount.photoUrl.isNotEmpty())
                     updateNavHeaderPhoto()
             }
 
@@ -185,6 +185,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun updateNavHeaderPhoto() {
-        Picasso.with(this).load(currAccount.getPhotoUrl()).into(headerImageView)
+        Picasso.with(this).load(currAccount.photoUrl).into(headerImageView)
     }
 }

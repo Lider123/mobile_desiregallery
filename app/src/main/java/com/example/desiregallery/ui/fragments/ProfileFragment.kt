@@ -51,13 +51,13 @@ class ProfileFragment : Fragment() {
         val fab = root.findViewById<FloatingActionButton>(R.id.profile_fab)
 
         account = (activity as MainActivity).getCurrAccount()
-        toolbarProfile.title = account.getDisplayName()
+        toolbarProfile.title = account.displayName
 
         val notSpecified = getString(R.string.not_specified)
-        root.profile_gender.text = if (account.getGender().isNotEmpty()) account.getGender() else notSpecified
-        root.profile_birthday.text = if (account.getBirthday().isNotEmpty()) account.getBirthday() else notSpecified
-        if (account.getPhotoUrl().isNotEmpty())
-            Picasso.with(activity).load(account.getPhotoUrl()).into(imageView)
+        root.profile_gender.text = if (account.gender.isNotEmpty()) account.gender else notSpecified
+        root.profile_birthday.text = if (account.birthday.isNotEmpty()) account.birthday else notSpecified
+        if (account.photoUrl.isNotEmpty())
+            Picasso.with(activity).load(account.photoUrl).into(imageView)
 
         if (account is EmailAccount) {
             fab.setOnClickListener { CropImage.activity().start(requireContext(), this) }
