@@ -1,6 +1,9 @@
 package com.example.desiregallery
 
 import android.app.Application
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
@@ -13,20 +16,16 @@ class MainApplication : Application() {
         const val STORAGE_POST_IMAGES_DIR = "postImages"
         const val STORAGE_PROFILE_IMAGES_DIR = "profileImages"
 
-        private var instance: MainApplication? = null
         private var analytics: FirebaseAnalytics? = null
         private var storage: FirebaseStorage? = null
         private var auth: FirebaseAuth? = null
 
-        fun getInstance(): MainApplication {
-            if (instance == null)
-                instance = MainApplication()
-            return instance!!
-        }
+        lateinit var instance: MainApplication
+            private set
 
         fun getAnalytics(): FirebaseAnalytics {
             if (analytics == null)
-                analytics = FirebaseAnalytics.getInstance(getInstance())
+                analytics = FirebaseAnalytics.getInstance(instance)
             return analytics!!
         }
 
@@ -43,9 +42,22 @@ class MainApplication : Application() {
         }
     }
 
+    lateinit var googleSignInClient: GoogleSignInClient
+        private set
+
     override fun onCreate() {
         super.onCreate()
+        instance = this
         Realm.init(this)
         VKSdk.initialize(applicationContext)
+        initGoogleSignInClient()
+    }
+
+    private fun initGoogleSignInClient() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
     }
 }

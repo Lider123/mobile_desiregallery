@@ -5,7 +5,8 @@ package com.example.desiregallery.auth
  */
 enum class AuthMethod(val methodName: String) {
     EMAIL("email"),
-    VK("vk");
+    VK("vk"),
+    GOOGLE("google");
 
     companion object {
         private val map = values().associateBy(AuthMethod::methodName)
