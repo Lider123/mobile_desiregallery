@@ -1,5 +1,6 @@
 package com.example.desiregallery.ui.activities
 
+import android.app.DatePickerDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -15,6 +16,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import com.google.firebase.auth.UserProfileChangeRequest
+import java.util.*
 
 
 class SignUpActivity : AppCompatActivity() {
@@ -44,15 +46,35 @@ class SignUpActivity : AppCompatActivity() {
     private fun initListeners() {
         sign_up_input_login.addTextChangedListener(inputTextWatcher)
         sign_up_input_email.addTextChangedListener(inputTextWatcher)
-        sign_up_input_gender.addTextChangedListener(inputTextWatcher)
         sign_up_input_birthday.addTextChangedListener(inputTextWatcher)
         sign_up_input_password.addTextChangedListener(inputTextWatcher)
         sign_up_input_confirm.addTextChangedListener(inputTextWatcher)
+
+        gender_radio_group.setOnCheckedChangeListener { group, checkedId -> checkForEmptyFields() }
+
+        sign_up_input_birthday.setOnClickListener {
+            val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                val date = getString(R.string.date_format, dayOfMonth, month+1, year)
+                sign_up_input_birthday.setText(date)
+            }
+            val calendar = Calendar.getInstance()
+            DatePickerDialog(this, dateSetListener,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH))
+                .show()
+        }
         sign_up_button.setOnClickListener {
             disableAll()
             val login = sign_up_input_login.text.toString()
             val email = sign_up_input_email.text.toString()
-            val gender = sign_up_input_gender.text.toString()
+            val gender: String = gender_radio_group.checkedRadioButtonId.let {
+                return@let when (it) {
+                    R.id.radio_male -> radio_male.text.toString()
+                    R.id.radio_female -> radio_female.text.toString()
+                    else -> ""
+                }
+            }
             val birthday = sign_up_input_birthday.text.toString()
             val password = sign_up_input_password.text.toString()
             val passwordConfirm = sign_up_input_confirm.text.toString()
@@ -109,7 +131,13 @@ class SignUpActivity : AppCompatActivity() {
             sign_up_input_confirm.text.toString(),
             sign_up_input_password.text.toString(),
             sign_up_input_birthday.text.toString(),
-            sign_up_input_gender.text.toString(),
+            gender_radio_group.checkedRadioButtonId.let {
+                return@let when (it) {
+                    R.id.radio_male -> radio_male.text.toString()
+                    R.id.radio_female -> radio_female.text.toString()
+                    else -> ""
+                }
+            },
             sign_up_input_email.text.toString(),
             sign_up_input_login.text.toString()
         ).all { fieldIsValid(it) }
@@ -119,7 +147,6 @@ class SignUpActivity : AppCompatActivity() {
         sign_up_input_confirm.isEnabled = true
         sign_up_input_password.isEnabled = true
         sign_up_input_birthday.isEnabled = true
-        sign_up_input_gender.isEnabled = true
         sign_up_input_email.isEnabled = true
         sign_up_input_login.isEnabled = true
         sign_up_button.isEnabled = true
@@ -129,7 +156,6 @@ class SignUpActivity : AppCompatActivity() {
         sign_up_input_confirm.isEnabled = false
         sign_up_input_password.isEnabled = false
         sign_up_input_birthday.isEnabled = false
-        sign_up_input_gender.isEnabled = false
         sign_up_input_email.isEnabled = false
         sign_up_input_login.isEnabled = false
         sign_up_button.isEnabled = false

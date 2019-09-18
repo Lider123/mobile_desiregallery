@@ -21,7 +21,6 @@ import androidx.fragment.app.Fragment
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.Utils
 import com.example.desiregallery.auth.EmailAccount
-import com.example.desiregallery.auth.IAccount
 import com.example.desiregallery.models.User
 import com.example.desiregallery.network.DGNetwork
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -42,7 +41,6 @@ class ProfileFragment : Fragment() {
     }
 
     private var infoChanged = false
-    private lateinit var account: IAccount
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_profile, container, false)
@@ -50,7 +48,7 @@ class ProfileFragment : Fragment() {
         val imageView = root.findViewById<ImageView>(R.id.profile_image_backdrop)
         val fab = root.findViewById<FloatingActionButton>(R.id.profile_fab)
 
-        account = (activity as MainActivity).getCurrAccount()
+        val account = (activity as MainActivity).currAccount
         toolbarProfile.title = account.displayName
 
         val notSpecified = getString(R.string.not_specified)
@@ -75,8 +73,9 @@ class ProfileFragment : Fragment() {
         if (!infoChanged)
             return
 
+        val account = (activity as MainActivity).currAccount
         if (account is EmailAccount) {
-            val emailUser = (account as EmailAccount).user
+            val emailUser = account.user
             DGNetwork.getBaseService().updateUser(emailUser.login, emailUser).enqueue(object: Callback<User> {
                 override fun onFailure(call: Call<User>, t: Throwable) {
                     Log.e(TAG, "Unable to update user ${emailUser.login}: ${t.message}")
@@ -106,10 +105,9 @@ class ProfileFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            if (account !is EmailAccount)
-                return
+            val account = (activity as MainActivity).currAccount as? EmailAccount ?: return
 
-            val emailUser = (account as EmailAccount).user
+            val emailUser = account.user
 
             val imageUri = CropImage.getActivityResult(data).uri
             val istream = activity!!.contentResolver.openInputStream(imageUri)
@@ -131,6 +129,7 @@ class ProfileFragment : Fragment() {
                 Log.i(TAG, "Image for user ${emailUser.login} successfully uploaded")
                 imageRef.downloadUrl.addOnCompleteListener { uriTask ->
                     emailUser.photo = uriTask.result.toString()
+                    (activity as MainActivity).currAccount = EmailAccount(emailUser)
                     profile_image_backdrop.setImageBitmap(selectedImage)
                     (activity as MainActivity).updateNavHeaderPhoto()
                     infoChanged = true
@@ -140,10 +139,9 @@ class ProfileFragment : Fragment() {
     }
 
     private fun editBirthday() {
-        if (account !is EmailAccount)
-            return
+        val account = (activity as MainActivity).currAccount as? EmailAccount ?: return
 
-        val emailUser = (account as EmailAccount).user
+        val emailUser = account.user
 
         val currBirthday = emailUser.birthday
         val cal = Calendar.getInstance()
@@ -156,6 +154,7 @@ class ProfileFragment : Fragment() {
             val birthday = getString(R.string.date_format, dayOfMonth, monthOfYear+1, year)
             if (birthday != emailUser.birthday) {
                 emailUser.birthday = birthday
+                (activity as MainActivity).currAccount = EmailAccount(emailUser)
                 profile_birthday.text = birthday
                 infoChanged = true
             }
@@ -168,10 +167,9 @@ class ProfileFragment : Fragment() {
     }
 
     private fun editGender() {
-        if (account !is EmailAccount)
-            return
+        val account = (activity as MainActivity).currAccount as? EmailAccount ?: return
 
-        val emailUser = (account as EmailAccount).user
+        val emailUser = account.user
         val gender = emailUser.gender
         val builder = AlertDialog.Builder(requireActivity())
         builder.setTitle(R.string.gender_dialog_title)
@@ -180,6 +178,7 @@ class ProfileFragment : Fragment() {
 
         builder.setSingleChoiceItems(values, checkedItem) { dialog, item ->
             emailUser.gender = values[item]
+            (activity as MainActivity).currAccount = EmailAccount(emailUser)
             profile_gender.text = values[item]
             infoChanged = true
             dialog.dismiss()

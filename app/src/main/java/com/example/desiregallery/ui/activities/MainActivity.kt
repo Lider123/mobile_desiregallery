@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var headerImageView: ImageView
     private lateinit var toolbar: Toolbar
 
-    private lateinit var currAccount: IAccount
+    lateinit var currAccount: IAccount
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,8 +101,6 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction().replace(R.id.main_container, fragment).commit()
         toolbar.title = resources.getString(id)
     }
-
-    fun getCurrAccount() = currAccount
 
     private fun setCurrentUser() {
         when (PreferencesHelper(this).getAuthMethod()) {
@@ -202,6 +200,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun updateNavHeaderPhoto() {
+        Log.d(TAG, currAccount.photoUrl)
         Picasso.with(this).load(currAccount.photoUrl).into(headerImageView)
     }
 }

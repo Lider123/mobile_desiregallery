@@ -29,6 +29,9 @@
     <string name="sign_in_with_google">Sign In with Google</string>
     <string name="sign_in_vk_failure">Failed to Sign In with VK</string>
     <string name="sign_in_google_failure">Failed to Sign In with Google</string>
+    <string name="male">male</string>
+    <string name="female">female</string>
+    <string name="gender_i_am">I am</string>
 
     <!-- Main menu -->
     <string name="Profile">Profile</string>
