@@ -9,4 +9,6 @@ interface IAccount {
     val photoUrl: String
     val gender: String
     val birthday: String
+
+    fun logOut()
 }

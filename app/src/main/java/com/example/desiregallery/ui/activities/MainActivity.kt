@@ -13,16 +13,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.desiregallery.*
-import com.example.desiregallery.auth.AuthMethod
-import com.example.desiregallery.auth.EmailAccount
-import com.example.desiregallery.auth.IAccount
-import com.example.desiregallery.auth.VKAccount
+import com.example.desiregallery.auth.*
 import com.example.desiregallery.models.User
 import com.example.desiregallery.network.DGNetwork
 import com.example.desiregallery.sharedprefs.PreferencesHelper
 import com.example.desiregallery.ui.fragments.FeedFragment
 import com.example.desiregallery.ui.fragments.ProfileFragment
 import com.example.desiregallery.ui.fragments.SettingsFragment
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.squareup.picasso.Picasso
 import com.vk.sdk.api.*
 import com.vk.sdk.api.model.VKApiUser
@@ -46,11 +44,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        setCurrentUser()
         setToolbar()
         setNavigationMenu()
         setDefaultFragment()
+        setCurrentUser()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -111,6 +108,7 @@ class MainActivity : AppCompatActivity() {
         when (PreferencesHelper(this).getAuthMethod()) {
             AuthMethod.EMAIL -> setCurrentEmailUser()
             AuthMethod.VK -> setCurrentVKUser()
+            AuthMethod.GOOGLE -> setCurrentGoogleUser()
         }
     }
 
@@ -172,8 +170,27 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    private fun setCurrentGoogleUser() {
+        val account = GoogleSignIn.getLastSignedInAccount(this)
+        account?: run {
+            Log.e(TAG, "Failed to get google account")
+            return
+        }
+
+        currAccount = GoogleAccount(account)
+        Log.d(TAG, String.format("Got data for user ${currAccount.displayName}"))
+
+        val headerView = navigationView.getHeaderView(0)
+        val headerTextView = headerView.findViewById<TextView>(R.id.nav_header_login)
+        headerImageView = headerView.findViewById(R.id.nav_header_image)
+        headerTextView.text = currAccount.displayName
+        if (currAccount.photoUrl.isNotEmpty())
+            updateNavHeaderPhoto()
+    }
+
     private fun handleLogout() {
         PreferencesHelper(this).clearAuthMethod()
+        currAccount.logOut()
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         finish()

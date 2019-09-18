@@ -1,5 +1,6 @@
 package com.example.desiregallery.auth
 
+import com.vk.sdk.VKSdk
 import com.vk.sdk.api.model.VKApiUser
 
 /**
@@ -30,4 +31,8 @@ class VKAccount(private val user: VKApiUser) : IAccount {
 
             return fields.getString("bdate")
         }
+
+    override fun logOut() {
+        VKSdk.logout()
+    }
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -41,16 +42,16 @@
                 android:layout_marginBottom="8dp"/>
 
         <Button
-                android:id="@+id/button_login"
+                android:id="@+id/button_sign_in"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/Login"
+                android:text="@string/sign_in"
                 style="@style/CustomButton"
                 android:layout_marginBottom="16dp"/>
 
         <TextView
-                android:text="@string/SignUp"
+                android:text="@string/sign_up_offer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:foregroundGravity="center"
@@ -62,15 +63,22 @@
                 android:layout_marginBottom="32dp"/>
 
         <Button
-                android:id="@+id/button_login_vk"
+                android:id="@+id/button_sign_in_vk"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/Login_with_VK"
+                android:text="@string/sign_in_with_vk"
                 android:drawableStart="@drawable/vk"
                 android:drawableLeft="@drawable/vk"
                 android:layout_marginBottom="8dp"
                 style="@style/VKButton"/>
+
+        <com.shobhitpuri.custombuttons.GoogleSignInButton
+                android:id="@+id/button_sign_in_google"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sign_in_with_google"
+                app:isDarkTheme="false"/>
     </LinearLayout>
     <ProgressBar
             android:id="@+id/login_progress"

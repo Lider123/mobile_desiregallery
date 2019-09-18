@@ -47,9 +47,9 @@ class LoginInstrumentedTest {
         Espresso.onView(withId(R.id.input_email)).perform(typeText(login)).perform(closeSoftKeyboard())
         Espresso.onView(withId(R.id.input_password)).perform(typeText(password)).perform(closeSoftKeyboard())
         if (correct)
-            Espresso.onView(withId(R.id.button_login)).check(matches(isEnabled()))
+            Espresso.onView(withId(R.id.button_sign_in)).check(matches(isEnabled()))
         else
-            Espresso.onView(withId(R.id.button_login)).check(matches(not(isEnabled())))
+            Espresso.onView(withId(R.id.button_sign_in)).check(matches(not(isEnabled())))
 
         Espresso.onView(withId(R.id.input_email)).perform(clearText())
         Espresso.onView(withId(R.id.input_password)).perform(clearText())
