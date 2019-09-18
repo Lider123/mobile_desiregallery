@@ -15,6 +15,10 @@ def sentryPropertiesFile = rootProject.file("app/sentry.properties")
 def sentryProperties = new Properties()
 sentryProperties.load(new FileInputStream(sentryPropertiesFile))
 
+def keystorePropertiesFile = rootProject.file("app/keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -27,6 +31,15 @@ android {
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
     }
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+
     buildTypes {
         debug {
             buildConfigField("String", "SENTRY_DSN", sentryProperties["DSN"])
@@ -39,6 +52,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             resValue("bool", "FIREBASE_ANALYTICS_ENABLED", "true")
             resValue("integer", "VK_APP_ID", vkProperties["APP_ID"])
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {
