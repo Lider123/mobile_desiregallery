@@ -10,15 +10,15 @@ class PreferencesHelper(context: Context) : IDGSharedPreferencesHelper {
     private val appPrefs = context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
 
     override fun setAuthMethod(method: AuthMethod) {
-        appPrefs.edit().putString(PREF_AUTH_METHOD, method.value).apply()
+        appPrefs.edit().putString(PREF_AUTH_METHOD, method.methodName).apply()
     }
 
     override fun getAuthMethod(): AuthMethod? {
-        val method = appPrefs.getString(PREF_AUTH_METHOD, null)
-        return if (method == null)
-            method
+        val methodName = appPrefs.getString(PREF_AUTH_METHOD, null)
+        return if (methodName == null)
+            methodName
         else
-            AuthMethod.fromString(method)
+            AuthMethod.fromString(methodName)
     }
 
     override fun clearAuthMethod() {
