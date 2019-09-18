@@ -21,9 +21,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
         return when (preference.key) {
             getString(R.string.pref_change_password_key) -> {
-                val user = MainApplication.getAuth().currentUser
+                val user = MainApplication.auth.currentUser
                 user?.let {
-                    MainApplication.getAuth().sendPasswordResetEmail(user.email!!).addOnCompleteListener { task ->
+                    MainApplication.auth.sendPasswordResetEmail(user.email!!).addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             Log.i(TAG, "Message for password reset was sent to email ${user.email}")
                             Toast.makeText(requireActivity(), R.string.reset_password_sent, Toast.LENGTH_LONG).show()

@@ -111,7 +111,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setCurrentEmailUser() {
-        MainApplication.getAuth().currentUser?.let {
+        MainApplication.auth.currentUser?.let {
             DGNetwork.getBaseService().getUser(it.displayName!!).enqueue(object: Callback<User> {
 
                 override fun onFailure(call: Call<User>, t: Throwable) {
