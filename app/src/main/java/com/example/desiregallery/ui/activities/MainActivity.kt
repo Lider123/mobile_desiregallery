@@ -3,7 +3,6 @@ package com.example.desiregallery.ui.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import com.google.android.material.navigation.NavigationView
 import androidx.core.view.GravityCompat
 import androidx.appcompat.app.ActionBar
@@ -14,6 +13,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.desiregallery.*
 import com.example.desiregallery.auth.*
+import com.example.desiregallery.logging.DGLogger
 import com.example.desiregallery.models.User
 import com.example.desiregallery.network.DGNetwork
 import com.example.desiregallery.sharedprefs.PreferencesHelper
@@ -115,18 +115,18 @@ class MainActivity : AppCompatActivity() {
             DGNetwork.getBaseService().getUser(it.displayName!!).enqueue(object: Callback<User> {
 
                 override fun onFailure(call: Call<User>, t: Throwable) {
-                    Log.e(TAG, "Failed to get data for user ${it.displayName}: ${t.message}")
+                    DGLogger.logError(TAG, "Failed to get data for user ${it.displayName}: ${t.message}")
                 }
 
                 override fun onResponse(call: Call<User>, response: Response<User>) {
                     val user = response.body()
                     user?: run {
-                        Log.e(TAG, "Unable to get data for user ${it.displayName}: response received an empty body")
+                        DGLogger.logError(TAG, "Unable to get data for user ${it.displayName}: response received an empty body")
                         return
                     }
 
                     currAccount = EmailAccount(user)
-                    Log.d(TAG, String.format("Got data for user ${currAccount.displayName}"))
+                    DGLogger.logInfo(TAG, String.format("Got data for user ${currAccount.displayName}"))
 
                     val headerView = navigationView.getHeaderView(0)
                     val headerTextView = headerView.findViewById<TextView>(R.id.nav_header_login)
@@ -145,13 +145,13 @@ class MainActivity : AppCompatActivity() {
             override fun onComplete(response: VKResponse?) {
                 super.onComplete(response)
                 response?: run {
-                    Log.e(TAG, "Failed to get response for user info")
+                    DGLogger.logError(TAG, "Failed to get response for user info")
                     return
                 }
 
                 val user: VKApiUser = (response.parsedModel as VKList<*>)[0] as VKApiUser
                 currAccount = VKAccount(user)
-                Log.d(TAG, String.format("Got data for user ${currAccount.displayName}"))
+                DGLogger.logInfo(TAG, String.format("Got data for user ${currAccount.displayName}"))
 
                 val headerView = navigationView.getHeaderView(0)
                 val headerTextView = headerView.findViewById<TextView>(R.id.nav_header_login)
@@ -163,7 +163,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onError(error: VKError?) {
                 super.onError(error)
-                Log.e(TAG, "There was an error with code ${error?.errorCode} while getting user info: ${error?.errorMessage}")
+                DGLogger.logError(TAG, "There was an error with code ${error?.errorCode} while getting user info: ${error?.errorMessage}")
             }
         })
     }
@@ -171,12 +171,12 @@ class MainActivity : AppCompatActivity() {
     private fun setCurrentGoogleUser() {
         val account = GoogleSignIn.getLastSignedInAccount(this)
         account?: run {
-            Log.e(TAG, "Failed to get google account")
+            DGLogger.logError(TAG, "Failed to get google account")
             return
         }
 
         currAccount = GoogleAccount(account)
-        Log.d(TAG, String.format("Got data for user ${currAccount.displayName}"))
+        DGLogger.logInfo(TAG, String.format("Got data for user ${currAccount.displayName}"))
 
         val headerView = navigationView.getHeaderView(0)
         val headerTextView = headerView.findViewById<TextView>(R.id.nav_header_login)
@@ -200,7 +200,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun updateNavHeaderPhoto() {
-        Log.d(TAG, currAccount.photoUrl)
         Picasso.with(this).load(currAccount.photoUrl).into(headerImageView)
     }
 }

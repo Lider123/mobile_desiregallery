@@ -2,7 +2,7 @@ package com.example.desiregallery.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import android.util.Log
+import com.example.desiregallery.logging.DGLogger
 import com.example.desiregallery.models.Post
 import com.example.desiregallery.network.DGNetwork
 import retrofit2.Call
@@ -30,16 +30,16 @@ class PostListViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     if (response.body() != null) {
                         posts.value = response.body()
-                        Log.i(TAG, "Posts have been loaded")
+                        DGLogger.logInfo(TAG, "Posts have been loaded")
                     }
                     else {
-                        Log.i(TAG, "There are no posts to load")
+                        DGLogger.logInfo(TAG, "There are no posts to load")
                     }
                 }
             }
 
             override fun onFailure(call: Call<List<Post>>, t: Throwable) {
-                Log.e(TAG, "Unable to load posts: ${t.message}")
+                DGLogger.logError(TAG, "Unable to load posts: ${t.message}")
             }
         })
     }
@@ -50,14 +50,14 @@ class PostListViewModel : ViewModel() {
         posts.value = currPosts
         DGNetwork.getBaseService().createPost(post.id, post).enqueue(object: Callback<Post> {
             override fun onFailure(call: Call<Post>, t: Throwable) {
-                Log.e(TAG, "Unable to create post ${post.id}: ${t.message}")
+                DGLogger.logError(TAG, "Unable to create post ${post.id}: ${t.message}")
             }
 
             override fun onResponse(call: Call<Post>, response: Response<Post>) {
                 if (!response.isSuccessful)
-                    Log.e(TAG, "Unable to create post ${post.id}: received response with code ${response.code()}")
+                    DGLogger.logError(TAG, "Unable to create post ${post.id}: received response with code ${response.code()}")
                 else
-                    Log.i(TAG, "Post ${post.id} successfully created")
+                    DGLogger.logInfo(TAG, "Post ${post.id} successfully created")
             }
         })
     }

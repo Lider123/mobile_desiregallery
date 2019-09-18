@@ -3,8 +3,8 @@ package com.example.desiregallery.presenters
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.util.Log
 import com.example.desiregallery.Utils
+import com.example.desiregallery.logging.DGLogger
 import com.example.desiregallery.models.Post
 import com.example.desiregallery.network.DGNetwork
 import com.example.desiregallery.ui.activities.CommentsActivity
@@ -32,12 +32,12 @@ class PostPresenter(
         view.updateRating(post.rating)
         DGNetwork.getBaseService().updatePost(post.id, post).enqueue(object: Callback<Post> {
             override fun onFailure(call: Call<Post>, t: Throwable) {
-                Log.e(TAG, "Unable to update post ${post.id}: ${t.message}")
+                DGLogger.logError(TAG, "Unable to update post ${post.id}: ${t.message}")
             }
 
             override fun onResponse(call: Call<Post>, response: Response<Post>) {
                 if (response.isSuccessful)
-                    Log.i(TAG, "Post ${post.id} has been successfully updated")
+                    DGLogger.logInfo(TAG, "Post ${post.id} has been successfully updated")
             }
         })
     }

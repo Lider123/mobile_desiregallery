@@ -14,8 +14,11 @@ jobs:
     #         name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
     #         command: sudo chmod +x ./gradlew
     - run:
-        name: Add properties
+        name: Add vk properties
         command: cp app/vk.properties.sample app/vk.properties
+    - run:
+        name: Add sentry properties
+        command: cp app/sentry.properties.sample app/sentry.properties
     - run:
         name: Download Dependencies
         command: ./gradlew androidDependencies

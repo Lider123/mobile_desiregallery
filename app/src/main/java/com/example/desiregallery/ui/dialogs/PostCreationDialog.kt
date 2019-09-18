@@ -5,12 +5,12 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.Utils
+import com.example.desiregallery.logging.DGLogger
 import com.example.desiregallery.models.Post
 import kotlinx.android.synthetic.main.dialog_create_post.view.*
 
@@ -49,16 +49,16 @@ class PostCreationDialog(private val activity: Activity, private val image: Bitm
         val imageRef = MainApplication.storage.getReferenceFromUrl(MainApplication.STORAGE_URL).child("${MainApplication.STORAGE_POST_IMAGES_DIR}/${post.id}.jpg")
         val uploadTask = imageRef.putBytes(Utils.bitmapToBytes(image))
         uploadTask.addOnFailureListener { error ->
-            Log.e(TAG, "Failed to upload image for new post ${post.id}: ${error.message}")
+            DGLogger.logError(TAG, "Failed to upload image for new post ${post.id}: ${error.message}")
             Toast.makeText(activity, R.string.post_image_upload_failure, Toast.LENGTH_LONG).show()
         }.addOnCompleteListener { task ->
             if (!task.isSuccessful) {
-                Log.e(TAG, "Image for new post ${post.id} has not been uploaded")
+                DGLogger.logError(TAG, "Image for new post ${post.id} has not been uploaded")
                 Toast.makeText(activity, R.string.post_image_upload_failure, Toast.LENGTH_LONG).show()
                 return@addOnCompleteListener
             }
 
-            Log.i(TAG, "Image for new post ${post.id} successfully uploaded")
+            DGLogger.logInfo(TAG, "Image for new post ${post.id} successfully uploaded")
             imageRef.downloadUrl.addOnCompleteListener { uriTask ->
                 post.setImageUrl(uriTask.result.toString())
                 onPublish(post)
