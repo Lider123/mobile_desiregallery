@@ -9,6 +9,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.vk.sdk.VKSdk
 import io.realm.Realm
+import io.sentry.Sentry
+import io.sentry.android.AndroidSentryClientFactory
 
 class MainApplication : Application() {
     companion object {
@@ -36,8 +38,14 @@ class MainApplication : Application() {
         storage = FirebaseStorage.getInstance()
         analyticsTracker = AnalyticsTracker.getInstance(this)
         Realm.init(this)
+        if (!BuildConfig.DEBUG)
+            initSentry()
         VKSdk.initialize(applicationContext)
         initGoogleSignInClient()
+    }
+
+    private fun initSentry() {
+        Sentry.init(BuildConfig.SENTRY_DSN, AndroidSentryClientFactory(applicationContext))
     }
 
     private fun initGoogleSignInClient() {

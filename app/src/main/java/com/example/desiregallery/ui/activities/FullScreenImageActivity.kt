@@ -15,7 +15,6 @@ import com.example.desiregallery.Utils
 import kotlinx.android.synthetic.main.activity_full_screen_image.*
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
-import android.util.Log
 import android.content.Intent
 import android.os.Environment
 import java.io.FileOutputStream
@@ -23,6 +22,8 @@ import java.io.File
 import java.io.IOException
 import android.net.Uri
 import com.example.desiregallery.MainApplication
+import com.example.desiregallery.logging.DGLogger
+
 
 class FullScreenImageActivity : AppCompatActivity() {
     companion object {
@@ -78,7 +79,7 @@ class FullScreenImageActivity : AppCompatActivity() {
             WRITE_REQUEST_CODE -> if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Utils.downloadBitmap(image, this)
             } else {
-                Log.e(TAG, "There is no permission to write to external storage")
+                DGLogger.logWarning(TAG, "There is no permission to write to external storage")
                 Toast.makeText(this, R.string.no_access_to_storage, Toast.LENGTH_LONG).show()
             }
         }

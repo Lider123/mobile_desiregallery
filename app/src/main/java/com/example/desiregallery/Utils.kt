@@ -7,8 +7,8 @@ import android.content.Context
 import android.os.Environment
 import android.util.Base64
 import android.view.inputmethod.InputMethodManager
-import android.util.Log
 import android.widget.Toast
+import com.example.desiregallery.logging.DGLogger
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -45,9 +45,9 @@ object Utils {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
             out.flush()
             out.close()
-            Log.i(tag, "Image has been downloaded")
+            DGLogger.logInfo(tag, "Image has been downloaded")
         } catch (e: IOException) {
-            Log.e(tag, "Unable to download image")
+            DGLogger.logError(tag, "Unable to download image")
             Toast.makeText(activity, R.string.download_error, Toast.LENGTH_LONG).show()
             e.printStackTrace()
         }

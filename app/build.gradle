@@ -11,6 +11,10 @@ def vkPropertiesFile = rootProject.file("app/vk.properties")
 def vkProperties = new Properties()
 vkProperties.load(new FileInputStream(vkPropertiesFile))
 
+def sentryPropertiesFile = rootProject.file("app/sentry.properties")
+def sentryProperties = new Properties()
+sentryProperties.load(new FileInputStream(sentryPropertiesFile))
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -25,10 +29,12 @@ android {
     }
     buildTypes {
         debug {
+            buildConfigField("String", "SENTRY_DSN", sentryProperties["DSN"])
             resValue("bool", "FIREBASE_ANALYTICS_ENABLED", "false")
             resValue("integer", "VK_APP_ID", vkProperties["APP_ID"])
         }
         release {
+            buildConfigField("String", "SENTRY_DSN", sentryProperties["DSN"])
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             resValue("bool", "FIREBASE_ANALYTICS_ENABLED", "true")
@@ -38,6 +44,9 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+    lintOptions {
+        lintConfig file("app/lint.xml")
     }
 }
 
@@ -65,6 +74,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.6.0'
     implementation 'com.vk:androidsdk:1.6.5'
     implementation 'de.hdodenhof:circleimageview:3.0.0'
+    implementation 'io.sentry:sentry-android:1.7.27'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

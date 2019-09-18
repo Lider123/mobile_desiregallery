@@ -6,7 +6,6 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.appcompat.widget.Toolbar
 import android.view.LayoutInflater
@@ -21,6 +20,7 @@ import androidx.fragment.app.Fragment
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.Utils
 import com.example.desiregallery.auth.EmailAccount
+import com.example.desiregallery.logging.DGLogger
 import com.example.desiregallery.models.User
 import com.example.desiregallery.network.DGNetwork
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -78,12 +78,12 @@ class ProfileFragment : Fragment() {
             val emailUser = account.user
             DGNetwork.getBaseService().updateUser(emailUser.login, emailUser).enqueue(object: Callback<User> {
                 override fun onFailure(call: Call<User>, t: Throwable) {
-                    Log.e(TAG, "Unable to update user ${emailUser.login}: ${t.message}")
+                    DGLogger.logError(TAG, "Unable to update user ${emailUser.login}: ${t.message}")
                 }
 
                 override fun onResponse(call: Call<User>, response: Response<User>) {
                     if (response.isSuccessful)
-                        Log.i(TAG, "VKUser ${emailUser.login} has been successfully updated")
+                        DGLogger.logInfo(TAG, "VKUser ${emailUser.login} has been successfully updated")
                 }
             })
 
@@ -94,9 +94,9 @@ class ProfileFragment : Fragment() {
                 .build()
             firebaseUser?.updateProfile(profileUpdates)?.addOnCompleteListener(requireActivity()) { task ->
                 if (task.isSuccessful)
-                    Log.i(TAG, String.format("Data of user %s have successfully been saved to firebase auth", emailUser.login))
+                    DGLogger.logInfo(TAG, String.format("Data of user %s have successfully been saved to firebase auth", emailUser.login))
                 else
-                    Log.e(TAG, "Unable to save user data to firebase auth: ${task.exception?.message}")
+                    DGLogger.logError(TAG, "Unable to save user data to firebase auth: ${task.exception?.message}")
             }
         }
 
@@ -116,16 +116,16 @@ class ProfileFragment : Fragment() {
             val imageRef = MainApplication.storage.getReferenceFromUrl(MainApplication.STORAGE_URL).child("${MainApplication.STORAGE_PROFILE_IMAGES_DIR}/${emailUser.login}.jpg")
             val uploadTask = imageRef.putBytes(Utils.bitmapToBytes(selectedImage))
             uploadTask.addOnFailureListener { error ->
-                Log.e(TAG, "Failed to upload image for user ${emailUser.login}: ${error.message}")
+                DGLogger.logError(TAG, "Failed to upload image for user ${emailUser.login}: ${error.message}")
                 Toast.makeText(activity, R.string.profile_image_upload_failure, Toast.LENGTH_LONG).show()
             }.addOnCompleteListener { task ->
                 if (!task.isSuccessful) {
-                    Log.e(TAG, "Image for user ${emailUser.login} has not been uploaded")
+                    DGLogger.logError(TAG, "Image for user ${emailUser.login} has not been uploaded")
                     Toast.makeText(activity, R.string.profile_image_upload_failure, Toast.LENGTH_LONG).show()
                     return@addOnCompleteListener
                 }
 
-                Log.i(TAG, "Image for user ${emailUser.login} successfully uploaded")
+                DGLogger.logInfo(TAG, "Image for user ${emailUser.login} successfully uploaded")
                 imageRef.downloadUrl.addOnCompleteListener { uriTask ->
                     emailUser.photo = uriTask.result.toString()
                     (activity as MainActivity).currAccount = EmailAccount(emailUser)
