@@ -46,6 +46,14 @@ class PostPresenter(
         view.updateImage(post.imageUrl.toString())
     }
 
+    fun setAuthorName() {
+        view.updateAuthorName(post.author.login)
+    }
+
+    fun setAuthorPhoto() {
+        view.updateAuthorPhoto(post.author.photo)
+    }
+
     fun goToCommentActivity(context: Context) {
         val intent = Intent(context, CommentsActivity::class.java).apply { putExtra(CommentsActivity.EXTRA_POST, post) }
         context.startActivity(intent)

@@ -2,20 +2,46 @@
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/item_author_container_padding"
+            android:orientation="horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/item_author_image"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="@dimen/item_author_image_margin_left"
+                android:layout_marginStart="@dimen/item_author_image_margin_left"
+                tools:src="@drawable/material"/>
+
+        <TextView
+                android:id="@+id/item_author_text"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:textSize="@dimen/item_author_font_size"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/item_author_text_margin_left"
+                android:layout_marginLeft="@dimen/item_author_text_margin_left"
+                android:gravity="center_vertical"
+                tools:text="Nickname"/>
+    </LinearLayout>
 
     <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-        <com.example.desiregallery.ui.widgets.SquareImageView
+        <ImageView
                 android:id="@+id/item_post_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/image_padding"
-                android:scaleType="fitCenter"/>
+                android:adjustViewBounds="true"/>
 
         <ProgressBar
                 android:id="@+id/item_progress"

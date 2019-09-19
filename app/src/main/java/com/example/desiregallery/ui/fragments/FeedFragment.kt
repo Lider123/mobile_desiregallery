@@ -47,6 +47,9 @@ class FeedFragment : androidx.fragment.app.Fragment() {
     private fun initModel() {
         model = ViewModelProviders.of(this).get(PostListViewModel::class.java)
         model.getPosts().observe(this, Observer<List<Post>>{ posts ->
+            post_list.setItemViewCacheSize(20)
+            post_list.isDrawingCacheEnabled = true
+            post_list.drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
             post_list.layoutManager = LinearLayoutManager(activity)
             post_list.adapter = PostAdapter(posts, activity!!)
         })

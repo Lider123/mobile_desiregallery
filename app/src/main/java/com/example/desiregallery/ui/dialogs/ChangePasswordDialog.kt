@@ -11,10 +11,6 @@ import kotlinx.android.synthetic.main.dialog_change_password.*
 
 @Deprecated("Restore password via email")
 class ChangePasswordDialog(private val activity: Activity) : AlertDialog(activity) {
-    companion object {
-        private val TAG = ChangePasswordDialog::class.java.simpleName
-    }
-
     private var currentPassword: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {

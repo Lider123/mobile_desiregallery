@@ -38,4 +38,8 @@ class User(
         result = 31 * result + birthday.hashCode()
         return result
     }
+
+    override fun toString(): String {
+        return "User(email='$email', password='$password', login='$login', gender='$gender', birthday='$birthday', photo='$photo')"
+    }
 }

@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <integer name="com_vk_sdk_AppId">@integer/VK_APP_ID</integer>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <integer
+            name="com_vk_sdk_AppId"
+            tools:keep="@integer/com_vk_sdk_AppId">@integer/VK_APP_ID</integer>
 </resources>

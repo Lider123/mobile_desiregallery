@@ -8,6 +8,7 @@ import kotlin.random.Random
 class Post : Serializable {
 
     var id = Random.nextLong(1e10.toLong()).toString()
+    var author: User = User("", "")
     var imageUrl: URL? = null
     var rating = 0f
     var numOfRates = 0
