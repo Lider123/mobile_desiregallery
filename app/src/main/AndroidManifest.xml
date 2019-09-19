@@ -25,7 +25,8 @@
         <activity
                 android:name=".ui.activities.SplashScreenActivity"
                 android:configChanges="orientation"
-                android:screenOrientation="portrait">
+                android:screenOrientation="portrait"
+                android:theme="@style/AppTheme.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -47,9 +48,9 @@
                 android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity
                 android:name=".ui.activities.LoginActivity"
-                android:theme="@style/Theme.AppCompat.NoActionBar"
                 android:configChanges="orientation"
-                android:screenOrientation="portrait"/>
+                android:screenOrientation="portrait"
+                android:theme="@style/AppTheme.SplashScreen"/>
         <activity
                 android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
                 android:theme="@style/Base.Theme.AppCompat"/>

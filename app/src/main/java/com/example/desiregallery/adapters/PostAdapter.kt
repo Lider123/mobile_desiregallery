@@ -12,9 +12,9 @@ import com.example.desiregallery.R
 import com.example.desiregallery.models.Post
 import com.example.desiregallery.presenters.PostPresenter
 import com.example.desiregallery.ui.views.PostView
-import com.example.desiregallery.ui.widgets.SquareImageView
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.item_post.view.*
 
 class PostAdapter(
@@ -36,10 +36,12 @@ class PostAdapter(
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view), PostView {
-        private val imageView: SquareImageView = view.item_post_image
+        private val imageView: ImageView = view.item_post_image
         private val ratingTextView: TextView = view.item_post_rating
         private val commentView: ImageView = view.item_post_comment
         private val progressBar: ProgressBar = view.item_progress
+        private val authorTextView: TextView = view.item_author_text
+        private val authorImage: CircleImageView = view.item_author_image
 
         private lateinit var rateDialog: ImageRateDialog
 
@@ -70,12 +72,34 @@ class PostAdapter(
                 })
         }
 
+        override fun updateAuthorName(name: String) {
+            authorTextView.text = name
+        }
+
+        override fun updateAuthorPhoto(imageUrl: String) {
+            if (imageUrl.isEmpty()) {
+                Picasso.with(context)
+                    .load(R.drawable.material)
+                    .error(R.drawable.image_error)
+                    .into(authorImage)
+            }
+            else {
+                Picasso.with(context)
+                    .load(imageUrl)
+                    .error(R.drawable.image_error)
+                    .placeholder(R.drawable.material)
+                    .into(authorImage)
+            }
+        }
+
         fun bind(context: Context, presenter: PostPresenter) {
             this.context = context
             this.presenter = presenter
 
             presenter.setImageView()
             presenter.setRating()
+            presenter.setAuthorName()
+            presenter.setAuthorPhoto()
             initListeners()
         }
 

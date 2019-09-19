@@ -2,6 +2,7 @@ package com.example.desiregallery.network.serializers
 
 import com.example.desiregallery.models.Comment
 import com.example.desiregallery.models.Post
+import com.example.desiregallery.models.User
 import com.google.gson.*
 
 import java.lang.reflect.Type
@@ -21,6 +22,8 @@ class PostDeserializer : JsonDeserializer<Post> {
 
         val id = rootObject.get("name").asString.split("/").last()
 
+        val authorName = fieldsObject.getAsJsonObject("author").get("stringValue").asString
+
         val imageUrl = fieldsObject.getAsJsonObject("imageUrl").get("stringValue").asString
 
         val rating: Float = ratingObject.get("doubleValue")?.asFloat ?: ratingObject.get("integerValue").asFloat
@@ -31,6 +34,7 @@ class PostDeserializer : JsonDeserializer<Post> {
 
         return Post().also {
             it.id = id
+            it.author = User("", "").apply { login = authorName }
             it.setImageUrl(imageUrl)
             it.rating = rating
             it.numOfRates = numOfRates

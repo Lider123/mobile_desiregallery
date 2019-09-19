@@ -23,7 +23,7 @@ class PostListViewModel : ViewModel() {
 
     fun getPosts() = posts
 
-    fun loadPosts() {
+    private fun loadPosts() {
         val api = DGNetwork.getBaseService()
         api.getPosts().enqueue(object: Callback<List<Post>> {
             override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
