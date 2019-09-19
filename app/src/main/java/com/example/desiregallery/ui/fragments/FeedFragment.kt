@@ -4,12 +4,12 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.desiregallery.R
 import com.example.desiregallery.adapters.PostAdapter
 import com.example.desiregallery.models.Post
@@ -26,7 +26,11 @@ class FeedFragment : androidx.fragment.app.Fragment() {
         model.addPost(post)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.fragment_feed, container, false)
         view.feed_fab.setOnClickListener { CropImage.activity().start(context!!, this) }
 
@@ -45,13 +49,15 @@ class FeedFragment : androidx.fragment.app.Fragment() {
     }
 
     private fun initModel() {
-        model = ViewModelProviders.of(this).get(PostListViewModel::class.java)
-        model.getPosts().observe(this, Observer<List<Post>>{ posts ->
-            post_list.setItemViewCacheSize(20)
-            post_list.isDrawingCacheEnabled = true
-            post_list.drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
-            post_list.layoutManager = LinearLayoutManager(activity)
-            post_list.adapter = PostAdapter(posts, activity!!)
+        model = ViewModelProvider(this).get(PostListViewModel::class.java)
+        model.getPosts().observe(this, Observer<List<Post>> { posts ->
+            post_list.apply {
+                setItemViewCacheSize(20)
+                layoutManager = LinearLayoutManager(context)
+                adapter = PostAdapter(posts)
+                isDrawingCacheEnabled = true
+                drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
+            }
         })
     }
 }
