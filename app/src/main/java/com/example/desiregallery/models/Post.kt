@@ -12,7 +12,6 @@ class Post : Serializable {
     var imageUrl: URL? = null
     var rating = 0f
     var numOfRates = 0
-    var comments: List<Comment> = ArrayList()
 
     fun setImageUrl(imageUrl: String) {
         try {
@@ -44,8 +43,6 @@ class Post : Serializable {
             return false
         if (numOfRates != other.numOfRates)
             return false
-        if (comments != other.comments)
-            return false
 
         return true
     }
@@ -55,7 +52,6 @@ class Post : Serializable {
         result = 31 * result + (imageUrl?.hashCode() ?: 0)
         result = 31 * result + rating.hashCode()
         result = 31 * result + numOfRates
-        result = 31 * result + comments.hashCode()
         return result
     }
 }

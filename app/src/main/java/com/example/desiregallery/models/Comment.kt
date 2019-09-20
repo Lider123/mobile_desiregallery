@@ -2,10 +2,19 @@ package com.example.desiregallery.models
 
 import java.io.Serializable
 import java.util.*
+import kotlin.random.Random
 
 /**
  * @author babaetskv
  * @since 08.08.19
  */
 
-data class Comment(var text: String, var datetime: Long = Date().time) : Serializable
+class Comment: Serializable {
+    var id: String = Random.nextLong(1e10.toLong()).toString()
+    var text: String = ""
+    var postId: String = ""
+    var author: String = ""
+    var datetime: Long = Date().time
+
+    override fun toString() = "Comment(text='$text', postId='$postId', author='$author', datetime=$datetime)"
+}

@@ -19,6 +19,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.Utils
+import com.example.desiregallery.auth.AccountProvider
 import com.example.desiregallery.auth.EmailAccount
 import com.example.desiregallery.logging.DGLogger
 import com.example.desiregallery.models.User
@@ -34,7 +35,6 @@ import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 class ProfileFragment : Fragment() {
     companion object {
         private val TAG = ProfileFragment::class.java.simpleName
@@ -48,22 +48,24 @@ class ProfileFragment : Fragment() {
         val imageView = root.findViewById<ImageView>(R.id.profile_image_backdrop)
         val fab = root.findViewById<FloatingActionButton>(R.id.profile_fab)
 
-        val account = (activity as MainActivity).currAccount
-        toolbarProfile.title = account.displayName
+        val account = AccountProvider.currAccount
+        account?.let {
+            toolbarProfile.title = it.displayName
 
-        val notSpecified = getString(R.string.not_specified)
-        root.profile_gender.text = if (account.gender.isNotEmpty()) account.gender else notSpecified
-        root.profile_birthday.text = if (account.birthday.isNotEmpty()) account.birthday else notSpecified
-        if (account.photoUrl.isNotEmpty())
-            Picasso.with(activity).load(account.photoUrl).into(imageView)
+            val notSpecified = getString(R.string.not_specified)
+            root.profile_gender.text = if (it.gender.isNotEmpty()) it.gender else notSpecified
+            root.profile_birthday.text = if (it.birthday.isNotEmpty()) it.birthday else notSpecified
+            if (it.photoUrl.isNotEmpty())
+                Picasso.with(activity).load(it.photoUrl).into(imageView)
 
-        if (account is EmailAccount) {
-            fab.setOnClickListener { CropImage.activity().start(requireContext(), this) }
-            root.profile_gender_view.setOnClickListener { editGender() }
-            root.profile_birthday_view.setOnClickListener { editBirthday() }
+            if (it is EmailAccount) {
+                fab.setOnClickListener { CropImage.activity().start(requireContext(), this) }
+                root.profile_gender_view.setOnClickListener { editGender() }
+                root.profile_birthday_view.setOnClickListener { editBirthday() }
+            }
+            else
+                fab.visibility = View.GONE
         }
-        else
-            fab.visibility = View.GONE
 
         return root
     }
@@ -73,7 +75,7 @@ class ProfileFragment : Fragment() {
         if (!infoChanged)
             return
 
-        val account = (activity as MainActivity).currAccount
+        val account = AccountProvider.currAccount
         if (account is EmailAccount) {
             val emailUser = account.user
             DGNetwork.getBaseService().updateUser(emailUser.login, emailUser).enqueue(object: Callback<User> {
@@ -105,7 +107,7 @@ class ProfileFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            val account = (activity as MainActivity).currAccount as? EmailAccount ?: return
+            val account = AccountProvider.currAccount as? EmailAccount ?: return
 
             val emailUser = account.user
 
@@ -128,7 +130,7 @@ class ProfileFragment : Fragment() {
                 DGLogger.logInfo(TAG, "Image for user ${emailUser.login} successfully uploaded")
                 imageRef.downloadUrl.addOnCompleteListener { uriTask ->
                     emailUser.photo = uriTask.result.toString()
-                    (activity as MainActivity).currAccount = EmailAccount(emailUser)
+                    AccountProvider.currAccount = EmailAccount(emailUser)
                     profile_image_backdrop.setImageBitmap(selectedImage)
                     (activity as MainActivity).updateNavHeaderPhoto()
                     infoChanged = true
@@ -138,7 +140,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun editBirthday() {
-        val account = (activity as MainActivity).currAccount as? EmailAccount ?: return
+        val account = AccountProvider.currAccount as? EmailAccount ?: return
 
         val emailUser = account.user
 
@@ -153,7 +155,7 @@ class ProfileFragment : Fragment() {
             val birthday = getString(R.string.date_format, dayOfMonth, monthOfYear+1, year)
             if (birthday != emailUser.birthday) {
                 emailUser.birthday = birthday
-                (activity as MainActivity).currAccount = EmailAccount(emailUser)
+                AccountProvider.currAccount = EmailAccount(emailUser)
                 profile_birthday.text = birthday
                 infoChanged = true
             }
@@ -166,7 +168,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun editGender() {
-        val account = (activity as MainActivity).currAccount as? EmailAccount ?: return
+        val account = AccountProvider.currAccount as? EmailAccount ?: return
 
         val emailUser = account.user
         val gender = emailUser.gender
@@ -177,7 +179,7 @@ class ProfileFragment : Fragment() {
 
         builder.setSingleChoiceItems(values, checkedItem) { dialog, item ->
             emailUser.gender = values[item]
-            (activity as MainActivity).currAccount = EmailAccount(emailUser)
+            AccountProvider.currAccount = EmailAccount(emailUser)
             profile_gender.text = values[item]
             infoChanged = true
             dialog.dismiss()

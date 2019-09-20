@@ -13,11 +13,12 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.lang.NullPointerException
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 object Utils {
+    private val TAG = Utils::class.java.simpleName
     private const val DOWNLOAD_FOLDER_DEFAULT = "DesireDownloads/"
 
     fun bitmapToBytes(bmp: Bitmap): ByteArray {
@@ -29,8 +30,13 @@ object Utils {
     fun bytesToBitmap(bytes: ByteArray): Bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
 
     fun hideSoftKeyboard(activity: Activity) {
-        val inputMethodManager = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(activity.currentFocus!!.windowToken, 0)
+        try {
+            val inputMethodManager = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(activity.currentFocus!!.windowToken, 0)
+        }
+        catch (e: NullPointerException) {
+            DGLogger.logWarning(TAG, "There was no keyboard to hide")
+        }
     }
 
     fun downloadBitmap(bitmap: Bitmap, activity: Activity) {

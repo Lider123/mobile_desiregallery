@@ -9,11 +9,10 @@ import java.io.Serializable
 /**
  * @author babaetskv on 19.09.19
  */
-class QueryBody : Serializable {
+class QueryRequest : Serializable {
     private val structuredQuery = JsonObject()
-    private val newTransaction = JsonObject()
 
-    fun from(collectionId: String): QueryBody {
+    fun from(collectionId: String): QueryRequest {
         if (structuredQuery.has("from"))
             structuredQuery.remove("from")
 
@@ -21,7 +20,7 @@ class QueryBody : Serializable {
         return this
     }
 
-    fun from(collectionIds: List<String>): QueryBody {
+    fun from(collectionIds: List<String>): QueryRequest {
         if (structuredQuery.has("from"))
             structuredQuery.remove("from")
 
@@ -32,7 +31,7 @@ class QueryBody : Serializable {
         return this
     }
 
-    fun where(filter: FieldFilter): QueryBody {
+    fun where(filter: FieldFilter): QueryRequest {
         if (structuredQuery.has("where"))
             structuredQuery.remove("where")
 
@@ -42,7 +41,7 @@ class QueryBody : Serializable {
         return this
     }
 
-    fun where(filter: CompositeFilter): QueryBody {
+    fun where(filter: CompositeFilter): QueryRequest {
         if (structuredQuery.has("where"))
             structuredQuery.remove("where")
 
@@ -52,7 +51,7 @@ class QueryBody : Serializable {
         return this
     }
 
-    fun orderBy(field: String, direction: OrderDirection): QueryBody {
+    fun orderBy(field: String, direction: OrderDirection): QueryRequest {
         if (structuredQuery.has("orderBy"))
             structuredQuery.remove("orderBy")
 

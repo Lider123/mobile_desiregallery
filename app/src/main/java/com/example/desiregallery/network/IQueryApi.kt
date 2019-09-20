@@ -1,7 +1,7 @@
 package com.example.desiregallery.network
 
-import com.example.desiregallery.models.User
-import com.example.desiregallery.network.query.QueryBody
+import com.example.desiregallery.models.Comment
+import com.example.desiregallery.network.query.QueryRequest
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -11,6 +11,6 @@ import retrofit2.http.POST
  */
 interface IQueryApi {
 
-    @POST(":runQuery")
-    fun getUsers(@Body query: QueryBody): Call<List<User>>
+    @POST(" ")
+    fun getComments(@Body query: QueryRequest): Call<List<Comment>>
 }
