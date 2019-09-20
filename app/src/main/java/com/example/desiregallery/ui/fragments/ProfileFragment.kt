@@ -78,7 +78,7 @@ class ProfileFragment : Fragment() {
         val account = AccountProvider.currAccount
         if (account is EmailAccount) {
             val emailUser = account.user
-            DGNetwork.getBaseService().updateUser(emailUser.login, emailUser).enqueue(object: Callback<User> {
+            DGNetwork.baseService.updateUser(emailUser.login, emailUser).enqueue(object: Callback<User> {
                 override fun onFailure(call: Call<User>, t: Throwable) {
                     DGLogger.logError(TAG, "Unable to update user ${emailUser.login}: ${t.message}")
                 }

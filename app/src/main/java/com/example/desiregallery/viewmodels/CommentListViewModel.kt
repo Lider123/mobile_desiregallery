@@ -27,7 +27,7 @@ class CommentListViewModel : ViewModel() {
             .from("comments")
             .where(FieldFilter("postId", ComparisonOperator.EQUAL, Value(postId)))
             .orderBy("datetime", OrderDirection.ASCENDING)
-        DGNetwork.getQueryService().getComments(commentsQuery).enqueue(object: Callback<List<Comment>> {
+        DGNetwork.queryService.getComments(commentsQuery).enqueue(object: Callback<List<Comment>> {
             override fun onFailure(call: Call<List<Comment>>, t: Throwable) {
                 DGLogger.logError(TAG, "Unable to load comments: ${t.message}")
                 error.value = CommentError.ERROR_DOWNLOAD
@@ -58,7 +58,7 @@ class CommentListViewModel : ViewModel() {
     }
 
     fun addComment(comment: Comment) {
-        DGNetwork.getBaseService().createComment(comment.id, comment).enqueue(object: Callback<Comment> {
+        DGNetwork.baseService.createComment(comment.id, comment).enqueue(object: Callback<Comment> {
 
             override fun onFailure(call: Call<Comment>, t: Throwable) {
                 DGLogger.logError(TAG, "Unable to upload comment: ${t.message}")

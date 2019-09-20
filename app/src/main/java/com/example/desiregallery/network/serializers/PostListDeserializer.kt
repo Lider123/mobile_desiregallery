@@ -23,7 +23,7 @@ class PostListDeserializer : JsonDeserializer<List<Post>> {
         val executor = Executors.newCachedThreadPool()
         for (author in authors)
             executor.execute {
-                val userResponse = DGNetwork.getBaseService().getUser(author).execute()
+                val userResponse = DGNetwork.baseService.getUser(author).execute()
                 if (!userResponse.isSuccessful || userResponse.body() == null)
                     throw Exception("There was an error while fetching authors")
 
