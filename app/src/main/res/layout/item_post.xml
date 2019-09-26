@@ -1,27 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="post"
+            type="com.example.desiregallery.models.Post" />
+
+    </data>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-    <LinearLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/item_author_container_padding"
             android:orientation="horizontal">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/item_author_image"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginLeft="@dimen/item_author_image_margin_left"
                 android:layout_marginStart="@dimen/item_author_image_margin_left"
-                tools:src="@drawable/material"/>
+                tools:src="@drawable/material" />
 
-        <TextView
+            <TextView
                 android:id="@+id/item_author_text"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -30,35 +39,35 @@
                 android:layout_marginStart="@dimen/item_author_text_margin_left"
                 android:layout_marginLeft="@dimen/item_author_text_margin_left"
                 android:gravity="center_vertical"
-                tools:text="Nickname"/>
-    </LinearLayout>
+                tools:text="Nickname" />
+        </LinearLayout>
 
-    <RelativeLayout
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-        <ImageView
+            <ImageView
                 android:id="@+id/item_post_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:adjustViewBounds="true"/>
+                android:adjustViewBounds="true" />
 
-        <ProgressBar
+            <ProgressBar
                 android:id="@+id/item_progress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:visibility="visible"
-                style="?android:attr/progressBarStyleLarge"/>
+                style="?android:attr/progressBarStyleLarge" />
 
-    </RelativeLayout>
+        </RelativeLayout>
 
-    <RelativeLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/item_status_padding">
 
-        <TextView
+            <TextView
                 android:id="@+id/item_post_rating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -68,9 +77,9 @@
                 android:drawableStart="@drawable/ic_grade_gold_32dp"
                 android:textColor="@color/colorOnBackground"
                 android:textSize="@dimen/item_rating_font_size"
-                android:text="@string/item_post_rating_placeholder"/>
+                android:text="@string/item_post_rating_placeholder" />
 
-        <ImageView
+            <ImageView
                 android:id="@+id/item_post_comment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -78,13 +87,14 @@
                 android:layout_marginStart="8dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                app:srcCompat="@drawable/ic_comment_colorsecondary_32dp"/>
+                app:srcCompat="@drawable/ic_comment_colorsecondary_32dp" />
 
-    </RelativeLayout>
+        </RelativeLayout>
 
-    <View
+        <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorSecondary"/>
+            android:background="@color/colorSecondary" />
 
-</LinearLayout>
+    </LinearLayout>
+</layout>
