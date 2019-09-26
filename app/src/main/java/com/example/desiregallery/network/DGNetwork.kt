@@ -1,5 +1,6 @@
 package com.example.desiregallery.network
 
+import com.example.desiregallery.models.Comment
 import com.example.desiregallery.models.Post
 import com.example.desiregallery.models.User
 import com.example.desiregallery.network.serializers.*
@@ -15,7 +16,8 @@ object DGNetwork {
 
     private var baseService: IDGApi? = null
     private var queryService: IQueryApi? = null
-    private var gson: Gson? = null
+    private var baseGson: Gson? = null
+    private var queryGson: Gson? = null
 
     fun getBaseService(): IDGApi {
         baseService?: run { initBaseService() }
@@ -27,10 +29,11 @@ object DGNetwork {
         return queryService!!
     }
 
-    private fun getGson(): Gson {
-        gson?: run {
+    private fun getBaseGson(): Gson {
+        baseGson?: run {
             val postListType = object : TypeToken<MutableList<Post>>() {}.type
             val userListType = object : TypeToken<MutableList<User>>() {}.type
+            val commentListType = object : TypeToken<MutableList<Comment>>() {}.type
             val gsonBuilder = GsonBuilder()
                 .registerTypeAdapter(Post::class.java, PostDeserializer())
                 .registerTypeAdapter(Post::class.java, PostSerializer())
@@ -38,15 +41,30 @@ object DGNetwork {
                 .registerTypeAdapter(User::class.java, UserDeserializer())
                 .registerTypeAdapter(User::class.java, UserSerializer())
                 .registerTypeAdapter(userListType, UserListDeserializer())
-            gson = gsonBuilder.create()
+                .registerTypeAdapter(Comment::class.java, CommentSerializer())
+                .registerTypeAdapter(Comment::class.java, CommentDeserializer())
+                .registerTypeAdapter(commentListType, CommentListDeserializer())
+            baseGson = gsonBuilder.create()
         }
-        return gson!!
+        return baseGson!!
+    }
+
+    private fun getQueryGson(): Gson {
+        queryGson?: run {
+            val commentListType = object : TypeToken<MutableList<Comment>>() {}.type
+            val gsonBuilder = GsonBuilder()
+                .registerTypeAdapter(Comment::class.java, CommentSerializer())
+                .registerTypeAdapter(Comment::class.java, CommentDeserializer())
+                .registerTypeAdapter(commentListType, CommentListDeserializer())
+            queryGson = gsonBuilder.create()
+        }
+        return queryGson!!
     }
 
     private fun initBaseService() {
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create(getGson()))
+            .addConverterFactory(GsonConverterFactory.create(getBaseGson()))
             .build()
         baseService = retrofit.create(IDGApi::class.java)
     }
@@ -54,7 +72,7 @@ object DGNetwork {
     private fun initQueryService() {
         val retrofit = Retrofit.Builder()
             .baseUrl(QUERY_URL)
-            .addConverterFactory(GsonConverterFactory.create(Gson()))
+            .addConverterFactory(GsonConverterFactory.create(getQueryGson()))
             .build()
         queryService = retrofit.create(IQueryApi::class.java)
     }

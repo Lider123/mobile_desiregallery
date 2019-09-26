@@ -5,6 +5,9 @@
     <string name="comments_input_hint">Add a comment</string>
     <string name="send">Send</string>
     <string name="comments">Comments</string>
+    <string name="comments_download_error">There was an error while loading comments</string>
+    <string name="comment_upload_error">Unable to send a comment</string>
+    <string name="comments_empty">No one has left a comment yet. Be the first.</string>
 
     <!-- Rate post dialog -->
     <string name="dialog_rate_text">Rate this post!</string>

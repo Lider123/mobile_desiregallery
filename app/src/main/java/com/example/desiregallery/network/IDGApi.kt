@@ -1,5 +1,6 @@
 package com.example.desiregallery.network
 
+import com.example.desiregallery.models.Comment
 import com.example.desiregallery.models.Post
 import com.example.desiregallery.models.User
 import retrofit2.Call
@@ -23,6 +24,9 @@ interface IDGApi {
 
     @POST("posts")
     fun createPost(@Query("documentId") id: String, @Body post: Post): Call<Post>
+
+    @POST("comments")
+    fun createComment(@Query("documentId") id: String, @Body comment: Comment): Call<Comment>
 
     @PATCH("users/{login}")
     fun updateUser(@Path("login") login: String, @Body user: User): Call<User>

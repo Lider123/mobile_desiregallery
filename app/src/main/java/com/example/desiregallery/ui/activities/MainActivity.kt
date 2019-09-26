@@ -39,8 +39,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var headerImageView: ImageView
     private lateinit var toolbar: Toolbar
 
-    lateinit var currAccount: IAccount
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -125,15 +123,17 @@ class MainActivity : AppCompatActivity() {
                         return
                     }
 
-                    currAccount = EmailAccount(user)
-                    DGLogger.logInfo(TAG, String.format("Got data for user ${currAccount.displayName}"))
+                    AccountProvider.currAccount = EmailAccount(user)
+                    AccountProvider.currAccount?.let { account ->
+                        DGLogger.logInfo(TAG, String.format("Got data for user ${account.displayName}"))
 
-                    val headerView = navigationView.getHeaderView(0)
-                    val headerTextView = headerView.findViewById<TextView>(R.id.nav_header_login)
-                    headerImageView = headerView.findViewById(R.id.nav_header_image)
-                    headerTextView.text = currAccount.displayName
-                    if (currAccount.photoUrl.isNotEmpty())
-                        updateNavHeaderPhoto()
+                        val headerView = navigationView.getHeaderView(0)
+                        val headerTextView = headerView.findViewById<TextView>(R.id.nav_header_login)
+                        headerImageView = headerView.findViewById(R.id.nav_header_image)
+                        headerTextView.text = account.displayName
+                        if (account.photoUrl.isNotEmpty())
+                            updateNavHeaderPhoto()
+                    }
                 }
             })
         }
@@ -150,15 +150,17 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 val user: VKApiUser = (response.parsedModel as VKList<*>)[0] as VKApiUser
-                currAccount = VKAccount(user)
-                DGLogger.logInfo(TAG, String.format("Got data for user ${currAccount.displayName}"))
+                AccountProvider.currAccount = VKAccount(user)
+                AccountProvider.currAccount?.let { account ->
+                    DGLogger.logInfo(TAG, String.format("Got data for user ${account.displayName}"))
 
-                val headerView = navigationView.getHeaderView(0)
-                val headerTextView = headerView.findViewById<TextView>(R.id.nav_header_login)
-                headerImageView = headerView.findViewById(R.id.nav_header_image)
-                headerTextView.text = currAccount.displayName
-                if (currAccount.photoUrl.isNotEmpty())
-                    updateNavHeaderPhoto()
+                    val headerView = navigationView.getHeaderView(0)
+                    val headerTextView = headerView.findViewById<TextView>(R.id.nav_header_login)
+                    headerImageView = headerView.findViewById(R.id.nav_header_image)
+                    headerTextView.text = account.displayName
+                    if (account.photoUrl.isNotEmpty())
+                        updateNavHeaderPhoto()
+                }
             }
 
             override fun onError(error: VKError?) {
@@ -175,20 +177,22 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        currAccount = GoogleAccount(account)
-        DGLogger.logInfo(TAG, String.format("Got data for user ${currAccount.displayName}"))
+        AccountProvider.currAccount = GoogleAccount(account)
+        AccountProvider.currAccount?.let { it ->
+            DGLogger.logInfo(TAG, String.format("Got data for user ${it.displayName}"))
 
-        val headerView = navigationView.getHeaderView(0)
-        val headerTextView = headerView.findViewById<TextView>(R.id.nav_header_login)
-        headerImageView = headerView.findViewById(R.id.nav_header_image)
-        headerTextView.text = currAccount.displayName
-        if (currAccount.photoUrl.isNotEmpty())
-            updateNavHeaderPhoto()
+            val headerView = navigationView.getHeaderView(0)
+            val headerTextView = headerView.findViewById<TextView>(R.id.nav_header_login)
+            headerImageView = headerView.findViewById(R.id.nav_header_image)
+            headerTextView.text = it.displayName
+            if (it.photoUrl.isNotEmpty())
+                updateNavHeaderPhoto()
+        }
     }
 
     private fun handleLogout() {
         PreferencesHelper(this).clearAuthMethod()
-        currAccount.logOut()
+        AccountProvider.currAccount?.logOut()
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         finish()
@@ -200,6 +204,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun updateNavHeaderPhoto() {
-        Picasso.with(this).load(currAccount.photoUrl).into(headerImageView)
+        Picasso.with(this).load(AccountProvider.currAccount?.photoUrl).into(headerImageView)
     }
 }

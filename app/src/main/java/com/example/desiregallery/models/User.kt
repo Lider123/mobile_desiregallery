@@ -1,9 +1,11 @@
 package com.example.desiregallery.models
 
+import java.io.Serializable
+
 class User(
     val email: String,
     val password: String
-) {
+) : Serializable {
 
     var login = ""
     var gender = ""

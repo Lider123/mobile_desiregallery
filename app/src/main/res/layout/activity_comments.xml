@@ -1,51 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".ui.activities.CommentsActivity">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/comments_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.activities.CommentsActivity">
 
     <include
-            android:id="@+id/comments_app_bar"
-            layout="@layout/toolbar_comments" />
+        android:id="@+id/comments_app_bar"
+        layout="@layout/toolbar_comments" />
+
+    <TextView
+        android:id="@+id/comments_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:padding="4dp"
+        android:textColor="@color/colorHint"
+        android:visibility="gone"
+        android:text="@string/comments_empty"
+        tools:visibility="visible"/>
+
+    <ProgressBar
+        android:id="@+id/comments_progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
     <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/comments_list"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
+        android:id="@+id/comments_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="@dimen/comments_input_view_padding">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/comments_input_view_padding">
 
         <EditText
-                android:id="@+id/comments_input"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:inputType="textMultiLine"
-                android:minLines="1"
-                android:maxLines="5"
-                android:layout_gravity="center_vertical"
-                android:hint="@string/comments_input_hint"
-                style="@style/CustomEditText"/>
+            android:id="@+id/comments_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="textMultiLine"
+            android:minLines="1"
+            android:maxLines="5"
+            android:hint="@string/comments_input_hint"
+            style="@style/CustomEditText"/>
 
         <Button
-                android:id="@+id/comments_button_send"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:text="@string/send"
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="2dp"
-                style="@style/CustomButton"/>
-
+            android:id="@+id/comments_button_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:text="@string/send"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="2dp"
+            style="@style/CustomButton"/>
     </LinearLayout>
-
 </LinearLayout>
