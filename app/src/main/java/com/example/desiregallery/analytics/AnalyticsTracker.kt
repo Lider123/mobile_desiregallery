@@ -13,13 +13,13 @@ class AnalyticsTracker private constructor(context: Context) : IDGAnalyticsTrack
 
     override fun trackLogin(method: AuthMethod) {
         val bundle = Bundle()
-        bundle.putString(FirebaseAnalytics.Param.METHOD, method.methodName)
+        bundle.putString(FirebaseAnalytics.Param.METHOD, method.name)
         analytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle)
     }
 
     override fun trackSignUp(method: AuthMethod) {
         val bundle = Bundle()
-        bundle.putString(FirebaseAnalytics.Param.METHOD, method.methodName)
+        bundle.putString(FirebaseAnalytics.Param.METHOD, method.name)
         analytics.logEvent(FirebaseAnalytics.Event.SIGN_UP, bundle)
     }
 

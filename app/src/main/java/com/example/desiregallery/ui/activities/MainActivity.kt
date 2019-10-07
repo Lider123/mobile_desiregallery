@@ -150,7 +150,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 val user: VKApiUser = (response.parsedModel as VKList<*>)[0] as VKApiUser
-                AccountProvider.currAccount = VKAccount(user)
+                AccountProvider.currAccount = VKAccount(this@MainActivity.resources, user)
                 AccountProvider.currAccount?.let { account ->
                     DGLogger.logInfo(TAG, String.format("Got data for user ${account.displayName}"))
 
