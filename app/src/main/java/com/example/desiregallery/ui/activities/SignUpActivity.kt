@@ -108,7 +108,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun saveUserInfo(user: User) {
-        DGNetwork.getBaseService().createUser(user.login, user).enqueue(object: Callback<User> {
+        DGNetwork.baseService.createUser(user.login, user).enqueue(object: Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 DGLogger.logInfo(TAG, String.format("Data of user %s have successfully been saved to firestore", user.login))
             }
