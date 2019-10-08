@@ -8,7 +8,7 @@ import com.example.desiregallery.network.DGNetwork
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
+import java.util.*
 
 class PostListViewModel : ViewModel() {
     companion object {
@@ -27,8 +27,13 @@ class PostListViewModel : ViewModel() {
         DGNetwork.baseService.getPosts().enqueue(object: Callback<List<Post>> {
             override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
                 if (response.isSuccessful) {
-                    if (response.body() != null) {
-                        posts.value = response.body()
+                    val data = response.body()
+                    if (data != null) {
+                        val sortedPosts = mutableListOf<Post>().apply {
+                            addAll(0, data)
+                            sortByDescending { post -> post.timestamp }
+                        }
+                        posts.value = sortedPosts
                         DGLogger.logInfo(TAG, "Posts have been loaded")
                     }
                     else {
@@ -45,7 +50,7 @@ class PostListViewModel : ViewModel() {
 
     fun addPost(post: Post) {
         val currPosts = posts.value as MutableList
-        currPosts.add(0, post)
+        currPosts.add(0, post.apply { timestamp = Date().time })
         posts.value = currPosts
         DGNetwork.baseService.createPost(post.id, post).enqueue(object: Callback<Post> {
             override fun onFailure(call: Call<Post>, t: Throwable) {

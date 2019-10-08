@@ -12,6 +12,7 @@ class Post : Serializable {
     var imageUrl: URL? = null
     var rating = 0f
     var numOfRates = 0
+    var timestamp = 0L
 
     fun setImageUrl(imageUrl: String) {
         try {
@@ -37,11 +38,15 @@ class Post : Serializable {
 
         if (id != other.id)
             return false
+        if (author != other.author)
+            return false
         if (imageUrl != other.imageUrl)
             return false
         if (rating != other.rating)
             return false
         if (numOfRates != other.numOfRates)
+            return false
+        if (timestamp != other.timestamp)
             return false
 
         return true
@@ -49,9 +54,11 @@ class Post : Serializable {
 
     override fun hashCode(): Int {
         var result = id.hashCode()
+        result = 31 * result + author.hashCode()
         result = 31 * result + (imageUrl?.hashCode() ?: 0)
         result = 31 * result + rating.hashCode()
         result = 31 * result + numOfRates
+        result = 31 * result + timestamp.hashCode()
         return result
     }
 }

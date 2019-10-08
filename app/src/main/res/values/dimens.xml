@@ -4,6 +4,7 @@
     <dimen name="item_rating_font_size">18sp</dimen>
     <dimen name="item_author_container_padding">8dp</dimen>
     <dimen name="item_author_font_size">16sp</dimen>
+    <dimen name="item_time_font_size">14sp</dimen>
     <dimen name="item_author_text_margin_left">8dp</dimen>
     <dimen name="item_author_image_margin_left">8dp</dimen>
 

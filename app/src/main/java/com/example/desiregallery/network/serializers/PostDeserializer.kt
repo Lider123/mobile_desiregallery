@@ -24,12 +24,15 @@ class PostDeserializer : JsonDeserializer<Post> {
 
         val numOfRates = fieldsObject.getAsJsonObject("numOfRates").get("integerValue").asInt
 
+        val timestamp = fieldsObject.getAsJsonObject("timestamp").get("integerValue").asLong
+
         return Post().also {
             it.id = id
             it.author = User("", "").apply { login = authorName }
             it.setImageUrl(imageUrl)
             it.rating = rating
             it.numOfRates = numOfRates
+            it.timestamp = timestamp
         }
     }
 }
