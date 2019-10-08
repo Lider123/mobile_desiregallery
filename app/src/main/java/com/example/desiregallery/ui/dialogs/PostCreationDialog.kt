@@ -10,8 +10,10 @@ import android.widget.Toast
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.Utils
+import com.example.desiregallery.auth.AccountProvider
 import com.example.desiregallery.logging.DGLogger
 import com.example.desiregallery.models.Post
+import com.example.desiregallery.models.User
 import kotlinx.android.synthetic.main.dialog_create_post.view.*
 
 /**
@@ -46,6 +48,10 @@ class PostCreationDialog(private val activity: Activity, private val image: Bitm
     private fun handlePublish() {
         content.dialog_post_progress.visibility = View.VISIBLE
         val post = Post()
+        post.author = User("", "").apply {
+            login = AccountProvider.currAccount?.displayName?: ""
+            photo = AccountProvider.currAccount?.photoUrl?: ""
+        }
         val imageRef = MainApplication.storage.getReferenceFromUrl(MainApplication.STORAGE_URL).child("${MainApplication.STORAGE_POST_IMAGES_DIR}/${post.id}.jpg")
         val uploadTask = imageRef.putBytes(Utils.bitmapToBytes(image))
         uploadTask.addOnFailureListener { error ->

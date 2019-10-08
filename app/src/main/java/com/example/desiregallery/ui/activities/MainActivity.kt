@@ -153,6 +153,10 @@ class MainActivity : AppCompatActivity() {
                 AccountProvider.currAccount = VKAccount(this@MainActivity.resources, user)
                 AccountProvider.currAccount?.let { account ->
                     DGLogger.logInfo(TAG, String.format("Got data for user ${account.displayName}"))
+                    saveUserInfo(User("", "").apply {
+                        photo = account.photoUrl
+                        login = account.displayName
+                    })
 
                     val headerView = navigationView.getHeaderView(0)
                     val headerTextView = headerView.findViewById<TextView>(R.id.nav_header_login)
@@ -180,6 +184,10 @@ class MainActivity : AppCompatActivity() {
         AccountProvider.currAccount = GoogleAccount(account)
         AccountProvider.currAccount?.let { it ->
             DGLogger.logInfo(TAG, String.format("Got data for user ${it.displayName}"))
+            saveUserInfo(User("", "").apply {
+                photo = it.photoUrl
+                login = it.displayName
+            })
 
             val headerView = navigationView.getHeaderView(0)
             val headerTextView = headerView.findViewById<TextView>(R.id.nav_header_login)
@@ -205,5 +213,18 @@ class MainActivity : AppCompatActivity() {
 
     fun updateNavHeaderPhoto() {
         Picasso.with(this).load(AccountProvider.currAccount?.photoUrl).into(headerImageView)
+    }
+
+    private fun saveUserInfo(user: User) {
+        DGNetwork.baseService.updateUser(user.login, user).enqueue(object: Callback<User> {
+
+            override fun onResponse(call: Call<User>, response: Response<User>) {
+                DGLogger.logInfo(TAG, "Data of user ${user.login} have successfully been saved to firestore")
+            }
+
+            override fun onFailure(call: Call<User>, t: Throwable) {
+                DGLogger.logError(TAG, "Unable to save user data to firestore: ${t.message}")
+            }
+        })
     }
 }
