@@ -11,12 +11,15 @@ class PostSerializer : JsonSerializer<Post> {
         val imageUrl = JsonObject()
         val rating = JsonObject()
         val numOfRates = JsonObject()
+        val author = JsonObject()
 
+        author.addProperty("stringValue", src.author.login)
         numOfRates.addProperty("integerValue", src.numOfRates)
         rating.addProperty("doubleValue", src.rating)
         imageUrl.addProperty("stringValue", src.imageUrl.toString())
 
         with(fields) {
+            add("author", author)
             add("numOfRates", numOfRates)
             add("rating", rating)
             add("imageUrl", imageUrl)

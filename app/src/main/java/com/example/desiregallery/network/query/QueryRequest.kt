@@ -8,6 +8,7 @@ import java.io.Serializable
 
 /**
  * @author babaetskv on 19.09.19
+ * Related to https://cloud.google.com/firestore/docs/reference/rest/v1/StructuredQuery
  */
 class QueryRequest : Serializable {
     private val structuredQuery = JsonObject()
@@ -59,6 +60,13 @@ class QueryRequest : Serializable {
             addProperty("direction", direction.name)
             add("field", JsonObject().apply { addProperty("fieldPath", field) })
         })
+        return this
+    }
+
+    fun limit(limit: Int): QueryRequest {
+        if (structuredQuery.has("limit"))
+            structuredQuery.remove("limit")
+        structuredQuery.addProperty("limit", limit)
         return this
     }
 }
