@@ -5,4 +5,5 @@ interface PostView {
     fun updateImage(imageUrl: String)
     fun updateAuthorName(name: String)
     fun updateAuthorPhoto(imageUrl: String)
+    fun updateTimestamp(time: Long)
 }

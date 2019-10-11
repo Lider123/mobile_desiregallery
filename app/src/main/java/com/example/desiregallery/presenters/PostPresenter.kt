@@ -54,6 +54,10 @@ class PostPresenter(
         view.updateAuthorPhoto(post.author.photo)
     }
 
+    fun setTimestamp() {
+        view.updateTimestamp(post.timestamp)
+    }
+
     fun goToCommentActivity(context: Context) {
         val intent = Intent(context, CommentsActivity::class.java).apply { putExtra(CommentsActivity.EXTRA_POST, post) }
         context.startActivity(intent)
