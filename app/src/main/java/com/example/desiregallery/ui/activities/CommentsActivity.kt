@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.desiregallery.R
 import com.example.desiregallery.Utils
-import com.example.desiregallery.adapters.CommentsAdapter
+import com.example.desiregallery.adapters.CommentAdapter
 import com.example.desiregallery.auth.AccountProvider
 import com.example.desiregallery.models.Comment
 import com.example.desiregallery.models.Post
@@ -27,7 +27,7 @@ class CommentsActivity : AppCompatActivity() {
 
     private lateinit var post: Post
     private lateinit var model: CommentListViewModel
-    private lateinit var adapter: CommentsAdapter
+    private lateinit var adapter: CommentAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +51,7 @@ class CommentsActivity : AppCompatActivity() {
         model = ViewModelProvider(this).get(CommentListViewModel::class.java)
         model.comments.observe(this, Observer<List<Comment>> { comments ->
             comments_list.layoutManager = LinearLayoutManager(this)
-            adapter = CommentsAdapter(comments, this)
+            adapter = CommentAdapter(comments)
             comments_list.adapter = adapter
             hideLoading()
             updateHintVisibility(comments.isNotEmpty())
