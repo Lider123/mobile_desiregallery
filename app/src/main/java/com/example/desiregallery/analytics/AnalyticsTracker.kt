@@ -27,6 +27,7 @@ class AnalyticsTracker private constructor(context: Context) : IDGAnalyticsTrack
         val bundle = Bundle()
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "post_image")
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, itemId)
+        analytics.logEvent(FirebaseAnalytics.Event.SHARE, bundle)
     }
 
     companion object {
