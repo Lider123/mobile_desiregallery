@@ -11,7 +11,7 @@ import com.example.desiregallery.presenters.PostPresenter
 import com.example.desiregallery.ui.views.PostViewHolder
 
 class PostAdapter(
-    private val items: List<Post>
+    private val items: MutableList<Post>
 ) : RecyclerView.Adapter<PostViewHolder>() {
 
     override fun getItemCount() = items.size
@@ -29,4 +29,9 @@ class PostAdapter(
         holder.bind(holder.itemView.context, presenter)
     }
 
+    fun addPosts(posts: List<Post>) {
+        val position = items.size
+        items.addAll(posts)
+        notifyItemRangeInserted(position, posts.size)
+    }
 }

@@ -69,4 +69,11 @@ class QueryRequest : Serializable {
         structuredQuery.addProperty("limit", limit)
         return this
     }
+
+    fun offset(count: Int): QueryRequest {
+        if (structuredQuery.has("offset"))
+            structuredQuery.remove("offset")
+        structuredQuery.addProperty("offset", count)
+        return this
+    }
 }
