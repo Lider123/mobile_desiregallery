@@ -5,47 +5,62 @@ import androidx.lifecycle.ViewModel
 import com.example.desiregallery.logging.DGLogger
 import com.example.desiregallery.models.Post
 import com.example.desiregallery.network.DGNetwork
+import com.example.desiregallery.network.query.OrderDirection
+import com.example.desiregallery.network.query.QueryRequest
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
 class PostListViewModel : ViewModel() {
-    companion object {
-        private val TAG = PostListViewModel::class.java.simpleName
-    }
+    val posts = MutableLiveData<MutableList<Post>>()
+    val isLoading = MutableLiveData<Boolean>().apply { value = false }
 
-    private var posts = MutableLiveData<List<Post>>()
+    var currentPage = 0
+    var isLastPage = false
+    val pageSize: Int
+        get() = PAGE_SIZE
 
     init {
         loadPosts()
     }
 
-    fun getPosts() = posts
+    fun loadPosts() {
+        val query = buildQuery(currentPage+1)
+        isLoading.value = true
+        DGNetwork.queryService.getPosts(query).enqueue(object: Callback<List<Post>> {
 
-    private fun loadPosts() {
-        DGNetwork.baseService.getPosts().enqueue(object: Callback<List<Post>> {
             override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
-                if (response.isSuccessful) {
-                    val data = response.body()
-                    if (data != null) {
-                        val sortedPosts = mutableListOf<Post>().apply {
-                            addAll(0, data)
-                            sortByDescending { post -> post.timestamp }
-                        }
-                        posts.value = sortedPosts
-                        DGLogger.logInfo(TAG, "Posts have been loaded")
-                    }
-                    else {
-                        DGLogger.logInfo(TAG, "There are no posts to load")
-                    }
+                if (!response.isSuccessful)
+                    DGLogger.logWarning(TAG, "Failed to load posts. Response received with code ${response.code()}: ${response.message()}")
+                else if (response.body() == null)
+                    DGLogger.logWarning(TAG, "Failed to load posts. Response received an empty body")
+                else if (response.body()!!.isEmpty()) {
+                    isLastPage = true
+                    DGLogger.logInfo(TAG, "Last page reached")
                 }
+                else {
+                    posts.value = response.body() as MutableList<Post>
+                    DGLogger.logInfo(TAG, "Posts have been loaded")
+                    currentPage++
+                }
+                isLoading.value = false
             }
 
             override fun onFailure(call: Call<List<Post>>, t: Throwable) {
                 DGLogger.logError(TAG, "Unable to load posts: ${t.message}")
+                isLoading.value = false
             }
         })
+    }
+
+    private fun buildQuery(page: Int): QueryRequest {
+        val offset = PAGE_SIZE * (page-1)
+        return QueryRequest()
+            .from("posts")
+            .orderBy("timestamp", OrderDirection.DESCENDING)
+            .limit(PAGE_SIZE)
+            .offset(offset)
     }
 
     fun addPost(post: Post) {
@@ -64,5 +79,10 @@ class PostListViewModel : ViewModel() {
                     DGLogger.logInfo(TAG, "Post ${post.id} successfully created")
             }
         })
+    }
+
+    companion object {
+        private val TAG = PostListViewModel::class.java.simpleName
+        const val PAGE_SIZE = 10
     }
 }

@@ -14,8 +14,9 @@ import java.util.concurrent.TimeUnit
 class PostListDeserializer : JsonDeserializer<List<Post>> {
     @Throws(JsonParseException::class)
     override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): List<Post>  {
-        val documents = json.asJsonObject.get("documents").asJsonArray
-        val posts: List<Post> = documents.map { context.deserialize(it, Post::class.java) as Post }
+        val documents = json.asJsonArray.filter { it.asJsonObject.has("document") }
+        val posts: List<Post> = documents
+            .map { context.deserialize(it.asJsonObject.get("document"), Post::class.java) as Post }
 
         val authors: Set<String> = LinkedHashSet(posts.map { post -> post.author.login })
         DGLogger.logInfo(TAG, "Preparing to load ${authors.size} users")

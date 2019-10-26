@@ -4,7 +4,6 @@ import com.example.desiregallery.models.Comment
 import com.example.desiregallery.models.Post
 import com.example.desiregallery.models.User
 import com.example.desiregallery.network.serializers.*
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import retrofit2.converter.gson.GsonConverterFactory
@@ -32,11 +31,15 @@ object GsonConverterProvider {
     }
 
     fun createQueryGson(): GsonConverterFactory {
+        val postListType = object : TypeToken<MutableList<Post>>() {}.type
         val commentListType = object : TypeToken<MutableList<Comment>>() {}.type
         val gsonBuilder = GsonBuilder()
             .registerTypeAdapter(Comment::class.java, CommentSerializer())
             .registerTypeAdapter(Comment::class.java, CommentDeserializer())
             .registerTypeAdapter(commentListType, CommentListDeserializer())
+            .registerTypeAdapter(Post::class.java, PostDeserializer())
+            .registerTypeAdapter(Post::class.java, PostSerializer())
+            .registerTypeAdapter(postListType, PostListDeserializer())
         return GsonConverterFactory.create(gsonBuilder.create())
     }
 }

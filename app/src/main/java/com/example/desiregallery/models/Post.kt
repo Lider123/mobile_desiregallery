@@ -6,7 +6,6 @@ import java.net.URL
 import kotlin.random.Random
 
 class Post : Serializable {
-
     var id = Random.nextLong(1e10.toLong()).toString()
     var author: User = User("", "")
     var imageUrl: URL? = null
@@ -60,5 +59,16 @@ class Post : Serializable {
         result = 31 * result + numOfRates
         result = 31 * result + timestamp.hashCode()
         return result
+    }
+
+    override fun toString(): String {
+        return "Post(" +
+                "id='$id', " +
+                "author=$author, " +
+                "imageUrl=$imageUrl, " +
+                "rating=$rating, " +
+                "numOfRates=$numOfRates, " +
+                "timestamp=$timestamp" +
+                ")"
     }
 }
