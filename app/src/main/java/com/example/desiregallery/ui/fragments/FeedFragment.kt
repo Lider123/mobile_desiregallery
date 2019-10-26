@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.desiregallery.R
 import com.example.desiregallery.adapters.PostAdapter
@@ -70,7 +70,7 @@ class FeedFragment : androidx.fragment.app.Fragment() {
     }
 
     private fun initModel() {
-        model = ViewModelProvider(this).get(PostListViewModel::class.java)
+        model = ViewModelProviders.of(this).get(PostListViewModel::class.java)
         model.posts.observe(this, Observer<List<Post>> { posts ->
             mPostAdapter.addPosts(posts)
         })

@@ -11,7 +11,8 @@ import com.example.desiregallery.R
 import kotlinx.android.synthetic.main.activity_login.*
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.auth.AuthMethod
-import com.example.desiregallery.logging.DGLogger
+import com.example.desiregallery.logging.logError
+import com.example.desiregallery.logging.logInfo
 import com.example.desiregallery.sharedprefs.PreferencesHelper
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -53,7 +54,7 @@ class LoginActivity : AppCompatActivity() {
         if (!VKSdk.onActivityResult(requestCode, resultCode, data, object: VKCallback<VKAccessToken> {
 
                 override fun onResult(res: VKAccessToken?) {
-                    DGLogger.logInfo(TAG, "Successfully logged in with vk")
+                    logInfo(TAG, "Successfully logged in with vk")
                     PreferencesHelper(this@LoginActivity).setAuthMethod(AuthMethod.VK)
                     MainApplication.analyticsTracker.trackLogin(AuthMethod.VK)
                     goToMainActivity()
@@ -62,7 +63,7 @@ class LoginActivity : AppCompatActivity() {
                 override fun onError(error: VKError?) {
                     if (error?.errorCode == VKError.VK_CANCELED)
                         return
-                    DGLogger.logError(TAG, "Failed to sign in with vk: ${error?.errorMessage}")
+                    logError(TAG, "Failed to sign in with vk: ${error?.errorMessage}")
                     Toast.makeText(this@LoginActivity, R.string.sign_in_vk_failure, Toast.LENGTH_SHORT).show()
                 }
             })) {
@@ -77,7 +78,7 @@ class LoginActivity : AppCompatActivity() {
     private fun handleGoogleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
-            DGLogger.logInfo(TAG, "Successfully signed in google account ${account?.displayName}")
+            logInfo(TAG, "Successfully signed in google account ${account?.displayName}")
             PreferencesHelper(this).setAuthMethod(AuthMethod.GOOGLE)
             MainApplication.analyticsTracker.trackLogin(AuthMethod.GOOGLE)
             goToMainActivity()
@@ -85,7 +86,7 @@ class LoginActivity : AppCompatActivity() {
         catch (e: ApiException) {
             if (e.statusCode == GoogleSignInStatusCodes.SIGN_IN_CANCELLED)
                 return
-            DGLogger.logError(TAG, "Failed to sign in with google: ${e.message}")
+            logError(TAG, "Failed to sign in with google: ${e.message}")
             Toast.makeText(this@LoginActivity, R.string.sign_in_google_failure, Toast.LENGTH_SHORT).show()
         }
     }
@@ -115,12 +116,12 @@ class LoginActivity : AppCompatActivity() {
             hideProgress()
             if (task.isSuccessful) {
                 val user = MainApplication.auth.currentUser
-                DGLogger.logInfo(TAG, "uUer with email ${user?.email} successfully logged in")
+                logInfo(TAG, "uUer with email ${user?.email} successfully logged in")
                 PreferencesHelper(this).setAuthMethod(AuthMethod.EMAIL)
                 MainApplication.analyticsTracker.trackLogin(AuthMethod.EMAIL)
                 goToMainActivity()
             } else {
-                DGLogger.logError(TAG, "Failed to login with email: ${task.exception}")
+                logError(TAG, "Failed to login with email: ${task.exception}")
                 Toast.makeText(baseContext, getString(R.string.login_error, task.exception?.message), Toast.LENGTH_LONG).show()
             }
         }

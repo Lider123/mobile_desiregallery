@@ -11,7 +11,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.vk.sdk.VKSdk
 import io.fabric.sdk.android.Fabric
-import io.realm.Realm
 import io.sentry.Sentry
 import io.sentry.android.AndroidSentryClientFactory
 
@@ -40,7 +39,6 @@ class MainApplication : Application() {
         auth = FirebaseAuth.getInstance()
         storage = FirebaseStorage.getInstance()
         analyticsTracker = AnalyticsTracker.getInstance(this)
-        Realm.init(this)
         if (!BuildConfig.DEBUG)
             initSentry()
         initCrashlytics()

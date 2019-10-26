@@ -13,9 +13,10 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.desiregallery.*
 import com.example.desiregallery.auth.*
-import com.example.desiregallery.logging.DGLogger
+import com.example.desiregallery.logging.logError
+import com.example.desiregallery.logging.logInfo
 import com.example.desiregallery.models.User
-import com.example.desiregallery.network.DGNetwork
+import com.example.desiregallery.network.baseService
 import com.example.desiregallery.sharedprefs.PreferencesHelper
 import com.example.desiregallery.ui.fragments.FeedFragment
 import com.example.desiregallery.ui.fragments.ProfileFragment
@@ -110,22 +111,22 @@ class MainActivity : AppCompatActivity() {
 
     private fun setCurrentEmailUser() {
         MainApplication.auth.currentUser?.let {
-            DGNetwork.baseService.getUser(it.displayName!!).enqueue(object: Callback<User> {
+            baseService.getUser(it.displayName!!).enqueue(object: Callback<User> {
 
                 override fun onFailure(call: Call<User>, t: Throwable) {
-                    DGLogger.logError(TAG, "Failed to get data for user ${it.displayName}: ${t.message}")
+                    logError(TAG, "Failed to get data for user ${it.displayName}: ${t.message}")
                 }
 
                 override fun onResponse(call: Call<User>, response: Response<User>) {
                     val user = response.body()
                     user?: run {
-                        DGLogger.logError(TAG, "Unable to get data for user ${it.displayName}: response received an empty body")
+                        logError(TAG, "Unable to get data for user ${it.displayName}: response received an empty body")
                         return
                     }
 
-                    AccountProvider.currAccount = EmailAccount(user)
+                    AccountProvider.currAccount = EmailAccount(user!!)
                     AccountProvider.currAccount?.let { account ->
-                        DGLogger.logInfo(TAG, String.format("Got data for user ${account.displayName}"))
+                        logInfo(TAG, String.format("Got data for user ${account.displayName}"))
 
                         val headerView = navigationView.getHeaderView(0)
                         val headerTextView = headerView.findViewById<TextView>(R.id.nav_header_login)
@@ -145,14 +146,14 @@ class MainActivity : AppCompatActivity() {
             override fun onComplete(response: VKResponse?) {
                 super.onComplete(response)
                 response?: run {
-                    DGLogger.logError(TAG, "Failed to get response for user info")
+                    logError(TAG, "Failed to get response for user info")
                     return
                 }
 
-                val user: VKApiUser = (response.parsedModel as VKList<*>)[0] as VKApiUser
+                val user: VKApiUser = (response!!.parsedModel as VKList<*>)[0] as VKApiUser
                 AccountProvider.currAccount = VKAccount(this@MainActivity.resources, user)
                 AccountProvider.currAccount?.let { account ->
-                    DGLogger.logInfo(TAG, String.format("Got data for user ${account.displayName}"))
+                    logInfo(TAG, String.format("Got data for user ${account.displayName}"))
                     saveUserInfo(User("", "").apply {
                         photo = account.photoUrl
                         login = account.displayName
@@ -169,7 +170,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onError(error: VKError?) {
                 super.onError(error)
-                DGLogger.logError(TAG, "There was an error with code ${error?.errorCode} while getting user info: ${error?.errorMessage}")
+                logError(TAG, "There was an error with code ${error?.errorCode} while getting user info: ${error?.errorMessage}")
             }
         })
     }
@@ -177,13 +178,13 @@ class MainActivity : AppCompatActivity() {
     private fun setCurrentGoogleUser() {
         val account = GoogleSignIn.getLastSignedInAccount(this)
         account?: run {
-            DGLogger.logError(TAG, "Failed to get google account")
+            logError(TAG, "Failed to get google account")
             return
         }
 
-        AccountProvider.currAccount = GoogleAccount(account)
+        AccountProvider.currAccount = GoogleAccount(account!!)
         AccountProvider.currAccount?.let { it ->
-            DGLogger.logInfo(TAG, String.format("Got data for user ${it.displayName}"))
+            logInfo(TAG, String.format("Got data for user ${it.displayName}"))
             saveUserInfo(User("", "").apply {
                 photo = it.photoUrl
                 login = it.displayName
@@ -216,14 +217,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun saveUserInfo(user: User) {
-        DGNetwork.baseService.updateUser(user.login, user).enqueue(object: Callback<User> {
+        baseService.updateUser(user.login, user).enqueue(object: Callback<User> {
 
             override fun onResponse(call: Call<User>, response: Response<User>) {
-                DGLogger.logInfo(TAG, "Data of user ${user.login} have successfully been saved to firestore")
+                logInfo(TAG, "Data of user ${user.login} have successfully been saved to firestore")
             }
 
             override fun onFailure(call: Call<User>, t: Throwable) {
-                DGLogger.logError(TAG, "Unable to save user data to firestore: ${t.message}")
+                logError(TAG, "Unable to save user data to firestore: ${t.message}")
             }
         })
     }
