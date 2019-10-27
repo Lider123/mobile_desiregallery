@@ -13,7 +13,7 @@ class Comment: Serializable {
     var id: String = Random.nextLong(1e10.toLong()).toString()
     var text: String = ""
     var postId: String = ""
-    var author: String = ""
+    var author = User("", "")
     var datetime: Long = Date().time
 
     override fun toString() = "Comment(text='$text', postId='$postId', author='$author', datetime=$datetime)"
