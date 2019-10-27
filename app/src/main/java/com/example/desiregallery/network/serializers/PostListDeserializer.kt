@@ -1,9 +1,9 @@
 package com.example.desiregallery.network.serializers
 
-import com.example.desiregallery.logging.DGLogger
+import com.example.desiregallery.logging.logInfo
 import com.example.desiregallery.models.Post
 import com.example.desiregallery.models.User
-import com.example.desiregallery.network.DGNetwork
+import com.example.desiregallery.network.baseService
 import com.google.gson.*
 import java.lang.Exception
 
@@ -19,12 +19,12 @@ class PostListDeserializer : JsonDeserializer<List<Post>> {
             .map { context.deserialize(it.asJsonObject.get("document"), Post::class.java) as Post }
 
         val authors: Set<String> = LinkedHashSet(posts.map { post -> post.author.login })
-        DGLogger.logInfo(TAG, "Preparing to load ${authors.size} users")
+        logInfo(TAG, "Preparing to load ${authors.size} users")
         val users = ArrayList<User>()
         val executor = Executors.newCachedThreadPool()
         for (author in authors)
             executor.execute {
-                val userResponse = DGNetwork.baseService.getUser(author).execute()
+                val userResponse = baseService.getUser(author).execute()
                 if (!userResponse.isSuccessful || userResponse.body() == null)
                     throw Exception("There was an error while fetching authors")
 
@@ -32,7 +32,7 @@ class PostListDeserializer : JsonDeserializer<List<Post>> {
             }
         executor.shutdown()
         executor.awaitTermination(15, TimeUnit.SECONDS)
-        DGLogger.logInfo(TAG, "Loaded ${users.size} users")
+        logInfo(TAG, "Loaded ${users.size} users")
         if (users.size != authors.size)
             throw Exception("There was an error while fetching authors")
 

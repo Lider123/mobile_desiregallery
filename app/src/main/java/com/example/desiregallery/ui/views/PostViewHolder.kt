@@ -5,10 +5,10 @@ import android.graphics.drawable.BitmapDrawable
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.example.desiregallery.R
-import com.example.desiregallery.Utils
 import com.example.desiregallery.databinding.ItemPostBinding
 import com.example.desiregallery.presenters.PostPresenter
 import com.example.desiregallery.ui.dialogs.ImageRateDialog
+import com.example.desiregallery.utils.formatDate
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
@@ -66,7 +66,7 @@ class PostViewHolder(
     }
 
     override fun updateTimestamp(time: Long) {
-        bind.itemTimestamp.text = Utils.formatDate(bind.itemTimestamp.context, time)
+        bind.itemTimestamp.text = formatDate(bind.itemTimestamp.context, time)
     }
 
     fun bind(context: Context, presenter: PostPresenter) {

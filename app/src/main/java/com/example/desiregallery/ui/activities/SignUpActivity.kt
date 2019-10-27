@@ -10,9 +10,10 @@ import android.text.TextWatcher
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.auth.AuthMethod
-import com.example.desiregallery.logging.DGLogger
+import com.example.desiregallery.logging.logError
+import com.example.desiregallery.logging.logInfo
 import com.example.desiregallery.models.User
-import com.example.desiregallery.network.DGNetwork
+import com.example.desiregallery.network.baseService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -88,7 +89,7 @@ class SignUpActivity : AppCompatActivity() {
 
             MainApplication.auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    DGLogger.logInfo(TAG, "VKUser $login successfully signed up")
+                    logInfo(TAG, "VKUser $login successfully signed up")
                     saveUserInfo(User(email, password).also {
                         it.login = login
                         it.gender = gender
@@ -98,7 +99,7 @@ class SignUpActivity : AppCompatActivity() {
                     MainApplication.analyticsTracker.trackSignUp(AuthMethod.EMAIL)
                     onBackPressed()
                 } else {
-                    DGLogger.logError(TAG, "Failed to sign up: ${task.exception?.message}")
+                    logError(TAG, "Failed to sign up: ${task.exception?.message}")
                     Toast.makeText(this, getString(R.string.sign_up_error, task.exception?.message), Toast.LENGTH_LONG).show()
                     enableAll()
                 }
@@ -108,13 +109,13 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun saveUserInfo(user: User) {
-        DGNetwork.baseService.createUser(user.login, user).enqueue(object: Callback<User> {
+        baseService.createUser(user.login, user).enqueue(object: Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
-                DGLogger.logInfo(TAG, String.format("Data of user %s have successfully been saved to firestore", user.login))
+                logInfo(TAG, String.format("Data of user %s have successfully been saved to firestore", user.login))
             }
 
             override fun onFailure(call: Call<User>, t: Throwable) {
-                DGLogger.logError(TAG, "Unable to save user data to firestore: ${t.message}")
+                logError(TAG, "Unable to save user data to firestore: ${t.message}")
             }
         })
 
@@ -122,9 +123,9 @@ class SignUpActivity : AppCompatActivity() {
         val profileUpdates = UserProfileChangeRequest.Builder().setDisplayName(user.login).build()
         firebaseUser?.updateProfile(profileUpdates)?.addOnCompleteListener(this) { task ->
             if (task.isSuccessful)
-                DGLogger.logInfo(TAG, String.format("Data of user %s have successfully been saved to firebase auth", user.login))
+                logInfo(TAG, String.format("Data of user %s have successfully been saved to firebase auth", user.login))
             else
-                DGLogger.logError(TAG, "Unable to save user data to firebase auth: ${task.exception?.message}")
+                logError(TAG, "Unable to save user data to firebase auth: ${task.exception?.message}")
         }
     }
 

@@ -9,8 +9,7 @@ import com.google.android.material.snackbar.Snackbar
 class SnackbarWrapper(container: View) {
     private val snackbar: Snackbar = Snackbar.make(container, "", Snackbar.LENGTH_LONG)
 
-    var currentText = ""
-        private set
+    private var currentText = ""
 
     fun show(text: String) {
         currentText = text

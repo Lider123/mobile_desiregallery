@@ -18,12 +18,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.example.desiregallery.MainApplication
-import com.example.desiregallery.Utils
 import com.example.desiregallery.auth.AccountProvider
 import com.example.desiregallery.auth.EmailAccount
-import com.example.desiregallery.logging.DGLogger
+import com.example.desiregallery.logging.logError
+import com.example.desiregallery.logging.logInfo
 import com.example.desiregallery.models.User
-import com.example.desiregallery.network.DGNetwork
+import com.example.desiregallery.network.baseService
+import com.example.desiregallery.utils.bitmapToBytes
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.squareup.picasso.Picasso
 import com.theartofdev.edmodo.cropper.CropImage
@@ -64,7 +65,7 @@ class ProfileFragment : Fragment() {
                 root.profile_birthday_view.setOnClickListener { editBirthday() }
             }
             else
-                fab.visibility = View.GONE
+                fab.hide()
         }
 
         return root
@@ -78,14 +79,14 @@ class ProfileFragment : Fragment() {
         val account = AccountProvider.currAccount
         if (account is EmailAccount) {
             val emailUser = account.user
-            DGNetwork.baseService.updateUser(emailUser.login, emailUser).enqueue(object: Callback<User> {
+            baseService.updateUser(emailUser.login, emailUser).enqueue(object: Callback<User> {
                 override fun onFailure(call: Call<User>, t: Throwable) {
-                    DGLogger.logError(TAG, "Unable to update user ${emailUser.login}: ${t.message}")
+                    logError(TAG, "Unable to update user ${emailUser.login}: ${t.message}")
                 }
 
                 override fun onResponse(call: Call<User>, response: Response<User>) {
                     if (response.isSuccessful)
-                        DGLogger.logInfo(TAG, "VKUser ${emailUser.login} has been successfully updated")
+                        logInfo(TAG, "VKUser ${emailUser.login} has been successfully updated")
                 }
             })
 
@@ -96,9 +97,9 @@ class ProfileFragment : Fragment() {
                 .build()
             firebaseUser?.updateProfile(profileUpdates)?.addOnCompleteListener(requireActivity()) { task ->
                 if (task.isSuccessful)
-                    DGLogger.logInfo(TAG, String.format("Data of user %s have successfully been saved to firebase auth", emailUser.login))
+                    logInfo(TAG, String.format("Data of user %s have successfully been saved to firebase auth", emailUser.login))
                 else
-                    DGLogger.logError(TAG, "Unable to save user data to firebase auth: ${task.exception?.message}")
+                    logError(TAG, "Unable to save user data to firebase auth: ${task.exception?.message}")
             }
         }
 
@@ -116,18 +117,18 @@ class ProfileFragment : Fragment() {
             val selectedImage = BitmapFactory.decodeStream(istream)
 
             val imageRef = MainApplication.storage.getReferenceFromUrl(MainApplication.STORAGE_URL).child("${MainApplication.STORAGE_PROFILE_IMAGES_DIR}/${emailUser.login}.jpg")
-            val uploadTask = imageRef.putBytes(Utils.bitmapToBytes(selectedImage))
+            val uploadTask = imageRef.putBytes(bitmapToBytes(selectedImage))
             uploadTask.addOnFailureListener { error ->
-                DGLogger.logError(TAG, "Failed to upload image for user ${emailUser.login}: ${error.message}")
+                logError(TAG, "Failed to upload image for user ${emailUser.login}: ${error.message}")
                 Toast.makeText(activity, R.string.profile_image_upload_failure, Toast.LENGTH_LONG).show()
             }.addOnCompleteListener { task ->
                 if (!task.isSuccessful) {
-                    DGLogger.logError(TAG, "Image for user ${emailUser.login} has not been uploaded")
+                    logError(TAG, "Image for user ${emailUser.login} has not been uploaded")
                     Toast.makeText(activity, R.string.profile_image_upload_failure, Toast.LENGTH_LONG).show()
                     return@addOnCompleteListener
                 }
 
-                DGLogger.logInfo(TAG, "Image for user ${emailUser.login} successfully uploaded")
+                logInfo(TAG, "Image for user ${emailUser.login} successfully uploaded")
                 imageRef.downloadUrl.addOnCompleteListener { uriTask ->
                     emailUser.photo = uriTask.result.toString()
                     AccountProvider.currAccount = EmailAccount(emailUser)

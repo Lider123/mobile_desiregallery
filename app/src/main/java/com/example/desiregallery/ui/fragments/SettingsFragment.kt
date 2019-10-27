@@ -6,7 +6,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
-import com.example.desiregallery.logging.DGLogger
+import com.example.desiregallery.logging.logInfo
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
@@ -25,11 +25,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 user?.let {
                     MainApplication.auth.sendPasswordResetEmail(user.email!!).addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            DGLogger.logInfo(TAG, "Message for password reset was sent to email ${user.email}")
+                            logInfo(TAG, "Message for password reset was sent to email ${user.email}")
                             Toast.makeText(requireActivity(), R.string.reset_password_sent, Toast.LENGTH_LONG).show()
                         }
                         else {
-                            DGLogger.logInfo(TAG, "An error occurred while sending password reset email: ${task.exception?.message}")
+                            logInfo(TAG, "An error occurred while sending password reset email: ${task.exception?.message}")
                             Toast.makeText(requireActivity(), R.string.reset_password_error, Toast.LENGTH_LONG).show()
                         }
                     }

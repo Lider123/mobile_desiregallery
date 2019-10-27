@@ -9,11 +9,12 @@ import android.view.View
 import android.widget.Toast
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
-import com.example.desiregallery.Utils
 import com.example.desiregallery.auth.AccountProvider
-import com.example.desiregallery.logging.DGLogger
+import com.example.desiregallery.logging.logError
+import com.example.desiregallery.logging.logInfo
 import com.example.desiregallery.models.Post
 import com.example.desiregallery.models.User
+import com.example.desiregallery.utils.bitmapToBytes
 import kotlinx.android.synthetic.main.dialog_create_post.view.*
 
 /**
@@ -53,18 +54,18 @@ class PostCreationDialog(private val activity: Activity, private val image: Bitm
             photo = AccountProvider.currAccount?.photoUrl?: ""
         }
         val imageRef = MainApplication.storage.getReferenceFromUrl(MainApplication.STORAGE_URL).child("${MainApplication.STORAGE_POST_IMAGES_DIR}/${post.id}.jpg")
-        val uploadTask = imageRef.putBytes(Utils.bitmapToBytes(image))
+        val uploadTask = imageRef.putBytes(bitmapToBytes(image))
         uploadTask.addOnFailureListener { error ->
-            DGLogger.logError(TAG, "Failed to upload image for new post ${post.id}: ${error.message}")
+            logError(TAG, "Failed to upload image for new post ${post.id}: ${error.message}")
             Toast.makeText(activity, R.string.post_image_upload_failure, Toast.LENGTH_LONG).show()
         }.addOnCompleteListener { task ->
             if (!task.isSuccessful) {
-                DGLogger.logError(TAG, "Image for new post ${post.id} has not been uploaded")
+                logError(TAG, "Image for new post ${post.id} has not been uploaded")
                 Toast.makeText(activity, R.string.post_image_upload_failure, Toast.LENGTH_LONG).show()
                 return@addOnCompleteListener
             }
 
-            DGLogger.logInfo(TAG, "Image for new post ${post.id} successfully uploaded")
+            logInfo(TAG, "Image for new post ${post.id} successfully uploaded")
             imageRef.downloadUrl.addOnCompleteListener { uriTask ->
                 post.setImageUrl(uriTask.result.toString())
                 onPublish(post)

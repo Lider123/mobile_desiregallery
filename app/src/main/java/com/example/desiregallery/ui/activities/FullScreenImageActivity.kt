@@ -11,7 +11,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.example.desiregallery.R
-import com.example.desiregallery.Utils
 import kotlinx.android.synthetic.main.activity_full_screen_image.*
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
@@ -22,8 +21,9 @@ import java.io.File
 import java.io.IOException
 import android.net.Uri
 import com.example.desiregallery.MainApplication
-import com.example.desiregallery.logging.DGLogger
-
+import com.example.desiregallery.logging.logWarning
+import com.example.desiregallery.utils.bytesToBitmap
+import com.example.desiregallery.utils.downloadBitmap
 
 class FullScreenImageActivity : AppCompatActivity() {
     companion object {
@@ -49,7 +49,7 @@ class FullScreenImageActivity : AppCompatActivity() {
         toolbar.title = ""
         setSupportActionBar(toolbar)
 
-        image = Utils.bytesToBitmap(intent.getByteArrayExtra(EXTRA_IMAGE))
+        image = bytesToBitmap(intent.getByteArrayExtra(EXTRA_IMAGE))
         postId = intent.getStringExtra(EXTRA_POST_ID)
         image_view_full_screen.setImageBitmap(image)
     }
@@ -77,9 +77,9 @@ class FullScreenImageActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             WRITE_REQUEST_CODE -> if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Utils.downloadBitmap(image, this)
+                downloadBitmap(image, this)
             } else {
-                DGLogger.logWarning(TAG, "There is no permission to write to external storage")
+                logWarning(TAG, "There is no permission to write to external storage")
                 Toast.makeText(this, R.string.no_access_to_storage, Toast.LENGTH_LONG).show()
             }
         }

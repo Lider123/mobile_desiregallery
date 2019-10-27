@@ -2,11 +2,14 @@ package com.example.desiregallery.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.desiregallery.logging.DGLogger
+import com.example.desiregallery.logging.logError
+import com.example.desiregallery.logging.logInfo
+import com.example.desiregallery.logging.logWarning
 import com.example.desiregallery.models.Post
-import com.example.desiregallery.network.DGNetwork
+import com.example.desiregallery.network.baseService
 import com.example.desiregallery.network.query.OrderDirection
 import com.example.desiregallery.network.query.QueryRequest
+import com.example.desiregallery.network.queryService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,27 +31,27 @@ class PostListViewModel : ViewModel() {
     fun loadPosts() {
         val query = buildQuery(currentPage+1)
         isLoading.value = true
-        DGNetwork.queryService.getPosts(query).enqueue(object: Callback<List<Post>> {
+        queryService.getPosts(query).enqueue(object: Callback<List<Post>> {
 
             override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
                 if (!response.isSuccessful)
-                    DGLogger.logWarning(TAG, "Failed to load posts. Response received with code ${response.code()}: ${response.message()}")
+                    logWarning(TAG, "Failed to load posts. Response received with code ${response.code()}: ${response.message()}")
                 else if (response.body() == null)
-                    DGLogger.logWarning(TAG, "Failed to load posts. Response received an empty body")
+                    logWarning(TAG, "Failed to load posts. Response received an empty body")
                 else if (response.body()!!.isEmpty()) {
                     isLastPage = true
-                    DGLogger.logInfo(TAG, "Last page reached")
+                    logInfo(TAG, "Last page reached")
                 }
                 else {
                     posts.value = response.body() as MutableList<Post>
-                    DGLogger.logInfo(TAG, "Posts have been loaded")
+                    logInfo(TAG, "Posts have been loaded")
                     currentPage++
                 }
                 isLoading.value = false
             }
 
             override fun onFailure(call: Call<List<Post>>, t: Throwable) {
-                DGLogger.logError(TAG, "Unable to load posts: ${t.message}")
+                logError(TAG, "Unable to load posts: ${t.message}")
                 isLoading.value = false
             }
         })
@@ -67,16 +70,16 @@ class PostListViewModel : ViewModel() {
         val currPosts = posts.value as MutableList
         currPosts.add(0, post.apply { timestamp = Date().time })
         posts.value = currPosts
-        DGNetwork.baseService.createPost(post.id, post).enqueue(object: Callback<Post> {
+        baseService.createPost(post.id, post).enqueue(object: Callback<Post> {
             override fun onFailure(call: Call<Post>, t: Throwable) {
-                DGLogger.logError(TAG, "Unable to create post ${post.id}: ${t.message}")
+                logError(TAG, "Unable to create post ${post.id}: ${t.message}")
             }
 
             override fun onResponse(call: Call<Post>, response: Response<Post>) {
                 if (!response.isSuccessful)
-                    DGLogger.logError(TAG, "Unable to create post ${post.id}: received response with code ${response.code()}")
+                    logError(TAG, "Unable to create post ${post.id}: received response with code ${response.code()}")
                 else
-                    DGLogger.logInfo(TAG, "Post ${post.id} successfully created")
+                    logInfo(TAG, "Post ${post.id} successfully created")
             }
         })
     }
