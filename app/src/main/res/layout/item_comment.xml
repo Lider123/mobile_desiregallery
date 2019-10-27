@@ -13,7 +13,7 @@
         android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/item_comment_background"
+        android:background="@drawable/item_background"
         android:layout_marginTop="@dimen/item_comment_margin"
         android:layout_marginStart="@dimen/item_comment_margin"
         android:layout_marginEnd="@dimen/item_comment_margin"
