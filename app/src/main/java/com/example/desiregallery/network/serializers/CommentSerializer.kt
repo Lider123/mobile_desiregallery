@@ -21,7 +21,7 @@ class CommentSerializer : JsonSerializer<Comment> {
         val postId = JsonObject()
 
         text.addProperty("stringValue", src.text)
-        author.addProperty("stringValue", src.author)
+        author.addProperty("stringValue", src.author.login)
         datetime.addProperty("stringValue", src.datetime.toString())
         postId.addProperty("stringValue", src.postId)
 

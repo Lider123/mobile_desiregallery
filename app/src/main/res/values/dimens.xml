@@ -8,13 +8,10 @@
     <dimen name="item_author_font_size">16sp</dimen>
     <dimen name="item_time_font_size">14sp</dimen>
     <dimen name="item_author_text_margin_left">8dp</dimen>
-    <dimen name="item_author_image_margin_left">8dp</dimen>
 
     <dimen name="comments_input_view_padding">10dp</dimen>
     <dimen name="item_comment_margin">16dp</dimen>
     <dimen name="item_corners_radius">4dp</dimen>
-    <dimen name="item_comment_text_margin">12dp</dimen>
-    <dimen name="item_comment_time_margin">4dp</dimen>
 
     <dimen name="button_corners_radius">2dp</dimen>
     <dimen name="button_margin">4dp</dimen>

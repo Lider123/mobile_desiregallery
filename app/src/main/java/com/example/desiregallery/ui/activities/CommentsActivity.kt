@@ -11,6 +11,7 @@ import com.example.desiregallery.adapters.CommentAdapter
 import com.example.desiregallery.auth.AccountProvider
 import com.example.desiregallery.models.Comment
 import com.example.desiregallery.models.Post
+import com.example.desiregallery.models.User
 import com.example.desiregallery.network.errors.CommentError
 import com.example.desiregallery.ui.widgets.SnackbarWrapper
 import com.example.desiregallery.utils.hideSoftKeyboard
@@ -77,7 +78,10 @@ class CommentsActivity : AppCompatActivity() {
         val newComment = Comment().apply {
             this.text = text
             postId = post.id
-            author = AccountProvider.currAccount?.displayName?: ""
+            author = User("", "").apply {
+                login = AccountProvider.currAccount?.displayName?: ""
+                photo = AccountProvider.currAccount?.photoUrl?: ""
+            }
         }
         model.addComment(newComment)
     }

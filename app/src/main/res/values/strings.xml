@@ -24,10 +24,7 @@
     <string name="birthday">birthday</string>
     <string name="confirm_password">confirm password</string>
     <string name="login_error">Unable to log in: %s</string>
-    <string name="invalid_login">Invalid login</string>
-    <string name="invalid_password">Invalid password</string>
     <string name="non_equal_passwords">Passwords are note equal</string>
-    <string name="non_unique_login">Login is already exists</string>
     <string name="sign_up_error">Unable to sign up: %s</string>
     <string name="sign_in_with_google">Sign In with Google</string>
     <string name="sign_in_vk_failure">Failed to Sign In with VK</string>
@@ -53,7 +50,6 @@
     <string name="not_specified">not specified</string>
     <string name="OK">OK</string>
     <string name="Cancel">Cancel</string>
-    <string name="login_dialog_title">Login</string>
     <string name="gender_dialog_title">Gender</string>
     <string name="profile_image_upload_failure">There was an error while uploading image</string>
     <string-array name="gender">
