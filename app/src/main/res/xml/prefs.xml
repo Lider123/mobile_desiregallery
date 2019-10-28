@@ -4,4 +4,7 @@
     <Preference
             android:key="@string/pref_change_password_key"
             android:title="@string/change_password"/>
+    <Preference
+            android:key="@string/pref_about_key"
+            android:title="@string/about"/>
 </PreferenceScreen>

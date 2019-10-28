@@ -60,6 +60,7 @@
     <!-- Settings screen -->
     <string name="reset_password_sent">Email for password reset was sent</string>
     <string name="reset_password_error">An error occurred while resetting password</string>
+    <string name="about">About</string>
 
     <!-- Change password dialog -->
     <string name="change_password">Change password</string>
@@ -76,10 +77,12 @@
 
     <!-- Preferences -->
     <string name="pref_change_password_key" translatable="false">pref_change_password_key</string>
+    <string name="pref_about_key" translatable="false">pref_about_key</string>
 
     <!-- Templates -->
     <string name="item_post_rating_placeholder" translatable="false">0.0</string>
     <string name="item_post_rating_format" translatable="false">%1$.1f</string>
     <string name="date_format" translatable="false">%1$02d.%2$02d.%3$d</string>
     <string name="datetime_format" translatable="false">dd.MM.yyyy HH:mm</string>
+    <string name="about_message">Version\n<b>%s</b>\n\nSource project\nhttps://github.com/Lider123/mobile_desiregallery</string>
 </resources>
