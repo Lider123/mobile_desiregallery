@@ -7,12 +7,9 @@ import androidx.preference.PreferenceFragmentCompat
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.logging.logInfo
+import com.example.desiregallery.ui.dialogs.AboutDialog
 
 class SettingsFragment : PreferenceFragmentCompat() {
-
-    companion object {
-        private val TAG = SettingsFragment::class.java.simpleName
-    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.prefs)
@@ -36,7 +33,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 }
                 true
             }
+            getString(R.string.pref_about_key) -> {
+                AboutDialog(requireContext()).show()
+                true
+            }
             else -> super.onPreferenceTreeClick(preference)
         }
+    }
+
+    companion object {
+        private val TAG = SettingsFragment::class.java.simpleName
     }
 }
