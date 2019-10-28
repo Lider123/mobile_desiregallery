@@ -47,7 +47,9 @@
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/item_author_font_size"
                         android:gravity="center_vertical"
-                        tools:text="Nickname" />
+                        android:textColor="@color/colorPrimary"
+                        android:textStyle="bold"
+                        tools:text="Author Name" />
 
                 <TextView
                         android:id="@+id/item_timestamp"
