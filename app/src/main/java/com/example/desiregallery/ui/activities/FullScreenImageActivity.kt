@@ -15,15 +15,18 @@ import kotlinx.android.synthetic.main.activity_full_screen_image.*
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
 import android.os.Environment
 import java.io.FileOutputStream
 import java.io.File
 import java.io.IOException
 import android.net.Uri
+import com.example.desiregallery.logging.logError
 import com.example.desiregallery.analytics.IDGAnalyticsTracker
 import com.example.desiregallery.logging.logWarning
-import com.example.desiregallery.utils.bytesToBitmap
 import com.example.desiregallery.utils.downloadBitmap
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
 import org.koin.android.ext.android.inject
 
 class FullScreenImageActivity : AppCompatActivity() {
@@ -32,7 +35,7 @@ class FullScreenImageActivity : AppCompatActivity() {
         private const val SHARING_REQUEST_CODE = 201
         private val TAG = FullScreenImageActivity::class.java.simpleName
 
-        const val EXTRA_IMAGE = "bytesImage"
+        const val EXTRA_IMAGE_URL = "imageUrl"
         const val EXTRA_POST_ID = "postId"
     }
 
@@ -52,9 +55,22 @@ class FullScreenImageActivity : AppCompatActivity() {
         toolbar.title = ""
         setSupportActionBar(toolbar)
 
-        image = bytesToBitmap(intent.getByteArrayExtra(EXTRA_IMAGE))
+        val imageUrl = intent.getStringExtra(EXTRA_IMAGE_URL)
+        Picasso.with(this)
+            .load(imageUrl)
+            .error(R.drawable.image_error)
+            .into(image_view_full_screen, object: Callback {
+
+                override fun onSuccess() {
+                    image = (image_view_full_screen.drawable as BitmapDrawable).bitmap
+                }
+
+                override fun onError() {
+                    logError(TAG, "There was an error while getting the bitmap")
+                }
+            })
+
         postId = intent.getStringExtra(EXTRA_POST_ID)
-        image_view_full_screen.setImageBitmap(image)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

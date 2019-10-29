@@ -2,7 +2,6 @@ package com.example.desiregallery.presenters
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import com.example.desiregallery.logging.*
 import com.example.desiregallery.models.Post
 import com.example.desiregallery.network.baseService
@@ -10,8 +9,6 @@ import com.example.desiregallery.ui.activities.CommentsActivity
 import com.example.desiregallery.ui.activities.FullScreenImageActivity
 import com.example.desiregallery.ui.contracts.IPostContract
 import com.example.desiregallery.ui.dialogs.ImageRateDialog
-import com.example.desiregallery.utils.bitmapToBytes
-import com.example.desiregallery.utils.prepareBitmap
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -31,8 +28,7 @@ class PostPresenter(private val post: Post = Post()): IPostContract.Presenter {
     override fun onImageClick(context: Context) {
         val imageUrl = post.imageUrl
         imageUrl?.let {
-            val bmpImage = prepareBitmap(context, imageUrl)
-            goToImageFullScreen(context, bmpImage)
+            goToImageFullScreen(context)
         }
     }
 
@@ -50,9 +46,9 @@ class PostPresenter(private val post: Post = Post()): IPostContract.Presenter {
         context.startActivity(intent)
     }
 
-    private fun goToImageFullScreen(context: Context, bmpImage: Bitmap) {
+    private fun goToImageFullScreen(context: Context) {
         val intent = Intent(context, FullScreenImageActivity::class.java).apply {
-            putExtra(FullScreenImageActivity.EXTRA_IMAGE, bitmapToBytes(bmpImage))
+            putExtra(FullScreenImageActivity.EXTRA_IMAGE_URL, post.imageUrl.toString())
             putExtra(FullScreenImageActivity.EXTRA_POST_ID, post.id)
         }
         context.startActivity(intent)
