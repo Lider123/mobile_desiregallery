@@ -9,7 +9,7 @@ import com.example.desiregallery.databinding.ItemCommentBinding
 import com.example.desiregallery.models.Comment
 import com.example.desiregallery.ui.viewholders.CommentViewHolder
 
-class CommentAdapter(private val items: List<Comment>) : RecyclerView.Adapter<CommentViewHolder>() {
+class CommentAdapter(private var items: List<Comment>) : RecyclerView.Adapter<CommentViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): CommentViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -22,5 +22,10 @@ class CommentAdapter(private val items: List<Comment>) : RecyclerView.Adapter<Co
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
         val item = items[position]
         holder.bind(item)
+    }
+
+    fun setComments(comments: List<Comment>) {
+        items = comments
+        notifyDataSetChanged()
     }
 }

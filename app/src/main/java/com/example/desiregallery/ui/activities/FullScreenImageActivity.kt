@@ -20,10 +20,11 @@ import java.io.FileOutputStream
 import java.io.File
 import java.io.IOException
 import android.net.Uri
-import com.example.desiregallery.MainApplication
+import com.example.desiregallery.analytics.IDGAnalyticsTracker
 import com.example.desiregallery.logging.logWarning
 import com.example.desiregallery.utils.bytesToBitmap
 import com.example.desiregallery.utils.downloadBitmap
+import org.koin.android.ext.android.inject
 
 class FullScreenImageActivity : AppCompatActivity() {
     companion object {
@@ -36,6 +37,8 @@ class FullScreenImageActivity : AppCompatActivity() {
     }
 
     private lateinit var toolbar: Toolbar
+
+    private val analytics: IDGAnalyticsTracker by inject()
 
     private lateinit var image: Bitmap
     private lateinit var postId: String
@@ -89,7 +92,7 @@ class FullScreenImageActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == SHARING_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK)
-                MainApplication.analyticsTracker.trackSharePhoto(postId)
+                analytics.trackSharePhoto(postId)
         }
     }
 

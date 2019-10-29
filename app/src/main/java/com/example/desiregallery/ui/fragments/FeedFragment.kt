@@ -7,8 +7,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.desiregallery.R
 import com.example.desiregallery.adapters.PostAdapter
@@ -19,10 +19,13 @@ import com.example.desiregallery.viewmodels.PostListViewModel
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.fragment_feed.*
 import kotlinx.android.synthetic.main.fragment_feed.view.*
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
-class FeedFragment : androidx.fragment.app.Fragment() {
-    private lateinit var model: PostListViewModel
-    private val mPostAdapter = PostAdapter(mutableListOf())
+class FeedFragment : Fragment() {
+    private val model: PostListViewModel by viewModel()
+    private val mPostAdapter: PostAdapter by inject { parametersOf(mutableListOf<Post>()) }
 
     private val addPost = fun(post: Post) {
         model.addPost(post)
@@ -55,8 +58,7 @@ class FeedFragment : androidx.fragment.app.Fragment() {
             })
         }
 
-        initModel()
-
+        setObservers()
         return view
     }
 
@@ -69,8 +71,7 @@ class FeedFragment : androidx.fragment.app.Fragment() {
         }
     }
 
-    private fun initModel() {
-        model = ViewModelProviders.of(this).get(PostListViewModel::class.java)
+    private fun setObservers() {
         model.posts.observe(this, Observer<List<Post>> { posts ->
             mPostAdapter.addPosts(posts)
         })

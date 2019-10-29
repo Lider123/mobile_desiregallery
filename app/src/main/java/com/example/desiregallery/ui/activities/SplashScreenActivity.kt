@@ -5,18 +5,17 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import com.example.desiregallery.R
-import com.example.desiregallery.sharedprefs.PreferencesHelper
+import com.example.desiregallery.sharedprefs.IDGSharedPreferencesHelper
+import org.koin.android.ext.android.inject
 
 class SplashScreenActivity : AppCompatActivity() {
-    companion object {
-        private var TIMEOUT = 2500L
-    }
+    private val prefs: IDGSharedPreferencesHelper by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
-        if (PreferencesHelper(this).hasAuthMethod())
+        if (prefs.hasAuthMethod())
             goToMainActivity()
         else {
             val r = Runnable(this::goToLoginActivity)
@@ -34,5 +33,9 @@ class SplashScreenActivity : AppCompatActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    companion object {
+        private var TIMEOUT = 2500L
     }
 }
