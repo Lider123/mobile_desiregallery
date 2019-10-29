@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory
 import android.os.Environment
 import android.util.Base64
 import android.widget.Toast
+import com.example.desiregallery.R
 import com.example.desiregallery.logging.logError
 import com.example.desiregallery.logging.logInfo
 import java.io.ByteArrayOutputStream
@@ -14,10 +15,6 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.util.*
-import android.content.Context
-import com.example.desiregallery.R
-import com.example.desiregallery.logging.logWarning
-import java.net.URL
 
 private const val TAG = "BitmapUtils"
 private const val DOWNLOAD_FOLDER_DEFAULT = "DesireDownloads/"
@@ -61,22 +58,3 @@ fun base64ToBitmap(str: String): Bitmap {
     val decodedBytes = Base64.decode(str, Base64.DEFAULT)
     return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
 }
-
-fun prepareBitmap(context: Context, url: String): Bitmap {
-    val uri = URL(url)
-    return prepareBitmap(context, uri)
-}
-
-fun prepareBitmap(context: Context, url: URL): Bitmap {
-    var bitmap: Bitmap? = null
-    try {
-        bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream())
-    } catch (e: Exception) {
-        logWarning(TAG, e.message?: "There was an error while preparing the bitmap")
-    }
-
-    if (bitmap == null)
-        bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.material)
-    return bitmap!!
-}
-
