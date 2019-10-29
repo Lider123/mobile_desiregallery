@@ -1,26 +1,16 @@
-package com.example.desiregallery.ui.views
+package com.example.desiregallery.ui.viewholders
 
-import android.content.Context
-import android.graphics.drawable.BitmapDrawable
 import androidx.recyclerview.widget.RecyclerView
 import com.example.desiregallery.R
 import com.example.desiregallery.databinding.ItemPostBinding
-import com.example.desiregallery.presenters.PostPresenter
-import com.example.desiregallery.ui.dialogs.ImageRateDialog
+import com.example.desiregallery.ui.contracts.IPostContract
 import com.example.desiregallery.utils.formatDate
 import com.squareup.picasso.Picasso
 
 class PostViewHolder(
     private val bind: ItemPostBinding
-) : RecyclerView.ViewHolder(bind.root), PostView {
-
-    private lateinit var rateDialog: ImageRateDialog
-    private lateinit var presenter: PostPresenter
-
-    private val handleRate = fun(rate: Float) {
-        rateDialog.hide()
-        presenter.updateRating(rate)
-    }
+) : RecyclerView.ViewHolder(bind.root), IPostContract.View {
+    private lateinit var presenter: IPostContract.Presenter
 
     override fun updateRating(rating: Float) {
         bind.itemPostRating.text = bind.itemPostRating
@@ -42,49 +32,40 @@ class PostViewHolder(
     }
 
     override fun updateAuthorPhoto(imageUrl: String) {
-        if (imageUrl.isEmpty()) {
+        if (imageUrl.isEmpty())
             Picasso.with(bind.itemAuthorImage.context)
                 .load(R.drawable.material)
                 .resize(100, 100)
                 .error(R.drawable.image_error)
                 .into(bind.itemAuthorImage)
-        } else {
+        else
             Picasso.with(bind.itemAuthorImage.context)
                 .load(imageUrl)
                 .resize(100, 100)
                 .error(R.drawable.image_error)
                 .placeholder(R.drawable.material)
                 .into(bind.itemAuthorImage)
-
-        }
     }
 
     override fun updateTimestamp(time: Long) {
         bind.itemTimestamp.text = formatDate(bind.itemTimestamp.context, time)
     }
 
-    fun bind(context: Context, presenter: PostPresenter) {
-        this.presenter = presenter
-
-        presenter.setImageView()
-        presenter.setRating()
-        presenter.setAuthorName()
-        presenter.setAuthorPhoto()
-        presenter.setTimestamp()
-        initListeners(context)
-    }
-
-    private fun initListeners(context: Context) {
+    private fun initListeners() {
         bind.itemPostImage.setOnClickListener {
-            val bmpImage = (bind.itemPostImage.drawable as BitmapDrawable).bitmap
-            presenter.goToImageFullScreen(bind.itemPostImage.context, bmpImage)
+            presenter.onImageClick(bind.itemPostImage.context)
         }
         bind.itemPostRating.setOnClickListener {
-            rateDialog = ImageRateDialog(bind.itemPostRating.context, handleRate)
-            rateDialog.show()
+            presenter.onRatingClick(bind.itemPostRating.context)
         }
         bind.itemPostComment.setOnClickListener {
-            presenter.goToCommentActivity(context)
+            presenter.onCommentsClick(bind.itemPostComment.context)
         }
+    }
+
+    fun bind(presenter: IPostContract.Presenter) {
+        this.presenter = presenter
+        presenter.attach(this)
+        initListeners()
     }
 }

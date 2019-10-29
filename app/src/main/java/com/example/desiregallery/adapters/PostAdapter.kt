@@ -8,7 +8,7 @@ import com.example.desiregallery.R
 import com.example.desiregallery.databinding.ItemPostBinding
 import com.example.desiregallery.models.Post
 import com.example.desiregallery.presenters.PostPresenter
-import com.example.desiregallery.ui.views.PostViewHolder
+import com.example.desiregallery.ui.viewholders.PostViewHolder
 
 class PostAdapter(
     private val items: MutableList<Post>
@@ -25,8 +25,8 @@ class PostAdapter(
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val item = items[position]
-        val presenter = PostPresenter(holder, item)
-        holder.bind(holder.itemView.context, presenter)
+        val presenter = PostPresenter(item)
+        holder.bind(presenter)
     }
 
     fun addPosts(posts: List<Post>) {
