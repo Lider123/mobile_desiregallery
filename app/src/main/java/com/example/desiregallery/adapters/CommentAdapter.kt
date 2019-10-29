@@ -7,7 +7,7 @@ import androidx.databinding.DataBindingUtil
 import com.example.desiregallery.R
 import com.example.desiregallery.databinding.ItemCommentBinding
 import com.example.desiregallery.models.Comment
-import com.example.desiregallery.ui.views.CommentViewHolder
+import com.example.desiregallery.ui.viewholders.CommentViewHolder
 
 class CommentAdapter(private val items: List<Comment>) : RecyclerView.Adapter<CommentViewHolder>() {
 

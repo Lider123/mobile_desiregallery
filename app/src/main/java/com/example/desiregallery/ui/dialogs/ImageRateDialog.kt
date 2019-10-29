@@ -13,6 +13,9 @@ class ImageRateDialog(context: Context, onRate: (Float) -> Unit) : Dialog(contex
         setContentView(R.layout.dialog_rate)
         window?.setBackgroundDrawableResource(android.R.color.transparent)
 
-        dialog_rate_bar.onRatingBarChangeListener = OnRatingBarChangeListener { _, rating, _ -> onRate(ceil(rating)) }
+        dialog_rate_bar.onRatingBarChangeListener = OnRatingBarChangeListener { _, rating, _ ->
+            hide()
+            onRate(ceil(rating))
+        }
     }
 }
