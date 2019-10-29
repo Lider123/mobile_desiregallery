@@ -10,10 +10,12 @@ import android.widget.Toast
 import com.example.desiregallery.R
 import kotlinx.android.synthetic.main.activity_login.*
 import com.example.desiregallery.MainApplication
+import com.example.desiregallery.analytics.AnalyticsTracker
+import com.example.desiregallery.analytics.IDGAnalyticsTracker
 import com.example.desiregallery.auth.AuthMethod
 import com.example.desiregallery.logging.logError
 import com.example.desiregallery.logging.logInfo
-import com.example.desiregallery.sharedprefs.PreferencesHelper
+import com.example.desiregallery.sharedprefs.IDGSharedPreferencesHelper
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes
@@ -24,14 +26,12 @@ import com.vk.sdk.VKCallback
 import com.vk.sdk.VKScope
 import com.vk.sdk.VKSdk
 import com.vk.sdk.api.VKError
+import org.koin.android.ext.android.inject
 
 class LoginActivity : AppCompatActivity() {
-    companion object {
-        private const val GOOGLE_SIGN_IN_REQUEST_CODE = 1
-        private val TAG = LoginActivity::class.java.simpleName
-    }
-
     private lateinit var inputTextWatcher: TextWatcher
+    private val prefs: IDGSharedPreferencesHelper by inject()
+    private val analytics: IDGAnalyticsTracker by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,8 +55,8 @@ class LoginActivity : AppCompatActivity() {
 
                 override fun onResult(res: VKAccessToken?) {
                     logInfo(TAG, "Successfully logged in with vk")
-                    PreferencesHelper(this@LoginActivity).setAuthMethod(AuthMethod.VK)
-                    MainApplication.analyticsTracker.trackLogin(AuthMethod.VK)
+                    prefs.setAuthMethod(AuthMethod.VK)
+                    analytics.trackLogin(AuthMethod.VK)
                     goToMainActivity()
                 }
 
@@ -79,8 +79,8 @@ class LoginActivity : AppCompatActivity() {
         try {
             val account = completedTask.getResult(ApiException::class.java)
             logInfo(TAG, "Successfully signed in google account ${account?.displayName}")
-            PreferencesHelper(this).setAuthMethod(AuthMethod.GOOGLE)
-            MainApplication.analyticsTracker.trackLogin(AuthMethod.GOOGLE)
+            prefs.setAuthMethod(AuthMethod.GOOGLE)
+            analytics.trackLogin(AuthMethod.GOOGLE)
             goToMainActivity()
         }
         catch (e: ApiException) {
@@ -117,8 +117,8 @@ class LoginActivity : AppCompatActivity() {
             if (task.isSuccessful) {
                 val user = MainApplication.auth.currentUser
                 logInfo(TAG, "uUer with email ${user?.email} successfully logged in")
-                PreferencesHelper(this).setAuthMethod(AuthMethod.EMAIL)
-                MainApplication.analyticsTracker.trackLogin(AuthMethod.EMAIL)
+                prefs.setAuthMethod(AuthMethod.EMAIL)
+                analytics.trackLogin(AuthMethod.EMAIL)
                 goToMainActivity()
             } else {
                 logError(TAG, "Failed to login with email: ${task.exception}")
@@ -155,5 +155,10 @@ class LoginActivity : AppCompatActivity() {
         button_sign_in.isEnabled = true
         button_sign_in_vk.isEnabled = true
         button_sign_in_google.isEnabled = true
+    }
+
+    companion object {
+        private const val GOOGLE_SIGN_IN_REQUEST_CODE = 1
+        private val TAG = LoginActivity::class.java.simpleName
     }
 }

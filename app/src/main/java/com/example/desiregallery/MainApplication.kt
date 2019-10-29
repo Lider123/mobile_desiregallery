@@ -3,7 +3,7 @@ package com.example.desiregallery
 import android.app.Application
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.core.CrashlyticsCore
-import com.example.desiregallery.analytics.AnalyticsTracker
+import com.example.desiregallery.di.applicationModule
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -13,6 +13,8 @@ import com.vk.sdk.VKSdk
 import io.fabric.sdk.android.Fabric
 import io.sentry.Sentry
 import io.sentry.android.AndroidSentryClientFactory
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 class MainApplication : Application() {
     companion object {
@@ -26,8 +28,6 @@ class MainApplication : Application() {
             private set
         lateinit var auth: FirebaseAuth
             private set
-        lateinit var analyticsTracker: AnalyticsTracker
-            private set
     }
 
     lateinit var googleSignInClient: GoogleSignInClient
@@ -35,10 +35,13 @@ class MainApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        startKoin {
+            androidContext(this@MainApplication)
+            modules(applicationModule)
+        }
         instance = this
         auth = FirebaseAuth.getInstance()
         storage = FirebaseStorage.getInstance()
-        analyticsTracker = AnalyticsTracker.getInstance(this)
         if (!BuildConfig.DEBUG)
             initSentry()
         initCrashlytics()

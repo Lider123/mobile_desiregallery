@@ -37,10 +37,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class ProfileFragment : Fragment() {
-    companion object {
-        private val TAG = ProfileFragment::class.java.simpleName
-    }
-
     private var infoChanged = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -187,5 +183,9 @@ class ProfileFragment : Fragment() {
         }
         val genderDialog = builder.create()
         genderDialog.show()
+    }
+
+    companion object {
+        private val TAG = ProfileFragment::class.java.simpleName
     }
 }

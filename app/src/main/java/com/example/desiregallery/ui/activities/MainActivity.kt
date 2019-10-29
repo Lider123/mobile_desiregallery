@@ -17,7 +17,7 @@ import com.example.desiregallery.logging.logError
 import com.example.desiregallery.logging.logInfo
 import com.example.desiregallery.models.User
 import com.example.desiregallery.network.baseService
-import com.example.desiregallery.sharedprefs.PreferencesHelper
+import com.example.desiregallery.sharedprefs.IDGSharedPreferencesHelper
 import com.example.desiregallery.ui.fragments.FeedFragment
 import com.example.desiregallery.ui.fragments.ProfileFragment
 import com.example.desiregallery.ui.fragments.SettingsFragment
@@ -26,19 +26,18 @@ import com.squareup.picasso.Picasso
 import com.vk.sdk.api.*
 import com.vk.sdk.api.model.VKApiUser
 import com.vk.sdk.api.model.VKList
+import org.koin.android.ext.android.inject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
-    companion object {
-        private val TAG = MainActivity::class.java.simpleName
-    }
-
     private lateinit var drawerLayout: androidx.drawerlayout.widget.DrawerLayout
     private lateinit var navigationView: NavigationView
     private lateinit var headerImageView: ImageView
     private lateinit var toolbar: Toolbar
+
+    private val prefs: IDGSharedPreferencesHelper by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,7 +101,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setCurrentUser() {
-        when (PreferencesHelper(this).getAuthMethod()) {
+        when (prefs.getAuthMethod()) {
             AuthMethod.EMAIL -> setCurrentEmailUser()
             AuthMethod.VK -> setCurrentVKUser()
             AuthMethod.GOOGLE -> setCurrentGoogleUser()
@@ -200,7 +199,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleLogout() {
-        PreferencesHelper(this).clearAuthMethod()
+        prefs.clearAuthMethod()
         AccountProvider.currAccount?.logOut()
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
@@ -227,5 +226,9 @@ class MainActivity : AppCompatActivity() {
                 logError(TAG, "Unable to save user data to firestore: ${t.message}")
             }
         })
+    }
+
+    companion object {
+        private val TAG = MainActivity::class.java.simpleName
     }
 }

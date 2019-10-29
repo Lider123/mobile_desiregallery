@@ -9,6 +9,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
+import com.example.desiregallery.analytics.IDGAnalyticsTracker
 import com.example.desiregallery.auth.AuthMethod
 import com.example.desiregallery.logging.logError
 import com.example.desiregallery.logging.logInfo
@@ -18,6 +19,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import com.google.firebase.auth.UserProfileChangeRequest
+import org.koin.android.ext.android.inject
 import java.util.*
 
 
@@ -25,6 +27,8 @@ class SignUpActivity : AppCompatActivity() {
     companion object {
         private val TAG = SignUpActivity::class.java.simpleName
     }
+
+    private val analytics: IDGAnalyticsTracker by inject()
 
     private lateinit var inputTextWatcher: TextWatcher
 
@@ -96,7 +100,7 @@ class SignUpActivity : AppCompatActivity() {
                         it.birthday = birthday
                     })
                     enableAll()
-                    MainApplication.analyticsTracker.trackSignUp(AuthMethod.EMAIL)
+                    analytics.trackSignUp(AuthMethod.EMAIL)
                     onBackPressed()
                 } else {
                     logError(TAG, "Failed to sign up: ${task.exception?.message}")

@@ -8,7 +8,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 /**
  * @author babaetskv on 18.09.19
  */
-class AnalyticsTracker private constructor(context: Context) : IDGAnalyticsTracker {
+class AnalyticsTracker(context: Context) : IDGAnalyticsTracker {
     private val analytics = FirebaseAnalytics.getInstance(context)
 
     override fun trackLogin(method: AuthMethod) {
@@ -28,9 +28,5 @@ class AnalyticsTracker private constructor(context: Context) : IDGAnalyticsTrack
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "post_image")
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, itemId)
         analytics.logEvent(FirebaseAnalytics.Event.SHARE, bundle)
-    }
-
-    companion object {
-        fun getInstance(context: Context) = AnalyticsTracker(context)
     }
 }
