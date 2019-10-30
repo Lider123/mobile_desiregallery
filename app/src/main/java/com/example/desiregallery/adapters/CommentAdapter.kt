@@ -1,15 +1,15 @@
 package com.example.desiregallery.adapters
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.paging.PagedListAdapter
 import com.example.desiregallery.R
 import com.example.desiregallery.databinding.ItemCommentBinding
 import com.example.desiregallery.models.Comment
 import com.example.desiregallery.ui.viewholders.CommentViewHolder
 
-class CommentAdapter(private var items: List<Comment>) : RecyclerView.Adapter<CommentViewHolder>() {
+class CommentAdapter : PagedListAdapter<Comment, CommentViewHolder>(Comment.CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): CommentViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -17,15 +17,8 @@ class CommentAdapter(private var items: List<Comment>) : RecyclerView.Adapter<Co
         return CommentViewHolder(bind)
     }
 
-    override fun getItemCount() = items.size
-
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
-        val item = items[position]
+        val item = getItem(position) as Comment
         holder.bind(item)
-    }
-
-    fun setComments(comments: List<Comment>) {
-        items = comments
-        notifyDataSetChanged()
     }
 }

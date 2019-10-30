@@ -58,7 +58,7 @@ class PostListViewModel : ViewModel() {
     }
 
     private fun buildQuery(page: Int): QueryRequest {
-        val offset = PAGE_SIZE * (page-1)
+        val offset = (PAGE_SIZE * (page-1)).toLong()
         return QueryRequest()
             .from("posts")
             .orderBy("timestamp", OrderDirection.DESCENDING)

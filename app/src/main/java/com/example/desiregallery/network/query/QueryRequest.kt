@@ -11,7 +11,7 @@ import java.io.Serializable
  * Related to https://cloud.google.com/firestore/docs/reference/rest/v1/StructuredQuery
  */
 class QueryRequest : Serializable {
-    private val structuredQuery = JsonObject()
+    val structuredQuery = JsonObject()
 
     fun from(collectionId: String): QueryRequest {
         if (structuredQuery.has("from"))
@@ -70,7 +70,7 @@ class QueryRequest : Serializable {
         return this
     }
 
-    fun offset(count: Int): QueryRequest {
+    fun offset(count: Long): QueryRequest {
         if (structuredQuery.has("offset"))
             structuredQuery.remove("offset")
         structuredQuery.addProperty("offset", count)

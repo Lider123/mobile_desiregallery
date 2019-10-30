@@ -1,18 +1,15 @@
 package com.example.desiregallery.di
 
 import android.view.View
-import com.example.desiregallery.adapters.CommentAdapter
 import com.example.desiregallery.adapters.PostAdapter
 import com.example.desiregallery.analytics.AnalyticsTracker
 import com.example.desiregallery.analytics.IDGAnalyticsTracker
-import com.example.desiregallery.models.Comment
 import com.example.desiregallery.models.Post
 import com.example.desiregallery.presenters.ProfilePresenter
 import com.example.desiregallery.sharedprefs.IDGSharedPreferencesHelper
 import com.example.desiregallery.sharedprefs.PreferencesHelper
 import com.example.desiregallery.ui.contracts.IProfileContract
 import com.example.desiregallery.ui.widgets.SnackbarWrapper
-import com.example.desiregallery.viewmodels.CommentListViewModel
 import com.example.desiregallery.viewmodels.PostListViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.experimental.dsl.viewModel
@@ -26,8 +23,6 @@ val applicationModule = module(override = true) {
     single<IDGAnalyticsTracker> { AnalyticsTracker(androidContext()) }
     factory { (container: View) -> SnackbarWrapper(container) }
     factory { (posts: MutableList<Post>) -> PostAdapter(posts) }
-    factory { (comments: List<Comment>) -> CommentAdapter(comments) }
     factory<IProfileContract.Presenter> { (view: IProfileContract.View) -> ProfilePresenter(view) }
     viewModel<PostListViewModel>()
-    viewModel<CommentListViewModel>()
 }
