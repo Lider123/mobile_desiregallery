@@ -40,10 +40,4 @@ class MainApplication : Application() {
             .build()
         Fabric.with(this, crashlytics)
     }
-
-    companion object {
-        const val STORAGE_URL = "gs://desiregallery-8072a.appspot.com"
-        const val STORAGE_POST_IMAGES_DIR = "postImages"
-        const val STORAGE_PROFILE_IMAGES_DIR = "profileImages"
-    }
 }

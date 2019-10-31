@@ -7,15 +7,13 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.auth.AccountProvider
 import com.example.desiregallery.logging.logError
 import com.example.desiregallery.logging.logInfo
 import com.example.desiregallery.models.Post
 import com.example.desiregallery.models.User
-import com.example.desiregallery.utils.bitmapToBytes
-import com.google.firebase.storage.FirebaseStorage
+import com.example.desiregallery.storage.IStorageHelper
 import kotlinx.android.synthetic.main.dialog_create_post.view.*
 
 /**
@@ -27,13 +25,9 @@ class PostCreationDialog(
     private val activity: Activity,
     private val image: Bitmap,
     private val accProvider: AccountProvider,
-    private val storage: FirebaseStorage,
+    private val storageHelper: IStorageHelper,
     private val onPublish: (Post) -> Unit
 ) : AlertDialog(activity) {
-    companion object {
-        private val TAG = PostCreationDialog::class.java.simpleName
-    }
-
     private lateinit var content: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,27 +54,26 @@ class PostCreationDialog(
             login = accProvider.currAccount?.displayName?: ""
             photo = accProvider.currAccount?.photoUrl?: ""
         }
-        val imageRef = storage.getReferenceFromUrl(MainApplication.STORAGE_URL).child("${MainApplication.STORAGE_POST_IMAGES_DIR}/${post.id}.jpg")
-        val uploadTask = imageRef.putBytes(bitmapToBytes(image))
-        uploadTask.addOnFailureListener { error ->
-            logError(TAG, "Failed to upload image for new post ${post.id}: ${error.message}")
-            Toast.makeText(activity, R.string.post_image_upload_failure, Toast.LENGTH_LONG).show()
-        }.addOnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                logError(TAG, "Image for new post ${post.id} has not been uploaded")
-                Toast.makeText(activity, R.string.post_image_upload_failure, Toast.LENGTH_LONG).show()
-                return@addOnCompleteListener
-            }
+        storageHelper.uploadPostImage(image, post.id, object: IStorageHelper.Callback {
 
-            logInfo(TAG, "Image for new post ${post.id} successfully uploaded")
-            imageRef.downloadUrl.addOnCompleteListener { uriTask ->
-                post.setImageUrl(uriTask.result.toString())
+            override fun onComplete(resultUrl: String) {
+                logInfo(TAG, "Image for new post ${post.id} successfully uploaded")
+                post.setImageUrl(resultUrl)
                 onPublish(post)
             }
-        }
+
+            override fun onFailure(error: Exception) {
+                logError(TAG, "Failed to upload image for new post ${post.id}: ${error.message}")
+                Toast.makeText(activity, R.string.post_image_upload_failure, Toast.LENGTH_LONG).show()
+            }
+        })
         content.dialog_post_progress.visibility = View.GONE
         dismiss()
     }
 
     private fun handleCancel() = dismiss()
+
+    companion object {
+        private val TAG = PostCreationDialog::class.java.simpleName
+    }
 }

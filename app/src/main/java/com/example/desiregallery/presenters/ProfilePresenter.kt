@@ -8,7 +8,6 @@ import android.content.res.Resources
 import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.appcompat.app.AlertDialog
-import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.auth.AccountProvider
 import com.example.desiregallery.auth.EmailAccount
@@ -16,11 +15,10 @@ import com.example.desiregallery.logging.logError
 import com.example.desiregallery.logging.logInfo
 import com.example.desiregallery.models.User
 import com.example.desiregallery.network.baseService
+import com.example.desiregallery.storage.IStorageHelper
 import com.example.desiregallery.ui.contracts.IProfileContract
-import com.example.desiregallery.utils.bitmapToBytes
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
-import com.google.firebase.storage.FirebaseStorage
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -34,7 +32,7 @@ class ProfilePresenter(
     private val view: IProfileContract.View,
     private val accProvider: AccountProvider,
     private val auth: FirebaseAuth,
-    private val storage: FirebaseStorage
+    private val storageHelper: IStorageHelper
 ) : IProfileContract.Presenter {
 
     override var infoChanged = false
@@ -103,28 +101,22 @@ class ProfilePresenter(
 
         val istream = resolver.openInputStream(imageUri)
         val selectedImage = BitmapFactory.decodeStream(istream)
+        storageHelper.uploadProfileImage(selectedImage, emailUser.login, object: IStorageHelper.Callback {
 
-        val imageRef = storage.getReferenceFromUrl(MainApplication.STORAGE_URL).child("${MainApplication.STORAGE_PROFILE_IMAGES_DIR}/${emailUser.login}.jpg")
-        val uploadTask = imageRef.putBytes(bitmapToBytes(selectedImage))
-        uploadTask.addOnFailureListener { error ->
-            logError(TAG, "Failed to upload image for user ${emailUser.login}: ${error.message}")
-            onFailure()
-        }.addOnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                logError(TAG, "Image for user ${emailUser.login} has not been uploaded")
-                onFailure()
-                return@addOnCompleteListener
-            }
-
-            logInfo(TAG, "Image for user ${emailUser.login} successfully uploaded")
-            imageRef.downloadUrl.addOnCompleteListener { uriTask ->
-                emailUser.photo = uriTask.result.toString()
+            override fun onComplete(resultUrl: String) {
+                logInfo(TAG, "Image for user ${emailUser.login} successfully uploaded")
+                emailUser.photo = resultUrl
                 accProvider.currAccount = EmailAccount(emailUser, auth)
                 view.updatePhoto(selectedImage)
                 onComplete()
                 infoChanged = true
             }
-        }
+
+            override fun onFailure(error: Exception) {
+                logError(TAG, "Failed to upload image for user ${emailUser.login}: ${error.message}")
+                onFailure()
+            }
+        })
     }
 
     private fun editBirthday(context: Context) {
