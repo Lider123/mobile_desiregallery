@@ -1,11 +1,9 @@
-package com.example.desiregallery.viewmodels
+package com.example.desiregallery.ui.comments
 
 import android.app.Application
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.example.desiregallery.ui.comments.CommentDataSource
-import com.example.desiregallery.ui.comments.CommentDataSourceFactory
 import com.example.desiregallery.utils.logError
 import com.example.desiregallery.utils.logInfo
 import com.example.desiregallery.data.models.Comment

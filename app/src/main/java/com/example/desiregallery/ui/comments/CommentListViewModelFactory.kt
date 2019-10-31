@@ -1,4 +1,4 @@
-package com.example.desiregallery.viewmodels
+package com.example.desiregallery.ui.comments
 
 import android.app.Application
 import androidx.lifecycle.ViewModel

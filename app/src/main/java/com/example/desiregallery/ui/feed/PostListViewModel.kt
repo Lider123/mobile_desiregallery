@@ -1,4 +1,4 @@
-package com.example.desiregallery.viewmodels
+package com.example.desiregallery.ui.feed
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

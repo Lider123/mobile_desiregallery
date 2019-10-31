@@ -14,7 +14,7 @@ import com.example.desiregallery.data.storage.IStorageHelper
 import com.example.desiregallery.data.storage.StorageHelper
 import com.example.desiregallery.ui.profile.IProfileContract
 import com.example.desiregallery.ui.widgets.SnackbarWrapper
-import com.example.desiregallery.viewmodels.PostListViewModel
+import com.example.desiregallery.ui.feed.PostListViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth

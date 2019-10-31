@@ -16,7 +16,6 @@ import com.example.desiregallery.listeners.PaginationListener
 import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.data.storage.IStorageHelper
 import com.example.desiregallery.ui.dialogs.PostCreationDialog
-import com.example.desiregallery.viewmodels.PostListViewModel
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.fragment_feed.*
 import kotlinx.android.synthetic.main.fragment_feed.view.*

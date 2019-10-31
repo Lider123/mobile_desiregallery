@@ -15,8 +15,6 @@ import com.example.desiregallery.data.models.User
 import com.example.desiregallery.data.network.RequestStatus
 import com.example.desiregallery.ui.widgets.SnackbarWrapper
 import com.example.desiregallery.utils.hideSoftKeyboard
-import com.example.desiregallery.viewmodels.CommentListViewModel
-import com.example.desiregallery.viewmodels.CommentListViewModelFactory
 import kotlinx.android.synthetic.main.activity_comments.*
 import kotlinx.android.synthetic.main.toolbar_comments.*
 import org.koin.android.ext.android.inject
@@ -47,7 +45,12 @@ class CommentsActivity : AppCompatActivity() {
 
     private fun initModel() {
         model = ViewModelProviders
-            .of(this, CommentListViewModelFactory(this.application, post.id))
+            .of(this,
+                CommentListViewModelFactory(
+                    this.application,
+                    post.id
+                )
+            )
             .get(CommentListViewModel::class.java)
         model.requestStatus.observe(this, Observer { status ->
             status?: return@Observer
