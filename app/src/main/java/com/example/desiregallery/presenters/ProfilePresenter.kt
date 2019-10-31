@@ -18,7 +18,9 @@ import com.example.desiregallery.models.User
 import com.example.desiregallery.network.baseService
 import com.example.desiregallery.ui.contracts.IProfileContract
 import com.example.desiregallery.utils.bitmapToBytes
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.storage.FirebaseStorage
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,12 +30,18 @@ import java.util.*
 /**
  * @author babaetskv on 29.10.19
  */
-class ProfilePresenter(private val view: IProfileContract.View) : IProfileContract.Presenter {
+class ProfilePresenter(
+    private val view: IProfileContract.View,
+    private val accProvider: AccountProvider,
+    private val auth: FirebaseAuth,
+    private val storage: FirebaseStorage
+) : IProfileContract.Presenter {
+
     override var infoChanged = false
         private set
 
     override fun attach(resources: Resources) {
-        val account = AccountProvider.currAccount
+        val account = accProvider.currAccount
         account?.let {
             view.updateTitle(it.displayName)
 
@@ -49,17 +57,17 @@ class ProfilePresenter(private val view: IProfileContract.View) : IProfileContra
     }
 
     override fun onGenderClick(context: Context) {
-        if (AccountProvider.currAccount is EmailAccount)
+        if (accProvider.currAccount is EmailAccount)
             editGender(context)
     }
 
     override fun onBirthdayClick(context: Context) {
-        if (AccountProvider.currAccount is EmailAccount)
+        if (accProvider.currAccount is EmailAccount)
             editBirthday(context)
     }
 
     override fun updateProfile(activity: Activity) {
-        val account = AccountProvider.currAccount
+        val account = accProvider.currAccount
         if (account is EmailAccount) {
             val emailUser = account.user
             baseService.updateUser(emailUser.login, emailUser).enqueue(object: Callback<User> {
@@ -73,7 +81,7 @@ class ProfilePresenter(private val view: IProfileContract.View) : IProfileContra
                 }
             })
 
-            val firebaseUser = MainApplication.auth.currentUser
+            val firebaseUser = auth.currentUser
             val profileUpdates = UserProfileChangeRequest.Builder()
                 .setDisplayName(emailUser.login)
                 .setPhotoUri(Uri.parse(emailUser.photo))
@@ -90,13 +98,13 @@ class ProfilePresenter(private val view: IProfileContract.View) : IProfileContra
     }
 
     override fun uploadPhoto(imageUri: Uri, resolver: ContentResolver, onFailure: () -> Unit, onComplete: () -> Unit) {
-        val account = AccountProvider.currAccount as? EmailAccount ?: return
+        val account = accProvider.currAccount as? EmailAccount ?: return
         val emailUser = account.user
 
         val istream = resolver.openInputStream(imageUri)
         val selectedImage = BitmapFactory.decodeStream(istream)
 
-        val imageRef = MainApplication.storage.getReferenceFromUrl(MainApplication.STORAGE_URL).child("${MainApplication.STORAGE_PROFILE_IMAGES_DIR}/${emailUser.login}.jpg")
+        val imageRef = storage.getReferenceFromUrl(MainApplication.STORAGE_URL).child("${MainApplication.STORAGE_PROFILE_IMAGES_DIR}/${emailUser.login}.jpg")
         val uploadTask = imageRef.putBytes(bitmapToBytes(selectedImage))
         uploadTask.addOnFailureListener { error ->
             logError(TAG, "Failed to upload image for user ${emailUser.login}: ${error.message}")
@@ -111,7 +119,7 @@ class ProfilePresenter(private val view: IProfileContract.View) : IProfileContra
             logInfo(TAG, "Image for user ${emailUser.login} successfully uploaded")
             imageRef.downloadUrl.addOnCompleteListener { uriTask ->
                 emailUser.photo = uriTask.result.toString()
-                AccountProvider.currAccount = EmailAccount(emailUser)
+                accProvider.currAccount = EmailAccount(emailUser, auth)
                 view.updatePhoto(selectedImage)
                 onComplete()
                 infoChanged = true
@@ -120,7 +128,7 @@ class ProfilePresenter(private val view: IProfileContract.View) : IProfileContra
     }
 
     private fun editBirthday(context: Context) {
-        val account = AccountProvider.currAccount as? EmailAccount ?: return
+        val account = accProvider.currAccount as? EmailAccount ?: return
         val emailUser = account.user
 
         val currBirthday = emailUser.birthday
@@ -134,7 +142,7 @@ class ProfilePresenter(private val view: IProfileContract.View) : IProfileContra
             val birthday = context.getString(R.string.date_format, dayOfMonth, monthOfYear+1, year)
             if (birthday != emailUser.birthday) {
                 emailUser.birthday = birthday
-                AccountProvider.currAccount = EmailAccount(emailUser)
+                accProvider.currAccount = EmailAccount(emailUser, auth)
                 view.updateBirthday(birthday)
                 infoChanged = true
             }
@@ -147,7 +155,7 @@ class ProfilePresenter(private val view: IProfileContract.View) : IProfileContra
     }
 
     private fun editGender(context: Context) {
-        val account = AccountProvider.currAccount as? EmailAccount ?: return
+        val account = accProvider.currAccount as? EmailAccount ?: return
         val emailUser = account.user
         val gender = emailUser.gender
         val builder = AlertDialog.Builder(context)
@@ -157,7 +165,7 @@ class ProfilePresenter(private val view: IProfileContract.View) : IProfileContra
 
         builder.setSingleChoiceItems(values, checkedItem) { dialog, item ->
             emailUser.gender = values[item]
-            AccountProvider.currAccount = EmailAccount(emailUser)
+            accProvider.currAccount = EmailAccount(emailUser, auth)
             view.updateGender(values[item])
             infoChanged = true
             dialog.dismiss()

@@ -25,6 +25,7 @@ import org.koin.core.parameter.parametersOf
 
 class CommentsActivity : AppCompatActivity() {
     private val snackbar: SnackbarWrapper by inject { parametersOf(comments_container) }
+    private val accProvider: AccountProvider by inject()
 
     private lateinit var post: Post
     private lateinit var model: CommentListViewModel
@@ -61,13 +62,17 @@ class CommentsActivity : AppCompatActivity() {
                 }
                 RequestStatus.ERROR_DOWNLOAD -> {
                     hideLoading()
-                    updateHintVisibility(true)
-                    snackbar.show(status.message)
+                    updateHintVisibility(false)
+                    snackbar.show(resources.getString(R.string.comments_download_error))
                 }
                 RequestStatus.ERROR_UPLOAD -> {
                     hideLoading()
+                    updateHintVisibility(false)
+                    snackbar.show(resources.getString(R.string.comment_upload_error))
+                }
+                RequestStatus.NO_DATA -> {
+                    hideLoading()
                     updateHintVisibility(true)
-                    snackbar.show(status.message)
                 }
             }
         })
@@ -93,8 +98,8 @@ class CommentsActivity : AppCompatActivity() {
             this.text = text
             postId = post.id
             author = User("", "").apply {
-                login = AccountProvider.currAccount?.displayName?: ""
-                photo = AccountProvider.currAccount?.photoUrl?: ""
+                login = accProvider.currAccount?.displayName?: ""
+                photo = accProvider.currAccount?.photoUrl?: ""
             }
         }
         model.addComment(newComment)

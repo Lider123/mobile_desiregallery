@@ -4,49 +4,27 @@ import android.app.Application
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.core.CrashlyticsCore
 import com.example.desiregallery.di.applicationModule
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.storage.FirebaseStorage
+import com.example.desiregallery.di.viewModelModule
 import com.vk.sdk.VKSdk
 import io.fabric.sdk.android.Fabric
 import io.sentry.Sentry
 import io.sentry.android.AndroidSentryClientFactory
 import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.loadKoinModules
 import org.koin.core.context.startKoin
 
 class MainApplication : Application() {
-    companion object {
-        const val STORAGE_URL = "gs://desiregallery-8072a.appspot.com"
-        const val STORAGE_POST_IMAGES_DIR = "postImages"
-        const val STORAGE_PROFILE_IMAGES_DIR = "profileImages"
-
-        lateinit var instance: MainApplication
-            private set
-        lateinit var storage: FirebaseStorage
-            private set
-        lateinit var auth: FirebaseAuth
-            private set
-    }
-
-    lateinit var googleSignInClient: GoogleSignInClient
-        private set
 
     override fun onCreate() {
         super.onCreate()
         startKoin {
             androidContext(this@MainApplication)
-            modules(applicationModule)
+            loadKoinModules(listOf(applicationModule, viewModelModule))
         }
-        instance = this
-        auth = FirebaseAuth.getInstance()
-        storage = FirebaseStorage.getInstance()
         if (!BuildConfig.DEBUG)
             initSentry()
         initCrashlytics()
         VKSdk.initialize(applicationContext)
-        initGoogleSignInClient()
     }
 
     private fun initSentry() {
@@ -63,11 +41,9 @@ class MainApplication : Application() {
         Fabric.with(this, crashlytics)
     }
 
-    private fun initGoogleSignInClient() {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail()
-            .build()
-
-        googleSignInClient = GoogleSignIn.getClient(this, gso)
+    companion object {
+        const val STORAGE_URL = "gs://desiregallery-8072a.appspot.com"
+        const val STORAGE_POST_IMAGES_DIR = "postImages"
+        const val STORAGE_PROFILE_IMAGES_DIR = "profileImages"
     }
 }

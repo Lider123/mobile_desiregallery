@@ -15,6 +15,7 @@ import com.example.desiregallery.logging.logInfo
 import com.example.desiregallery.models.Post
 import com.example.desiregallery.models.User
 import com.example.desiregallery.utils.bitmapToBytes
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.dialog_create_post.view.*
 
 /**
@@ -22,7 +23,13 @@ import kotlinx.android.synthetic.main.dialog_create_post.view.*
  * @since 24.07.19
  */
 
-class PostCreationDialog(private val activity: Activity, private val image: Bitmap, private val onPublish: (Post) -> Unit) : AlertDialog(activity) {
+class PostCreationDialog(
+    private val activity: Activity,
+    private val image: Bitmap,
+    private val accProvider: AccountProvider,
+    private val storage: FirebaseStorage,
+    private val onPublish: (Post) -> Unit
+) : AlertDialog(activity) {
     companion object {
         private val TAG = PostCreationDialog::class.java.simpleName
     }
@@ -50,10 +57,10 @@ class PostCreationDialog(private val activity: Activity, private val image: Bitm
         content.dialog_post_progress.visibility = View.VISIBLE
         val post = Post()
         post.author = User("", "").apply {
-            login = AccountProvider.currAccount?.displayName?: ""
-            photo = AccountProvider.currAccount?.photoUrl?: ""
+            login = accProvider.currAccount?.displayName?: ""
+            photo = accProvider.currAccount?.photoUrl?: ""
         }
-        val imageRef = MainApplication.storage.getReferenceFromUrl(MainApplication.STORAGE_URL).child("${MainApplication.STORAGE_POST_IMAGES_DIR}/${post.id}.jpg")
+        val imageRef = storage.getReferenceFromUrl(MainApplication.STORAGE_URL).child("${MainApplication.STORAGE_POST_IMAGES_DIR}/${post.id}.jpg")
         val uploadTask = imageRef.putBytes(bitmapToBytes(image))
         uploadTask.addOnFailureListener { error ->
             logError(TAG, "Failed to upload image for new post ${post.id}: ${error.message}")

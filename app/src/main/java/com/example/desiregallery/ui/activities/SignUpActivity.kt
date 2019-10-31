@@ -7,7 +7,6 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_sign_up.*
 import android.text.Editable
 import android.text.TextWatcher
-import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.analytics.IDGAnalyticsTracker
 import com.example.desiregallery.auth.AuthMethod
@@ -15,6 +14,7 @@ import com.example.desiregallery.logging.logError
 import com.example.desiregallery.logging.logInfo
 import com.example.desiregallery.models.User
 import com.example.desiregallery.network.baseService
+import com.google.firebase.auth.FirebaseAuth
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,6 +29,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private val analytics: IDGAnalyticsTracker by inject()
+    private val auth: FirebaseAuth by inject()
 
     private lateinit var inputTextWatcher: TextWatcher
 
@@ -91,7 +92,7 @@ class SignUpActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            MainApplication.auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
+            auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     logInfo(TAG, "VKUser $login successfully signed up")
                     saveUserInfo(User(email, password).also {
@@ -123,7 +124,7 @@ class SignUpActivity : AppCompatActivity() {
             }
         })
 
-        val firebaseUser = MainApplication.auth.currentUser
+        val firebaseUser = auth.currentUser
         val profileUpdates = UserProfileChangeRequest.Builder().setDisplayName(user.login).build()
         firebaseUser?.updateProfile(profileUpdates)?.addOnCompleteListener(this) { task ->
             if (task.isSuccessful)
