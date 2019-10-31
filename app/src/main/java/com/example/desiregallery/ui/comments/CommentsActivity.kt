@@ -84,7 +84,6 @@ class CommentsActivity : AppCompatActivity() {
             val adapter = CommentAdapter()
             adapter.submitList(comments)
             comments_list.adapter = adapter
-            hideLoading()
             updateHintVisibility(comments.isEmpty())
         })
     }

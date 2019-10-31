@@ -2,11 +2,9 @@ package com.example.desiregallery.di
 
 import android.content.res.Resources
 import android.view.View
-import com.example.desiregallery.ui.feed.PostAdapter
 import com.example.desiregallery.analytics.AnalyticsTracker
 import com.example.desiregallery.analytics.IDGAnalyticsTracker
 import com.example.desiregallery.auth.AccountProvider
-import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.ui.profile.ProfilePresenter
 import com.example.desiregallery.data.prefs.IDGSharedPreferencesHelper
 import com.example.desiregallery.data.prefs.PreferencesHelper
@@ -27,8 +25,11 @@ import org.koin.dsl.module
  * @author babaetskv on 29.10.19
  */
 val applicationModule = module(override = true) {
+    single<Resources> { androidContext().resources }
     single<IDGSharedPreferencesHelper> { PreferencesHelper(androidContext()) }
     single<IDGAnalyticsTracker> { AnalyticsTracker(androidContext()) }
+    single<IStorageHelper> { StorageHelper(get()) }
+    factory { (container: View) -> SnackbarWrapper(container) }
     single { AccountProvider() }
     single { FirebaseStorage.getInstance() }
     single { FirebaseAuth.getInstance() }
@@ -38,17 +39,8 @@ val applicationModule = module(override = true) {
             .build()
         GoogleSignIn.getClient(androidContext(), gso)
     }
-    single<Resources> { androidContext().resources }
-    single<IStorageHelper> { StorageHelper(get()) }
-    factory { (container: View) -> SnackbarWrapper(container) }
-    factory { (posts: MutableList<Post>) -> PostAdapter(posts) }
     factory<IProfileContract.Presenter> { (view: IProfileContract.View) ->
-        ProfilePresenter(
-            view,
-            get(),
-            get(),
-            get()
-        )
+        ProfilePresenter(view, get(), get(), get())
     }
 }
 

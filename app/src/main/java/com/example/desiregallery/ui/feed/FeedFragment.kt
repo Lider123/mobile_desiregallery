@@ -9,25 +9,27 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.desiregallery.R
 import com.example.desiregallery.auth.AccountProvider
-import com.example.desiregallery.listeners.PaginationListener
 import com.example.desiregallery.data.models.Post
+import com.example.desiregallery.data.network.RequestStatus
 import com.example.desiregallery.data.storage.IStorageHelper
 import com.example.desiregallery.ui.dialogs.PostCreationDialog
+import com.example.desiregallery.ui.widgets.SnackbarWrapper
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.fragment_feed.*
 import kotlinx.android.synthetic.main.fragment_feed.view.*
 import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
 class FeedFragment : Fragment() {
-    private val model: PostListViewModel by viewModel()
-    private val mPostAdapter: PostAdapter by inject { parametersOf(mutableListOf<Post>()) }
+    private val snackbar: SnackbarWrapper by inject { parametersOf(feed_container) }
     private val storageHelper: IStorageHelper by inject()
     private val accProvider: AccountProvider by inject()
+
+    private lateinit var model: PostListViewModel
 
     private val addPost = fun(post: Post) {
         model.addPost(post)
@@ -42,22 +44,11 @@ class FeedFragment : Fragment() {
             setItemViewCacheSize(20)
             val lm = LinearLayoutManager(context)
             layoutManager = lm
-            adapter = mPostAdapter
             isDrawingCacheEnabled = true
             drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
-            addOnScrollListener(object: PaginationListener(lm) {
-                override val pageSize: Int
-                    get() = model.pageSize
-
-                override fun loadMoreItems() = model.loadPosts()
-
-                override fun isLastPage() = model.isLastPage
-
-                override fun isLoading() = model.isLoading.value as Boolean
-            })
         }
 
-        setObservers()
+        initModel()
         return view
     }
 
@@ -77,12 +68,52 @@ class FeedFragment : Fragment() {
         }
     }
 
-    private fun setObservers() {
-        model.posts.observe(this, Observer<List<Post>> { posts ->
-            mPostAdapter.addPosts(posts)
+    private fun initModel() {
+        model = ViewModelProviders.of(this).get(PostListViewModel::class.java)
+        model.pagedListLiveData.observe(this, Observer { posts ->
+            val adapter = PostAdapter()
+            adapter.submitList(posts)
+            post_list.adapter = adapter
         })
-        model.isLoading.observe(this, Observer<Boolean> { isLoading ->
-            feed_progress.visibility = if (isLoading) View.VISIBLE else View.GONE
+        model.requestStatus.observe(this, Observer { status ->
+            status?: return@Observer
+
+            when(status) {
+                RequestStatus.DOWNLOADING -> {
+                    showLoading()
+                    updateHintVisibility(false)
+                }
+                RequestStatus.SUCCESS -> {
+                    hideLoading()
+                    updateHintVisibility(false)
+                }
+                RequestStatus.ERROR_DOWNLOAD -> {
+                    hideLoading()
+                    updateHintVisibility(false)
+                    snackbar.show(resources.getString(R.string.posts_download_error))
+                }
+                RequestStatus.ERROR_UPLOAD -> {
+                    hideLoading()
+                    updateHintVisibility(false)
+                    snackbar.show(resources.getString(R.string.post_upload_error))
+                }
+                RequestStatus.NO_DATA -> {
+                    hideLoading()
+                    updateHintVisibility(true)
+                }
+            }
         })
+    }
+
+    private fun showLoading() {
+        feed_progress.visibility = View.VISIBLE
+    }
+
+    private fun hideLoading() {
+        feed_progress.visibility = View.GONE
+    }
+
+    private fun updateHintVisibility(visible: Boolean) {
+        feed_hint.visibility = if (visible) View.VISIBLE else View.GONE
     }
 }
