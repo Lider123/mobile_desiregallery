@@ -2,14 +2,14 @@ package com.example.desiregallery.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.desiregallery.logging.logError
-import com.example.desiregallery.logging.logInfo
-import com.example.desiregallery.logging.logWarning
-import com.example.desiregallery.models.Post
-import com.example.desiregallery.network.baseService
-import com.example.desiregallery.network.query.OrderDirection
-import com.example.desiregallery.network.query.QueryRequest
-import com.example.desiregallery.network.queryService
+import com.example.desiregallery.utils.logError
+import com.example.desiregallery.utils.logInfo
+import com.example.desiregallery.utils.logWarning
+import com.example.desiregallery.data.models.Post
+import com.example.desiregallery.data.network.baseService
+import com.example.desiregallery.data.network.query.OrderDirection
+import com.example.desiregallery.data.network.query.QueryRequest
+import com.example.desiregallery.data.network.queryService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -35,9 +35,15 @@ class PostListViewModel : ViewModel() {
 
             override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
                 if (!response.isSuccessful)
-                    logWarning(TAG, "Failed to load posts. Response received with code ${response.code()}: ${response.message()}")
+                    logWarning(
+                        TAG,
+                        "Failed to load posts. Response received with code ${response.code()}: ${response.message()}"
+                    )
                 else if (response.body() == null)
-                    logWarning(TAG, "Failed to load posts. Response received an empty body")
+                    logWarning(
+                        TAG,
+                        "Failed to load posts. Response received an empty body"
+                    )
                 else if (response.body()!!.isEmpty()) {
                     isLastPage = true
                     logInfo(TAG, "Last page reached")
@@ -72,14 +78,23 @@ class PostListViewModel : ViewModel() {
         posts.value = currPosts
         baseService.createPost(post.id, post).enqueue(object: Callback<Post> {
             override fun onFailure(call: Call<Post>, t: Throwable) {
-                logError(TAG, "Unable to create post ${post.id}: ${t.message}")
+                logError(
+                    TAG,
+                    "Unable to create post ${post.id}: ${t.message}"
+                )
             }
 
             override fun onResponse(call: Call<Post>, response: Response<Post>) {
                 if (!response.isSuccessful)
-                    logError(TAG, "Unable to create post ${post.id}: received response with code ${response.code()}")
+                    logError(
+                        TAG,
+                        "Unable to create post ${post.id}: received response with code ${response.code()}"
+                    )
                 else
-                    logInfo(TAG, "Post ${post.id} successfully created")
+                    logInfo(
+                        TAG,
+                        "Post ${post.id} successfully created"
+                    )
             }
         })
     }

@@ -8,7 +8,6 @@ import com.vk.sdk.api.model.VKApiUser
 /**
  * @author babaetskv on 17.09.19
  */
-
 class VKAccount(private val user: VKApiUser, resources: Resources) : IAccount {
     private val GENDER_MALE = resources.getString(R.string.male)
     private val GENDER_FEMALE = resources.getString(R.string.female)

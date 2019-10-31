@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Context
 import android.view.inputmethod.InputMethodManager
 import com.example.desiregallery.R
-import com.example.desiregallery.logging.logWarning
 import java.lang.NullPointerException
 import java.text.SimpleDateFormat
 import java.util.*

@@ -26,7 +26,9 @@ class AboutDialog(context: Context) : AlertDialog(context) {
         setTitle(R.string.app_name)
         setCancelable(true)
         setIcon(R.drawable.logo_icon)
-        setButton(DialogInterface.BUTTON_POSITIVE, context.getString(R.string.OK)) { dialog, _ -> dialog.dismiss() }
+        setButton(DialogInterface.BUTTON_POSITIVE, context.getString(R.string.OK)) { dialog, _ ->
+            dialog.dismiss()
+        }
         setView(message)
     }
 }

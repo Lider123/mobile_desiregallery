@@ -1,6 +1,6 @@
 package com.example.desiregallery.auth
 
-import com.example.desiregallery.models.User
+import com.example.desiregallery.data.models.User
 import com.google.firebase.auth.FirebaseAuth
 
 /**

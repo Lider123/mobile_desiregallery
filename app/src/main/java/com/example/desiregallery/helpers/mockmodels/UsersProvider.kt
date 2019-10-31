@@ -1,7 +1,7 @@
 @file:JvmName("UsersProvider")
 package com.example.desiregallery.helpers.mockmodels
 
-import com.example.desiregallery.models.User
+import com.example.desiregallery.data.models.User
 
 import java.util.ArrayList
 

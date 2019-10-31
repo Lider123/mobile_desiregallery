@@ -6,7 +6,7 @@
     <data>
         <variable
             name="comment"
-            type="com.example.desiregallery.models.Comment" />
+            type="com.example.desiregallery.data.models.Comment" />
     </data>
 
     <LinearLayout
