@@ -10,6 +10,8 @@ import com.example.desiregallery.models.Post
 import com.example.desiregallery.presenters.ProfilePresenter
 import com.example.desiregallery.sharedprefs.IDGSharedPreferencesHelper
 import com.example.desiregallery.sharedprefs.PreferencesHelper
+import com.example.desiregallery.storage.IStorageHelper
+import com.example.desiregallery.storage.StorageHelper
 import com.example.desiregallery.ui.contracts.IProfileContract
 import com.example.desiregallery.ui.widgets.SnackbarWrapper
 import com.example.desiregallery.viewmodels.PostListViewModel
@@ -37,6 +39,7 @@ val applicationModule = module(override = true) {
         GoogleSignIn.getClient(androidContext(), gso)
     }
     single<Resources> { androidContext().resources }
+    single<IStorageHelper> { StorageHelper(get()) }
     factory { (container: View) -> SnackbarWrapper(container) }
     factory { (posts: MutableList<Post>) -> PostAdapter(posts) }
     factory<IProfileContract.Presenter> { (view: IProfileContract.View) -> ProfilePresenter(view, get(), get(), get()) }
