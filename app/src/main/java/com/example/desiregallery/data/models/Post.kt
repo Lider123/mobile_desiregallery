@@ -1,5 +1,6 @@
 package com.example.desiregallery.data.models
 
+import androidx.recyclerview.widget.DiffUtil
 import java.io.Serializable
 import java.net.MalformedURLException
 import java.net.URL
@@ -69,5 +70,18 @@ class Post : Serializable {
                 "rating=$rating, " +
                 "numOfRates=$numOfRates, " +
                 "timestamp=$timestamp)"
+    }
+
+    companion object {
+        val CALLBACK = object: DiffUtil.ItemCallback<Post>() {
+
+            override fun areItemsTheSame(oldItem: Post, newItem: Post): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: Post, newItem: Post): Boolean {
+                return true
+            }
+        }
     }
 }

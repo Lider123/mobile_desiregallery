@@ -68,32 +68,34 @@ class CommentDataSource(
     }
 
     override fun loadAfter(params: LoadParams<Long>, callback: LoadCallback<Long, Comment>) {
+        val key = params.key
+        val pageSize = params.requestedLoadSize
         statusHandler.setRequestStatus(RequestStatus.DOWNLOADING)
         val query = QueryRequest()
             .from("comments")
             .where(FieldFilter("postId", ComparisonOperator.EQUAL, Value(postId)))
-            .limit(params.requestedLoadSize)
+            .limit(pageSize)
             .orderBy("timestamp", OrderDirection.ASCENDING)
-            .offset(params.requestedLoadSize * (params.key-1))
+            .offset(pageSize * (key-1))
         queryService.getComments(query).enqueue(object: Callback<List<Comment>> {
 
             override fun onFailure(call: Call<List<Comment>>, t: Throwable) {
-                logError(TAG, "Unable to load comments for page ${params.key}: ${t.message}")
+                logError(TAG, "Unable to load comments for page ${key}: ${t.message}")
                 statusHandler.setRequestStatus(RequestStatus.ERROR_DOWNLOAD)
             }
 
             override fun onResponse(call: Call<List<Comment>>, response: Response<List<Comment>>) {
                 if (!response.isSuccessful) {
-                    logWarning(TAG, "Failed to load comments for page ${params.key}. Response has been received with code ${response.code()}")
+                    logWarning(TAG, "Failed to load comments for page ${key}. Response has been received with code ${response.code()}")
                     statusHandler.setRequestStatus(RequestStatus.ERROR_DOWNLOAD)
                     return
                 }
 
                 val comments = response.body()
                 comments?.let {
-                    logInfo(TAG, "Successfully loaded ${it.size} comments for page ${params.key}")
-                    callback.onResult(it, params.key+1)
-                }?: logWarning(TAG, "Failed to load comments for page ${params.key}. Received an empty body")
+                    logInfo(TAG, "Successfully loaded ${it.size} comments for page $key")
+                    callback.onResult(it, key+1)
+                }?: logWarning(TAG, "Failed to load comments for page ${key}. Received an empty body")
                 statusHandler.setRequestStatus(RequestStatus.SUCCESS)
             }
         })

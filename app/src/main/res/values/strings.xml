@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">DesireGallery</string>
 
+    <!-- Feed screen -->
+    <string name="posts_download_error">There was an error while loading posts</string>
+    <string name="post_upload_error">Unable to send a post</string>
+    <string name="posts_empty">There are no posts yet</string>
+
     <!-- Comments screen -->
     <string name="comments_input_hint">Add a comment</string>
     <string name="send">Send</string>

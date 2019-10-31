@@ -70,7 +70,6 @@ class CommentListViewModel(application: Application, postId: String) : AndroidVi
 
     companion object {
         private val TAG = CommentListViewModel::class.java.simpleName
-
         const val PAGE_SIZE = 10
     }
 }
