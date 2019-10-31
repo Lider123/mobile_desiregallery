@@ -6,7 +6,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 /**
  * @author babaetskv on 18.09.19
  */
-class GoogleAccount(account: GoogleSignInAccount, private val client: GoogleSignInClient) : IAccount {
+class GoogleAccount(
+    account: GoogleSignInAccount,
+    private val client: GoogleSignInClient
+) : IAccount {
     override val accessToken = "" // TODO
     override val displayName = account.displayName as String
     override val photoUrl = account.photoUrl?.toString()?: ""

@@ -2,17 +2,17 @@ package com.example.desiregallery.di
 
 import android.content.res.Resources
 import android.view.View
-import com.example.desiregallery.adapters.PostAdapter
+import com.example.desiregallery.ui.feed.PostAdapter
 import com.example.desiregallery.analytics.AnalyticsTracker
 import com.example.desiregallery.analytics.IDGAnalyticsTracker
 import com.example.desiregallery.auth.AccountProvider
-import com.example.desiregallery.models.Post
-import com.example.desiregallery.presenters.ProfilePresenter
-import com.example.desiregallery.sharedprefs.IDGSharedPreferencesHelper
-import com.example.desiregallery.sharedprefs.PreferencesHelper
-import com.example.desiregallery.storage.IStorageHelper
-import com.example.desiregallery.storage.StorageHelper
-import com.example.desiregallery.ui.contracts.IProfileContract
+import com.example.desiregallery.data.models.Post
+import com.example.desiregallery.ui.profile.ProfilePresenter
+import com.example.desiregallery.data.prefs.IDGSharedPreferencesHelper
+import com.example.desiregallery.data.prefs.PreferencesHelper
+import com.example.desiregallery.data.storage.IStorageHelper
+import com.example.desiregallery.data.storage.StorageHelper
+import com.example.desiregallery.ui.profile.IProfileContract
 import com.example.desiregallery.ui.widgets.SnackbarWrapper
 import com.example.desiregallery.viewmodels.PostListViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -42,7 +42,14 @@ val applicationModule = module(override = true) {
     single<IStorageHelper> { StorageHelper(get()) }
     factory { (container: View) -> SnackbarWrapper(container) }
     factory { (posts: MutableList<Post>) -> PostAdapter(posts) }
-    factory<IProfileContract.Presenter> { (view: IProfileContract.View) -> ProfilePresenter(view, get(), get(), get()) }
+    factory<IProfileContract.Presenter> { (view: IProfileContract.View) ->
+        ProfilePresenter(
+            view,
+            get(),
+            get(),
+            get()
+        )
+    }
 }
 
 val viewModelModule = module {

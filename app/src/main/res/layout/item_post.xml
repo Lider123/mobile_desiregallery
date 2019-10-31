@@ -6,7 +6,7 @@
     <data>
         <variable
             name="post"
-            type="com.example.desiregallery.models.Post" />
+            type="com.example.desiregallery.data.models.Post" />
     </data>
 
     <LinearLayout

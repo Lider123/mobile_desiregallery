@@ -1,7 +1,7 @@
 @file:JvmName("PostsProvider")
 package com.example.desiregallery.helpers.mockmodels
 
-import com.example.desiregallery.models.Post
+import com.example.desiregallery.data.models.Post
 import java.util.ArrayList
 
 private val posts = initPosts()

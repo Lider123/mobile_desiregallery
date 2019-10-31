@@ -9,11 +9,11 @@ import android.view.View
 import android.widget.Toast
 import com.example.desiregallery.R
 import com.example.desiregallery.auth.AccountProvider
-import com.example.desiregallery.logging.logError
-import com.example.desiregallery.logging.logInfo
-import com.example.desiregallery.models.Post
-import com.example.desiregallery.models.User
-import com.example.desiregallery.storage.IStorageHelper
+import com.example.desiregallery.utils.logError
+import com.example.desiregallery.utils.logInfo
+import com.example.desiregallery.data.models.Post
+import com.example.desiregallery.data.models.User
+import com.example.desiregallery.data.storage.IStorageHelper
 import kotlinx.android.synthetic.main.dialog_create_post.view.*
 
 /**
@@ -64,7 +64,8 @@ class PostCreationDialog(
 
             override fun onFailure(error: Exception) {
                 logError(TAG, "Failed to upload image for new post ${post.id}: ${error.message}")
-                Toast.makeText(activity, R.string.post_image_upload_failure, Toast.LENGTH_LONG).show()
+                Toast.makeText(activity, R.string.post_image_upload_failure, Toast.LENGTH_LONG)
+                    .show()
             }
         })
         content.dialog_post_progress.visibility = View.GONE
