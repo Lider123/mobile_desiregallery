@@ -1,16 +1,14 @@
 package com.example.desiregallery.ui.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
-import com.example.desiregallery.R
-import kotlinx.android.synthetic.main.activity_login.*
+import androidx.appcompat.app.AppCompatActivity
 import com.example.desiregallery.MainApplication
-import com.example.desiregallery.analytics.AnalyticsTracker
+import com.example.desiregallery.R
 import com.example.desiregallery.analytics.IDGAnalyticsTracker
 import com.example.desiregallery.auth.AuthMethod
 import com.example.desiregallery.logging.logError
@@ -26,6 +24,7 @@ import com.vk.sdk.VKCallback
 import com.vk.sdk.VKScope
 import com.vk.sdk.VKSdk
 import com.vk.sdk.api.VKError
+import kotlinx.android.synthetic.main.activity_login.*
 import org.koin.android.ext.android.inject
 
 class LoginActivity : AppCompatActivity() {

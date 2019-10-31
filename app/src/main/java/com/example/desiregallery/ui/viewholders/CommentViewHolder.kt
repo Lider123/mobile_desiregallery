@@ -14,7 +14,7 @@ class CommentViewHolder(private val bind: ItemCommentBinding) : RecyclerView.Vie
 
     fun bind(item: Comment) {
         bind.itemCommentText.text = item.text
-        bind.itemCommentTime.text = formatDate(bind.itemCommentTime.context, item.datetime)
+        bind.itemCommentTime.text = formatDate(bind.itemCommentTime.context, item.timestamp)
         bind.itemAuthorName.text = item.author.login
         if (item.author.photo.isEmpty())
             Picasso.with(bind.itemAuthorPhoto.context)

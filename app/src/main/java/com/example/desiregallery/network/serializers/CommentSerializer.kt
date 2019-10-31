@@ -22,13 +22,13 @@ class CommentSerializer : JsonSerializer<Comment> {
 
         text.addProperty("stringValue", src.text)
         author.addProperty("stringValue", src.author.login)
-        datetime.addProperty("stringValue", src.datetime.toString())
+        datetime.addProperty("integerValue", src.timestamp)
         postId.addProperty("stringValue", src.postId)
 
         with(fields) {
             add("text", text)
             add("author", author)
-            add("datetime", datetime)
+            add("timestamp", datetime)
             add("postId", postId)
         }
         result.add("fields", fields)

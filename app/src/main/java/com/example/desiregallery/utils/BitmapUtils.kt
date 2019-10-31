@@ -16,7 +16,6 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.util.*
 
-private const val TAG = "BitmapUtils"
 private const val DOWNLOAD_FOLDER_DEFAULT = "DesireDownloads/"
 
 fun bitmapToBytes(bmp: Bitmap): ByteArray {

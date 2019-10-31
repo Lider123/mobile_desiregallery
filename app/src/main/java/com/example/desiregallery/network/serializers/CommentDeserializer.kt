@@ -22,7 +22,7 @@ class CommentDeserializer : JsonDeserializer<Comment> {
 
         val authorName = fieldsObject.getAsJsonObject("author").get("stringValue").asString
 
-        val datetime = fieldsObject.getAsJsonObject("datetime").get("stringValue").asLong
+        val datetime = fieldsObject.getAsJsonObject("timestamp").get("integerValue").asLong
 
         val postId = fieldsObject.getAsJsonObject("postId").get("stringValue").asString
 
@@ -30,7 +30,7 @@ class CommentDeserializer : JsonDeserializer<Comment> {
             it.id = id
             it.text = text
             it.author = User("", "").apply { login = authorName }
-            it.datetime = datetime
+            it.timestamp = datetime
             it.postId = postId
         }
     }
