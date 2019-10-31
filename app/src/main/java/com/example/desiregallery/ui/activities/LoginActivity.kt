@@ -7,7 +7,6 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.analytics.IDGAnalyticsTracker
 import com.example.desiregallery.auth.AuthMethod
@@ -16,21 +15,25 @@ import com.example.desiregallery.logging.logInfo
 import com.example.desiregallery.sharedprefs.IDGSharedPreferencesHelper
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FirebaseAuth
 import com.vk.sdk.VKAccessToken
 import com.vk.sdk.VKCallback
 import com.vk.sdk.VKScope
 import com.vk.sdk.VKSdk
 import com.vk.sdk.api.VKError
 import kotlinx.android.synthetic.main.activity_login.*
+import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var inputTextWatcher: TextWatcher
     private val prefs: IDGSharedPreferencesHelper by inject()
     private val analytics: IDGAnalyticsTracker by inject()
+    private val auth: FirebaseAuth by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,7 +103,7 @@ class LoginActivity : AppCompatActivity() {
         }
         button_sign_in_vk.setOnClickListener { VKSdk.login(this, VKScope.FRIENDS, VKScope.OFFLINE) }
         button_sign_in_google.setOnClickListener {
-            val client = MainApplication.instance.googleSignInClient
+            val client: GoogleSignInClient = get()
             startActivityForResult(client.signInIntent, GOOGLE_SIGN_IN_REQUEST_CODE)
         }
         link_sign_up.setOnClickListener {
@@ -111,10 +114,10 @@ class LoginActivity : AppCompatActivity() {
 
     private fun logIn(email: String, password: String) {
         showProgress()
-        MainApplication.auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
             hideProgress()
             if (task.isSuccessful) {
-                val user = MainApplication.auth.currentUser
+                val user = auth.currentUser
                 logInfo(TAG, "uUer with email ${user?.email} successfully logged in")
                 prefs.setAuthMethod(AuthMethod.EMAIL)
                 analytics.trackLogin(AuthMethod.EMAIL)

@@ -51,10 +51,16 @@ class CommentDataSource(private val postId: String, private val statusHandler: I
 
                 val comments = response.body()
                 comments?.let {
-                    logInfo(TAG, "Successfully loaded ${it.size} comments for page 1")
+                    if (comments.isEmpty()) {
+                        logInfo(TAG, "There are no comments to download")
+                        statusHandler.setRequestStatus(RequestStatus.NO_DATA)
+                    }
+                    else {
+                        logInfo(TAG, "Successfully loaded ${it.size} comments for page 1")
+                        statusHandler.setRequestStatus(RequestStatus.SUCCESS)
+                    }
                     callback.onResult(it, null, 2L)
                 }?: logWarning(TAG, "Failed to load comments for page 1. Received an empty body")
-                statusHandler.setRequestStatus(RequestStatus.SUCCESS)
             }
         })
     }

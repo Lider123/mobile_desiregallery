@@ -12,10 +12,12 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.desiregallery.R
 import com.example.desiregallery.adapters.PostAdapter
+import com.example.desiregallery.auth.AccountProvider
 import com.example.desiregallery.listeners.PaginationListener
 import com.example.desiregallery.models.Post
 import com.example.desiregallery.ui.dialogs.PostCreationDialog
 import com.example.desiregallery.viewmodels.PostListViewModel
+import com.google.firebase.storage.FirebaseStorage
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.fragment_feed.*
 import kotlinx.android.synthetic.main.fragment_feed.view.*
@@ -26,6 +28,8 @@ import org.koin.core.parameter.parametersOf
 class FeedFragment : Fragment() {
     private val model: PostListViewModel by viewModel()
     private val mPostAdapter: PostAdapter by inject { parametersOf(mutableListOf<Post>()) }
+    private val storage: FirebaseStorage by inject()
+    private val accProvider: AccountProvider by inject()
 
     private val addPost = fun(post: Post) {
         model.addPost(post)
@@ -67,7 +71,7 @@ class FeedFragment : Fragment() {
             val imageUri = CropImage.getActivityResult(data).uri
             val istream = activity!!.contentResolver.openInputStream(imageUri)
             val selectedImage = BitmapFactory.decodeStream(istream)
-            PostCreationDialog(activity!!, selectedImage, addPost).show()
+            PostCreationDialog(activity!!, selectedImage, accProvider, storage, addPost).show()
         }
     }
 

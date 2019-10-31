@@ -1,12 +1,12 @@
 package com.example.desiregallery.auth
 
-import com.example.desiregallery.MainApplication
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 
 /**
  * @author babaetskv on 18.09.19
  */
-class GoogleAccount(account: GoogleSignInAccount) : IAccount {
+class GoogleAccount(account: GoogleSignInAccount, private val client: GoogleSignInClient) : IAccount {
     override val accessToken = "" // TODO
     override val displayName = account.displayName as String
     override val photoUrl = account.photoUrl?.toString()?: ""
@@ -14,6 +14,6 @@ class GoogleAccount(account: GoogleSignInAccount) : IAccount {
     override val birthday = ""
 
     override fun logOut() {
-        MainApplication.instance.googleSignInClient.signOut()
+        client.signOut()
     }
 }

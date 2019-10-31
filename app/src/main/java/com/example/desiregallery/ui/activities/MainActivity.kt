@@ -22,10 +22,12 @@ import com.example.desiregallery.ui.fragments.FeedFragment
 import com.example.desiregallery.ui.fragments.ProfileFragment
 import com.example.desiregallery.ui.fragments.SettingsFragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
 import com.vk.sdk.api.*
 import com.vk.sdk.api.model.VKApiUser
 import com.vk.sdk.api.model.VKList
+import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import retrofit2.Call
 import retrofit2.Callback
@@ -38,6 +40,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var toolbar: Toolbar
 
     private val prefs: IDGSharedPreferencesHelper by inject()
+    private val auth: FirebaseAuth by inject()
+    private val accProvider: AccountProvider by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,7 +113,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setCurrentEmailUser() {
-        MainApplication.auth.currentUser?.let {
+        auth.currentUser?.let {
             baseService.getUser(it.displayName!!).enqueue(object: Callback<User> {
 
                 override fun onFailure(call: Call<User>, t: Throwable) {
@@ -123,8 +127,8 @@ class MainActivity : AppCompatActivity() {
                         return
                     }
 
-                    AccountProvider.currAccount = EmailAccount(user!!)
-                    AccountProvider.currAccount?.let { account ->
+                    accProvider.currAccount = EmailAccount(user, auth)
+                    accProvider.currAccount?.let { account ->
                         logInfo(TAG, String.format("Got data for user ${account.displayName}"))
 
                         val headerView = navigationView.getHeaderView(0)
@@ -149,9 +153,9 @@ class MainActivity : AppCompatActivity() {
                     return
                 }
 
-                val user: VKApiUser = (response!!.parsedModel as VKList<*>)[0] as VKApiUser
-                AccountProvider.currAccount = VKAccount(this@MainActivity.resources, user)
-                AccountProvider.currAccount?.let { account ->
+                val user: VKApiUser = (response.parsedModel as VKList<*>)[0] as VKApiUser
+                accProvider.currAccount = VKAccount(user, get())
+                accProvider.currAccount?.let { account ->
                     logInfo(TAG, String.format("Got data for user ${account.displayName}"))
                     saveUserInfo(User("", "").apply {
                         photo = account.photoUrl
@@ -181,8 +185,8 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        AccountProvider.currAccount = GoogleAccount(account!!)
-        AccountProvider.currAccount?.let { it ->
+        accProvider.currAccount = GoogleAccount(account, get())
+        accProvider.currAccount?.let { it ->
             logInfo(TAG, String.format("Got data for user ${it.displayName}"))
             saveUserInfo(User("", "").apply {
                 photo = it.photoUrl
@@ -200,7 +204,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleLogout() {
         prefs.clearAuthMethod()
-        AccountProvider.currAccount?.logOut()
+        accProvider.currAccount?.logOut()
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         finish()
@@ -212,7 +216,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun updateNavHeaderPhoto() {
-        Picasso.with(this).load(AccountProvider.currAccount?.photoUrl).into(headerImageView)
+        Picasso.with(this).load(accProvider.currAccount?.photoUrl).into(headerImageView)
     }
 
     private fun saveUserInfo(user: User) {
