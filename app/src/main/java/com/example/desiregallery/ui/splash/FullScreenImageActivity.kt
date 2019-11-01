@@ -30,9 +30,9 @@ import com.squareup.picasso.Picasso
 import org.koin.android.ext.android.inject
 
 class FullScreenImageActivity : AppCompatActivity() {
-    private lateinit var toolbar: Toolbar
-
     private val analytics: IDGAnalyticsTracker by inject()
+
+    private lateinit var toolbar: Toolbar
 
     private lateinit var image: Bitmap
     private lateinit var postId: String

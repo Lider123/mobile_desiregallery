@@ -3,12 +3,16 @@ package com.example.desiregallery.data.network.serializers
 import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.data.models.User
 import com.example.desiregallery.data.network.DOCUMENT
-import com.example.desiregallery.data.network.getUsersByNames
+import com.example.desiregallery.data.network.NetworkHelper
 import com.google.gson.*
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 import java.lang.reflect.Type
 
-class PostListDeserializer : JsonDeserializer<List<Post>> {
+class PostListDeserializer : JsonDeserializer<List<Post>>, KoinComponent {
+    private val networkHelper: NetworkHelper by inject()
+
     @Throws(JsonParseException::class)
     override fun deserialize(json: JsonElement, typeOfT: Type,
                              context: JsonDeserializationContext): List<Post>  {
@@ -18,7 +22,7 @@ class PostListDeserializer : JsonDeserializer<List<Post>> {
         }
 
         val authors: Set<String> = LinkedHashSet(posts.map { post -> post.author.login })
-        val users = getUsersByNames(authors)
+        val users = networkHelper.getUsersByNames(authors)
         posts.map { post ->
             val authorName = post.author.login
             post.author = users.find { user -> user.login == authorName } as User

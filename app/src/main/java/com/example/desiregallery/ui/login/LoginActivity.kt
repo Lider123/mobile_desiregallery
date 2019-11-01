@@ -33,10 +33,11 @@ import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 
 class LoginActivity : AppCompatActivity() {
-    private lateinit var inputTextWatcher: TextWatcher
     private val prefs: IDGSharedPreferencesHelper by inject()
     private val analytics: IDGAnalyticsTracker by inject()
     private val auth: FirebaseAuth by inject()
+
+    private lateinit var inputTextWatcher: TextWatcher
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -3,21 +3,24 @@ package com.example.desiregallery.ui.feed
 import android.content.Context
 import android.content.Intent
 import com.example.desiregallery.data.models.Post
-import com.example.desiregallery.data.network.baseService
+import com.example.desiregallery.data.network.BaseNetworkService
 import com.example.desiregallery.ui.comments.CommentsActivity
 import com.example.desiregallery.ui.dialogs.ImageRateDialog
 import com.example.desiregallery.ui.splash.FullScreenImageActivity
 import com.example.desiregallery.utils.logError
 import com.example.desiregallery.utils.logInfo
+import org.koin.core.KoinComponent
+import org.koin.core.get
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class PostPresenter(private val post: Post = Post()): IPostContract.Presenter {
-    private lateinit var view: IPostContract.View
+class PostPresenter(
+    private val view: IPostContract.View,
+    private val post: Post = Post()
+): IPostContract.Presenter, KoinComponent {
 
-    override fun attach(view: IPostContract.View) {
-        this.view = view
+    override fun attach() {
         view.updateImage(post.imageUrl.toString())
         view.updateRating(post.rating)
         view.updateAuthorName(post.author.login)
@@ -57,7 +60,8 @@ class PostPresenter(private val post: Post = Post()): IPostContract.Presenter {
     private fun updateRating(rate: Float) {
         post.updateRating(rate)
         view.updateRating(post.rating)
-        baseService.updatePost(post.id, post).enqueue(object: Callback<Post> {
+        val networkService: BaseNetworkService = get()
+        networkService.updatePost(post.id, post).enqueue(object: Callback<Post> {
 
             override fun onFailure(call: Call<Post>, t: Throwable) {
                 logError(TAG, "Unable to update post ${post.id}: ${t.message}")

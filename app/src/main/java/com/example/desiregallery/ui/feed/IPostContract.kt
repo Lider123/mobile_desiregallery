@@ -15,7 +15,7 @@ interface IPostContract {
     }
 
     interface Presenter {
-        fun attach(view: View)
+        fun attach()
         fun onImageClick(context: Context)
         fun onRatingClick(context: Context)
         fun onCommentsClick(context: Context)

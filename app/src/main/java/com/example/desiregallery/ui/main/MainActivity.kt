@@ -17,7 +17,7 @@ import com.example.desiregallery.auth.*
 import com.example.desiregallery.utils.logError
 import com.example.desiregallery.utils.logInfo
 import com.example.desiregallery.data.models.User
-import com.example.desiregallery.data.network.baseService
+import com.example.desiregallery.data.network.BaseNetworkService
 import com.example.desiregallery.data.prefs.IDGSharedPreferencesHelper
 import com.example.desiregallery.ui.profile.ProfileFragment
 import com.example.desiregallery.ui.settings.SettingsFragment
@@ -36,14 +36,15 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
+    private val prefs: IDGSharedPreferencesHelper = get()
+    private val auth: FirebaseAuth by inject()
+    private val accProvider: AccountProvider = get()
+    private val baseService: BaseNetworkService by inject()
+
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navigationView: NavigationView
     private lateinit var headerImageView: ImageView
     private lateinit var toolbar: Toolbar
-
-    private val prefs: IDGSharedPreferencesHelper by inject()
-    private val auth: FirebaseAuth by inject()
-    private val accProvider: AccountProvider by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -221,12 +222,6 @@ class MainActivity : AppCompatActivity() {
         navigationView.setCheckedItem(R.id.nav_feed)
     }
 
-    fun updateNavHeaderPhoto() {
-        Picasso.with(this)
-            .load(accProvider.currAccount?.photoUrl)
-            .into(headerImageView)
-    }
-
     private fun saveUserInfo(user: User) {
         baseService.updateUser(user.login, user).enqueue(object: Callback<User> {
 
@@ -238,6 +233,12 @@ class MainActivity : AppCompatActivity() {
                 logError(TAG, "Unable to save user data to firestore: ${t.message}")
             }
         })
+    }
+
+    fun updateNavHeaderPhoto() {
+        Picasso.with(this)
+            .load(accProvider.currAccount?.photoUrl)
+            .into(headerImageView)
     }
 
     companion object {

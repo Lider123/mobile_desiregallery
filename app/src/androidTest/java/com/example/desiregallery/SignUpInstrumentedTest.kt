@@ -8,7 +8,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import androidx.test.espresso.matcher.RootMatchers.withDecorView
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -67,7 +66,7 @@ class SignUpInstrumentedTest {
         }
         Espresso.onView(withId(R.id.sign_up_button)).check(matches(isEnabled())).perform(click())
 
-        onView(withText(R.string.non_equal_passwords)).inRoot(withDecorView(not(`is`(mActivityRule.activity.window.decorView))))
+        Espresso.onView(withText(R.string.non_equal_passwords)).inRoot(withDecorView(not(`is`(mActivityRule.activity.window.decorView))))
             .check(matches(isDisplayed()))
         clearInputs()
     }
