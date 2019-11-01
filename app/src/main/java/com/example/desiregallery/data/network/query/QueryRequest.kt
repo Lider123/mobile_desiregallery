@@ -12,7 +12,7 @@ import java.io.Serializable
  * Related to https://cloud.google.com/firestore/docs/reference/rest/v1/StructuredQuery
  */
 class QueryRequest : Serializable {
-    val structuredQuery = JsonObject()
+    private val structuredQuery = JsonObject()
 
     fun from(collectionId: String): QueryRequest {
         if (structuredQuery.has(FROM))

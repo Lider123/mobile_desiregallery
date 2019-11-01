@@ -4,6 +4,7 @@ import android.app.Application
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.core.CrashlyticsCore
 import com.example.desiregallery.di.applicationModule
+import com.example.desiregallery.di.networkModule
 import com.example.desiregallery.di.viewModelModule
 import com.vk.sdk.VKSdk
 import io.fabric.sdk.android.Fabric
@@ -19,7 +20,7 @@ class MainApplication : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@MainApplication)
-            loadKoinModules(listOf(applicationModule, viewModelModule))
+            loadKoinModules(listOf(applicationModule, networkModule, viewModelModule))
         }
         if (!BuildConfig.DEBUG)
             initSentry()

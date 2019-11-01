@@ -4,18 +4,10 @@ import com.example.desiregallery.data.models.Comment
 import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.data.models.User
 import retrofit2.Call
+import retrofit2.Retrofit
 import retrofit2.http.*
 
-interface IDGApi {
-
-    @GET("posts")
-    fun getPosts(): Call<List<Post>>
-
-    @GET("users")
-    fun getUsers(): Call<List<User>>
-
-    @GET("posts/{id}")
-    fun getPost(@Path("id") id: String): Call<Post>
+interface BaseNetworkService {
 
     @GET("users/{login}")
     fun getUser(@Path("login") login: String): Call<User>
@@ -34,4 +26,16 @@ interface IDGApi {
 
     @PATCH("posts/{id}")
     fun updatePost(@Path("id") id: String, @Body post: Post): Call<Post>
+
+    companion object {
+        private const val BASE_URL = "https://firestore.googleapis.com/v1/projects/desiregallery-8072a/databases/(default)/documents/"
+
+        fun createService(): BaseNetworkService {
+            val retrofit = Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(createBaseGson())
+                .build()
+            return retrofit.create(BaseNetworkService::class.java)
+        }
+    }
 }

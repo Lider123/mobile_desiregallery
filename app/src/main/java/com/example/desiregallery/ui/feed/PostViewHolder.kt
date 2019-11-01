@@ -64,7 +64,7 @@ class PostViewHolder(
 
     fun bind(presenter: IPostContract.Presenter) {
         this.presenter = presenter
-        presenter.attach(this)
+        presenter.attach()
         initListeners()
     }
 }

@@ -3,24 +3,21 @@ package com.example.desiregallery.ui.comments
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import com.example.desiregallery.data.models.Comment
-import com.example.desiregallery.data.network.IStatusHandler
-import com.example.desiregallery.ui.comments.CommentDataSource
+import io.reactivex.disposables.CompositeDisposable
 
 /**
  * @author babaetskv on 30.10.19
  */
 class CommentDataSourceFactory(
     private val postId: String,
-    private val statusHandler: IStatusHandler
+    private val compositeDisposable: CompositeDisposable
 ) : DataSource.Factory<Long, Comment>() {
-    private lateinit var commentDataSource: CommentDataSource
 
-    val mutableLiveData: MutableLiveData<CommentDataSource> = MutableLiveData()
+    val commentDataSourceLiveData: MutableLiveData<CommentDataSource> = MutableLiveData()
 
     override fun create(): DataSource<Long, Comment> {
-        commentDataSource =
-            CommentDataSource(postId, statusHandler)
-        mutableLiveData.postValue(commentDataSource)
+        val commentDataSource = CommentDataSource(postId, compositeDisposable)
+        commentDataSourceLiveData.postValue(commentDataSource)
         return commentDataSource
     }
 }

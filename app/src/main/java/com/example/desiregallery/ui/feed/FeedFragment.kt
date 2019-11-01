@@ -9,37 +9,30 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.desiregallery.R
-import com.example.desiregallery.auth.AccountProvider
-import com.example.desiregallery.data.models.Post
-import com.example.desiregallery.data.network.RequestStatus
-import com.example.desiregallery.data.storage.IStorageHelper
+import com.example.desiregallery.data.network.RequestState
 import com.example.desiregallery.ui.dialogs.PostCreationDialog
 import com.example.desiregallery.ui.widgets.SnackbarWrapper
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.fragment_feed.*
 import kotlinx.android.synthetic.main.fragment_feed.view.*
 import org.koin.android.ext.android.inject
-import org.koin.core.parameter.parametersOf
 
 class FeedFragment : Fragment() {
-    private val snackbar: SnackbarWrapper by inject { parametersOf(feed_container) }
-    private val storageHelper: IStorageHelper by inject()
-    private val accProvider: AccountProvider by inject()
+    private val model: PostListViewModel by inject()
 
-    private lateinit var model: PostListViewModel
-
-    private val addPost = fun(post: Post) {
-        model.addPost(post)
-    }
+    private lateinit var snackbar: SnackbarWrapper
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_feed, container, false)
-        view.feed_fab.setOnClickListener { CropImage.activity().start(context!!, this) }
+        initModel()
+        return view
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         with(view.post_list) {
             setItemViewCacheSize(20)
             val lm = LinearLayoutManager(context)
@@ -47,9 +40,8 @@ class FeedFragment : Fragment() {
             isDrawingCacheEnabled = true
             drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
         }
-
-        initModel()
-        return view
+        snackbar = SnackbarWrapper(feed_container)
+        feed_fab.setOnClickListener { CropImage.activity().start(context!!, this) }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -58,46 +50,41 @@ class FeedFragment : Fragment() {
             val imageUri = CropImage.getActivityResult(data).uri
             val istream = activity!!.contentResolver.openInputStream(imageUri)
             val selectedImage = BitmapFactory.decodeStream(istream)
-            PostCreationDialog(
-                activity!!,
-                selectedImage,
-                accProvider,
-                storageHelper,
-                addPost
-            ).show()
+            PostCreationDialog(activity!!, selectedImage) { post ->
+                model.addPost(post)
+            }.show()
         }
     }
 
     private fun initModel() {
-        model = ViewModelProviders.of(this).get(PostListViewModel::class.java)
-        model.pagedListLiveData.observe(this, Observer { posts ->
+        model.postsLiveData.observe(this, Observer { posts ->
             val adapter = PostAdapter()
             adapter.submitList(posts)
             post_list.adapter = adapter
         })
-        model.requestStatus.observe(this, Observer { status ->
+        model.getState().observe(this, Observer { status ->
             status?: return@Observer
 
             when(status) {
-                RequestStatus.DOWNLOADING -> {
+                RequestState.DOWNLOADING -> {
                     showLoading()
                     updateHintVisibility(false)
                 }
-                RequestStatus.SUCCESS -> {
+                RequestState.SUCCESS -> {
                     hideLoading()
                     updateHintVisibility(false)
                 }
-                RequestStatus.ERROR_DOWNLOAD -> {
+                RequestState.ERROR_DOWNLOAD -> {
                     hideLoading()
                     updateHintVisibility(false)
                     snackbar.show(resources.getString(R.string.posts_download_error))
                 }
-                RequestStatus.ERROR_UPLOAD -> {
+                RequestState.ERROR_UPLOAD -> {
                     hideLoading()
                     updateHintVisibility(false)
                     snackbar.show(resources.getString(R.string.post_upload_error))
                 }
-                RequestStatus.NO_DATA -> {
+                RequestState.NO_DATA -> {
                     hideLoading()
                     updateHintVisibility(true)
                 }

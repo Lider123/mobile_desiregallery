@@ -1,17 +1,17 @@
 package com.example.desiregallery.ui.splash
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import androidx.appcompat.app.AppCompatActivity
 import com.example.desiregallery.R
 import com.example.desiregallery.data.prefs.IDGSharedPreferencesHelper
 import com.example.desiregallery.ui.login.LoginActivity
 import com.example.desiregallery.ui.main.MainActivity
-import org.koin.android.ext.android.inject
+import org.koin.android.ext.android.get
 
 class SplashScreenActivity : AppCompatActivity() {
-    private val prefs: IDGSharedPreferencesHelper by inject()
+    private val prefs: IDGSharedPreferencesHelper = get()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

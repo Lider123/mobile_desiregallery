@@ -13,12 +13,13 @@ import com.example.desiregallery.auth.AuthMethod
 import com.example.desiregallery.utils.logError
 import com.example.desiregallery.utils.logInfo
 import com.example.desiregallery.data.models.User
-import com.example.desiregallery.data.network.baseService
+import com.example.desiregallery.data.network.BaseNetworkService
 import com.google.firebase.auth.FirebaseAuth
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import com.google.firebase.auth.UserProfileChangeRequest
+import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 import java.util.*
 
@@ -113,6 +114,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun saveUserInfo(user: User) {
+        val baseService: BaseNetworkService = get()
         baseService.createUser(user.login, user).enqueue(object: Callback<User> {
 
             override fun onResponse(call: Call<User>, response: Response<User>) {

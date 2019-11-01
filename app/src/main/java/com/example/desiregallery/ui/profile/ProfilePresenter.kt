@@ -14,10 +14,12 @@ import com.example.desiregallery.auth.EmailAccount
 import com.example.desiregallery.utils.logError
 import com.example.desiregallery.utils.logInfo
 import com.example.desiregallery.data.models.User
-import com.example.desiregallery.data.network.baseService
+import com.example.desiregallery.data.network.BaseNetworkService
 import com.example.desiregallery.data.storage.IStorageHelper
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,12 +29,12 @@ import java.util.*
 /**
  * @author babaetskv on 29.10.19
  */
-class ProfilePresenter(
-    private val view: IProfileContract.View,
-    private val accProvider: AccountProvider,
-    private val auth: FirebaseAuth,
-    private val storageHelper: IStorageHelper
-) : IProfileContract.Presenter {
+class ProfilePresenter(private val view: IProfileContract.View) : IProfileContract.Presenter, KoinComponent {
+    private val accProvider: AccountProvider by inject()
+    private val networkService: BaseNetworkService by inject()
+    private val auth: FirebaseAuth by inject()
+    private val storageHelper: IStorageHelper by inject()
+
     override var infoChanged = false
         private set
 
@@ -66,7 +68,7 @@ class ProfilePresenter(
         val account = accProvider.currAccount
         if (account is EmailAccount) {
             val emailUser = account.user
-            baseService.updateUser(emailUser.login, emailUser).enqueue(object: Callback<User> {
+            networkService.updateUser(emailUser.login, emailUser).enqueue(object: Callback<User> {
 
                 override fun onFailure(call: Call<User>, t: Throwable) {
                     logError(TAG, "Unable to update user ${emailUser.login}: ${t.message}")

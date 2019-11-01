@@ -9,12 +9,14 @@ import android.view.View
 import android.widget.Toast
 import com.example.desiregallery.R
 import com.example.desiregallery.auth.AccountProvider
-import com.example.desiregallery.utils.logError
-import com.example.desiregallery.utils.logInfo
 import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.data.models.User
 import com.example.desiregallery.data.storage.IStorageHelper
+import com.example.desiregallery.utils.logError
+import com.example.desiregallery.utils.logInfo
 import kotlinx.android.synthetic.main.dialog_create_post.view.*
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * @author babaetskv
@@ -24,10 +26,11 @@ import kotlinx.android.synthetic.main.dialog_create_post.view.*
 class PostCreationDialog(
     private val activity: Activity,
     private val image: Bitmap,
-    private val accProvider: AccountProvider,
-    private val storageHelper: IStorageHelper,
     private val onPublish: (Post) -> Unit
-) : AlertDialog(activity) {
+) : AlertDialog(activity), KoinComponent {
+    private val accProvider: AccountProvider by inject()
+    private val storageHelper: IStorageHelper by inject()
+
     private lateinit var content: View
 
     override fun onCreate(savedInstanceState: Bundle?) {

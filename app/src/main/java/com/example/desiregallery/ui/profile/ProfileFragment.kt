@@ -7,11 +7,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.desiregallery.R
-import com.example.desiregallery.ui.main.MainActivity
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.example.desiregallery.ui.profile.IProfileContract
+import com.example.desiregallery.R
+import com.example.desiregallery.ui.main.MainActivity
 import com.squareup.picasso.Picasso
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.fragment_profile.*
@@ -19,7 +18,6 @@ import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
 class ProfileFragment : Fragment(), IProfileContract.View {
-
     private val presenter: IProfileContract.Presenter by inject { parametersOf(this) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
