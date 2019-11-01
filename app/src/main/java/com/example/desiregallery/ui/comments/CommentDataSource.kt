@@ -8,11 +8,7 @@ import com.example.desiregallery.utils.logWarning
 import com.example.desiregallery.data.models.Comment
 import com.example.desiregallery.data.network.QueryNetworkService
 import com.example.desiregallery.data.network.RequestState
-import com.example.desiregallery.data.network.query.OrderDirection
-import com.example.desiregallery.data.network.query.QueryRequest
-import com.example.desiregallery.data.network.query.Value
-import com.example.desiregallery.data.network.query.filters.FieldFilter
-import com.example.desiregallery.data.network.query.operators.ComparisonOperator
+import com.example.desiregallery.data.network.query.requests.CommentsQueryRequest
 import io.reactivex.disposables.CompositeDisposable
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -31,11 +27,11 @@ class CommentDataSource(
     override fun loadInitial(params: LoadInitialParams<Long>,
                              callback: LoadInitialCallback<Long, Comment>) {
         updateState(RequestState.DOWNLOADING)
-        val query = QueryRequest()
-            .from("comments")
-            .where(FieldFilter("postId", ComparisonOperator.EQUAL, Value(postId)))
-            .limit(params.requestedLoadSize)
-            .orderBy("timestamp", OrderDirection.ASCENDING)
+        val query = CommentsQueryRequest(
+            postId,
+            params.requestedLoadSize,
+            0
+        )
         compositeDisposable.add(
             networkService.getComments(query).subscribe(
                 { comments ->
@@ -64,12 +60,11 @@ class CommentDataSource(
         val key = params.key
         val pageSize = params.requestedLoadSize
         updateState(RequestState.DOWNLOADING)
-        val query = QueryRequest()
-            .from("comments")
-            .where(FieldFilter("postId", ComparisonOperator.EQUAL, Value(postId)))
-            .limit(pageSize)
-            .orderBy("timestamp", OrderDirection.ASCENDING)
-            .offset(pageSize * (key-1))
+        val query = CommentsQueryRequest(
+            postId,
+            pageSize,
+            pageSize * (key - 1)
+        )
         compositeDisposable.add(
             networkService.getComments(query).subscribe(
                 { comments ->

@@ -5,8 +5,7 @@ import androidx.paging.PageKeyedDataSource
 import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.data.network.QueryNetworkService
 import com.example.desiregallery.data.network.RequestState
-import com.example.desiregallery.data.network.query.OrderDirection
-import com.example.desiregallery.data.network.query.QueryRequest
+import com.example.desiregallery.data.network.query.requests.PostsQueryRequest
 import com.example.desiregallery.utils.logError
 import com.example.desiregallery.utils.logInfo
 import com.example.desiregallery.utils.logWarning
@@ -26,10 +25,10 @@ class PostDataSource(
 
     override fun loadInitial(params: LoadInitialParams<Long>, callback: LoadInitialCallback<Long, Post>) {
         updateState(RequestState.DOWNLOADING)
-        val query = QueryRequest()
-            .from("posts")
-            .limit(params.requestedLoadSize)
-            .orderBy("timestamp", OrderDirection.DESCENDING)
+        val query = PostsQueryRequest(
+            params.requestedLoadSize,
+            0
+        )
         compositeDisposable.add(
             networkService.getPosts(query).subscribe(
                 { posts ->
@@ -58,11 +57,10 @@ class PostDataSource(
         val key = params.key
         val pageSize = params.requestedLoadSize
         updateState(RequestState.DOWNLOADING)
-        val query = QueryRequest()
-            .from("posts")
-            .limit(pageSize)
-            .orderBy("timestamp", OrderDirection.DESCENDING)
-            .offset(pageSize * (key-1))
+        val query = PostsQueryRequest(
+            pageSize,
+            pageSize * (key - 1)
+        )
         compositeDisposable.add(
             networkService.getPosts(query).subscribe(
                 { posts ->

@@ -1,6 +1,7 @@
-package com.example.desiregallery.data.network.query
+package com.example.desiregallery.data.network.query.requests
 
 import com.example.desiregallery.data.network.*
+import com.example.desiregallery.data.network.query.OrderDirection
 import com.example.desiregallery.data.network.query.filters.CompositeFilter
 import com.example.desiregallery.data.network.query.filters.FieldFilter
 import com.google.gson.JsonArray
@@ -11,10 +12,10 @@ import java.io.Serializable
  * @author babaetskv on 19.09.19
  * Related to https://cloud.google.com/firestore/docs/reference/rest/v1/StructuredQuery
  */
-class QueryRequest : Serializable {
+abstract class BaseQueryRequest : Serializable {
     private val structuredQuery = JsonObject()
 
-    fun from(collectionId: String): QueryRequest {
+    protected fun from(collectionId: String): BaseQueryRequest {
         if (structuredQuery.has(FROM))
             structuredQuery.remove(FROM)
 
@@ -24,7 +25,7 @@ class QueryRequest : Serializable {
         return this
     }
 
-    fun from(collectionIds: List<String>): QueryRequest {
+    protected fun from(collectionIds: List<String>): BaseQueryRequest {
         if (structuredQuery.has(FROM))
             structuredQuery.remove(FROM)
 
@@ -35,7 +36,7 @@ class QueryRequest : Serializable {
         return this
     }
 
-    fun where(filter: FieldFilter): QueryRequest {
+    protected fun where(filter: FieldFilter): BaseQueryRequest {
         if (structuredQuery.has(WHERE))
             structuredQuery.remove(WHERE)
 
@@ -45,7 +46,7 @@ class QueryRequest : Serializable {
         return this
     }
 
-    fun where(filter: CompositeFilter): QueryRequest {
+    protected fun where(filter: CompositeFilter): BaseQueryRequest {
         if (structuredQuery.has(WHERE))
             structuredQuery.remove(WHERE)
 
@@ -55,7 +56,7 @@ class QueryRequest : Serializable {
         return this
     }
 
-    fun orderBy(field: String, direction: OrderDirection): QueryRequest {
+    protected fun orderBy(field: String, direction: OrderDirection): BaseQueryRequest {
         if (structuredQuery.has(ORDER_BY))
             structuredQuery.remove(ORDER_BY)
 
@@ -66,14 +67,14 @@ class QueryRequest : Serializable {
         return this
     }
 
-    fun limit(limit: Int): QueryRequest {
+    protected fun limit(limit: Int): BaseQueryRequest {
         if (structuredQuery.has(LIMIT))
             structuredQuery.remove(LIMIT)
         structuredQuery.addProperty(LIMIT, limit)
         return this
     }
 
-    fun offset(count: Long): QueryRequest {
+    protected fun offset(count: Long): BaseQueryRequest {
         if (structuredQuery.has(OFFSET))
             structuredQuery.remove(OFFSET)
         structuredQuery.addProperty(OFFSET, count)
