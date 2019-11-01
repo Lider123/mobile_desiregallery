@@ -31,8 +31,13 @@ class PostDataSource(
         )
         compositeDisposable.add(
             networkService.getPosts(query).subscribe(
-                { posts ->
-                    logInfo(TAG, "Posts for page 1 have been loaded")
+                { response ->
+                    if (!response.isSuccessful) {
+                        logWarning(TAG, "Failed to load posts for page 1. Received code ${response.code()}: ${response.message()}")
+                        updateState(RequestState.ERROR_DOWNLOAD)
+                        return@subscribe
+                    }
+                    val posts = response.body()
                     posts?.let {
                         if (posts.isEmpty()) {
                             logInfo(TAG, "There are no posts to download")
@@ -63,7 +68,13 @@ class PostDataSource(
         )
         compositeDisposable.add(
             networkService.getPosts(query).subscribe(
-                { posts ->
+                { response ->
+                    if (!response.isSuccessful) {
+                        logWarning(TAG, "Failed to load posts for page ${key}. Received code ${response.code()}: ${response.message()}")
+                        updateState(RequestState.ERROR_DOWNLOAD)
+                        return@subscribe
+                    }
+                    val posts = response.body()
                     posts?.let {
                         logInfo(TAG, "Successfully loaded ${it.size} posts for page $key")
                         callback.onResult(it, key+1)

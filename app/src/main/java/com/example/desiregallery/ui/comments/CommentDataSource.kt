@@ -34,10 +34,15 @@ class CommentDataSource(
         )
         compositeDisposable.add(
             networkService.getComments(query).subscribe(
-                { comments ->
-                    logInfo(TAG, "Successfully loaded comments for page 1")
+                { response ->
+                    if (!response.isSuccessful) {
+                        logWarning(TAG, "Failed to load comments for page 1. Received code ${response.code()}: ${response.message()}")
+                        updateState(RequestState.ERROR_DOWNLOAD)
+                        return@subscribe
+                    }
+                    val comments = response.body()
                     comments?.let {
-                        if (comments.isEmpty()) {
+                        if (it.isEmpty()) {
                             logInfo(TAG, "There are no comments to download")
                             updateState(RequestState.NO_DATA)
                         }
@@ -67,7 +72,13 @@ class CommentDataSource(
         )
         compositeDisposable.add(
             networkService.getComments(query).subscribe(
-                { comments ->
+                { response ->
+                    if (!response.isSuccessful) {
+                        logWarning(TAG, "Failed to load comments for page ${key}. Received code ${response.code()}: ${response.message()}")
+                        updateState(RequestState.ERROR_DOWNLOAD)
+                        return@subscribe
+                    }
+                    val comments = response.body()
                     comments?.let {
                         logInfo(TAG, "Successfully loaded ${it.size} comments for page $key")
                         callback.onResult(it, key+1)
