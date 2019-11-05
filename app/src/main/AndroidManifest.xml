@@ -21,6 +21,12 @@
         <meta-data
                 android:name="firebase_analytics_collection_enabled"
                 android:value="@bool/FIREBASE_ANALYTICS_ENABLED" />
+        <meta-data
+                android:name="com.google.firebase.messaging.default_notification_icon"
+                android:resource="@drawable/logo_icon" />
+        <meta-data
+                android:name="com.google.firebase.messaging.default_notification_color"
+                android:resource="@color/colorSecondary" />
 
         <activity
                 android:name=".ui.splash.SplashScreenActivity"
@@ -54,6 +60,13 @@
         <activity
                 android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
                 android:theme="@style/Base.Theme.AppCompat"/>
-    </application>
 
+        <service
+                android:name=".MessagingService"
+                android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+    </application>
 </manifest>

@@ -1,6 +1,7 @@
 package com.example.desiregallery.di
 
 import android.content.res.Resources
+import com.example.desiregallery.MessagingHelper
 import com.example.desiregallery.analytics.AnalyticsTracker
 import com.example.desiregallery.analytics.IDGAnalyticsTracker
 import com.example.desiregallery.auth.AccountProvider
@@ -37,6 +38,7 @@ val applicationModule = module(override = true) {
     single { AccountProvider() }
     single { FirebaseStorage.getInstance() }
     single { FirebaseAuth.getInstance() }
+    single { MessagingHelper() }
     single {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()

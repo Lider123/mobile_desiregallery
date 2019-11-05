@@ -23,8 +23,11 @@ import com.example.desiregallery.ui.profile.ProfileFragment
 import com.example.desiregallery.ui.settings.SettingsFragment
 import com.example.desiregallery.ui.feed.FeedFragment
 import com.example.desiregallery.ui.login.LoginActivity
+import com.example.desiregallery.utils.logWarning
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.iid.FirebaseInstanceId
 import com.squareup.picasso.Picasso
 import com.vk.sdk.api.*
 import com.vk.sdk.api.model.VKApiUser
@@ -39,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     private val prefs: IDGSharedPreferencesHelper = get()
     private val auth: FirebaseAuth by inject()
     private val accProvider: AccountProvider = get()
+    private val messagingHelper: MessagingHelper = get()
     private val baseService: BaseNetworkService by inject()
 
     private lateinit var drawerLayout: DrawerLayout
@@ -49,6 +53,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        messagingHelper.fetchToken()
+
         setToolbar()
         setNavigationMenu()
         setDefaultFragment()
