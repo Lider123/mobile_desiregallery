@@ -9,7 +9,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 
-class NetworkHelper : KoinComponent {
+class NetworkUtils : KoinComponent {
     private val networkService: BaseNetworkService by inject()
 
     fun getUsersByNames(userNames: Collection<String>): List<User> {
@@ -33,6 +33,6 @@ class NetworkHelper : KoinComponent {
     }
 
     companion object {
-        private val TAG = NetworkHelper::class.java.simpleName
+        private val TAG = NetworkUtils::class.java.simpleName
     }
 }

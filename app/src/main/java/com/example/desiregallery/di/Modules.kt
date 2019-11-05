@@ -6,7 +6,7 @@ import com.example.desiregallery.analytics.IDGAnalyticsTracker
 import com.example.desiregallery.auth.AccountProvider
 import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.data.network.BaseNetworkService
-import com.example.desiregallery.data.network.NetworkHelper
+import com.example.desiregallery.data.network.NetworkUtils
 import com.example.desiregallery.data.network.QueryNetworkService
 import com.example.desiregallery.data.prefs.IDGSharedPreferencesHelper
 import com.example.desiregallery.data.prefs.PreferencesHelper
@@ -51,7 +51,7 @@ val applicationModule = module(override = true) {
 val networkModule = module {
     single { QueryNetworkService.getService() }
     single { BaseNetworkService.createService() }
-    single { NetworkHelper() }
+    single { NetworkUtils() }
 }
 
 val viewModelModule = module {

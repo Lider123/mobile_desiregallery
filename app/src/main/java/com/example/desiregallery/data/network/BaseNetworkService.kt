@@ -3,8 +3,11 @@ package com.example.desiregallery.data.network
 import com.example.desiregallery.data.models.Comment
 import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.data.models.User
+import com.example.desiregallery.data.network.serializers.*
+import com.google.gson.GsonBuilder
 import retrofit2.Call
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 
 interface BaseNetworkService {
@@ -29,6 +32,17 @@ interface BaseNetworkService {
 
     companion object {
         private const val BASE_URL = "https://firestore.googleapis.com/v1/projects/desiregallery-8072a/databases/(default)/documents/"
+
+        private fun createBaseGson(): GsonConverterFactory {
+            val gsonBuilder = GsonBuilder()
+                .registerTypeAdapter(Post::class.java, PostDeserializer())
+                .registerTypeAdapter(Post::class.java, PostSerializer())
+                .registerTypeAdapter(User::class.java, UserDeserializer())
+                .registerTypeAdapter(User::class.java, UserSerializer())
+                .registerTypeAdapter(Comment::class.java, CommentSerializer())
+                .registerTypeAdapter(Comment::class.java, CommentDeserializer())
+            return GsonConverterFactory.create(gsonBuilder.create())
+        }
 
         fun createService(): BaseNetworkService {
             val retrofit = Retrofit.Builder()

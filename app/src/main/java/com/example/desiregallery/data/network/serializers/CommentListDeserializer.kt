@@ -3,7 +3,7 @@ package com.example.desiregallery.data.network.serializers
 import com.example.desiregallery.data.models.Comment
 import com.example.desiregallery.data.models.User
 import com.example.desiregallery.data.network.DOCUMENT
-import com.example.desiregallery.data.network.NetworkHelper
+import com.example.desiregallery.data.network.NetworkUtils
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
@@ -15,7 +15,7 @@ import java.lang.reflect.Type
  * @author babaetskv on 20.09.19
  */
 class CommentListDeserializer : JsonDeserializer<List<Comment>>, KoinComponent {
-    private val networkHelper: NetworkHelper by inject()
+    private val networkUtils: NetworkUtils by inject()
 
     override fun deserialize(json: JsonElement, typeOfT: Type,
                              context: JsonDeserializationContext): List<Comment> {
@@ -25,7 +25,7 @@ class CommentListDeserializer : JsonDeserializer<List<Comment>>, KoinComponent {
         }
 
         val authors: Set<String> = LinkedHashSet(comments.map { comment -> comment.author.login })
-        val users = networkHelper.getUsersByNames(authors)
+        val users = networkUtils.getUsersByNames(authors)
         comments.map { comment ->
             val authorName = comment.author.login
             comment.author = users.find { user -> user.login == authorName } as User
