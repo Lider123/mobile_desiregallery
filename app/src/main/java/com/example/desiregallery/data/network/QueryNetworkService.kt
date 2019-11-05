@@ -5,6 +5,7 @@ import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.data.network.query.requests.CommentsQueryRequest
 import com.example.desiregallery.data.network.query.requests.PostsQueryRequest
 import io.reactivex.Single
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.http.Body
@@ -16,10 +17,10 @@ import retrofit2.http.POST
 interface QueryNetworkService {
 
     @POST(" ")
-    fun getComments(@Body query: CommentsQueryRequest): Single<List<Comment>>
+    fun getComments(@Body query: CommentsQueryRequest): Single<Response<List<Comment>>>
 
     @POST(" ")
-    fun getPosts(@Body query: PostsQueryRequest): Single<List<Post>>
+    fun getPosts(@Body query: PostsQueryRequest): Single<Response<List<Post>>>
 
     companion object {
         private const val QUERY_URL = "https://firestore.googleapis.com/v1/projects/desiregallery-8072a/databases/(default)/documents:runQuery/"
