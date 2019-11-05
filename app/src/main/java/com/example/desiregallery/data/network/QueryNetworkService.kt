@@ -4,10 +4,14 @@ import com.example.desiregallery.data.models.Comment
 import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.data.network.query.requests.CommentsQueryRequest
 import com.example.desiregallery.data.network.query.requests.PostsQueryRequest
+import com.example.desiregallery.data.network.serializers.*
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import io.reactivex.Single
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -24,6 +28,17 @@ interface QueryNetworkService {
 
     companion object {
         private const val QUERY_URL = "https://firestore.googleapis.com/v1/projects/desiregallery-8072a/databases/(default)/documents:runQuery/"
+
+        private fun createQueryGson(): GsonConverterFactory {
+            val postListType = object : TypeToken<MutableList<Post>>() {}.type
+            val commentListType = object : TypeToken<MutableList<Comment>>() {}.type
+            val gsonBuilder = GsonBuilder()
+                .registerTypeAdapter(Comment::class.java, CommentDeserializer())
+                .registerTypeAdapter(commentListType, CommentListDeserializer())
+                .registerTypeAdapter(Post::class.java, PostDeserializer())
+                .registerTypeAdapter(postListType, PostListDeserializer())
+            return GsonConverterFactory.create(gsonBuilder.create())
+        }
 
         fun getService(): QueryNetworkService {
             val retrofit = Retrofit.Builder()
