@@ -7,7 +7,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="32dp"
-        tools:context=".ui.signup.SignUpActivity">
+        tools:context=".ui.screens.SignUpActivity">
 
     <ScrollView
             android:layout_width="match_parent"
@@ -40,36 +40,6 @@
                     android:maxLines="1"
                     android:layout_marginBottom="16dp"
                     style="@style/CustomEditText"/>
-
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="16dp">
-
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="@string/gender_i_am"/>
-
-                <RadioGroup
-                        android:id="@+id/gender_radio_group"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-                    <RadioButton
-                            android:id="@+id/radio_male"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/male"/>
-                    <RadioButton
-                            android:id="@+id/radio_female"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/female"/>
-                </RadioGroup>
-            </LinearLayout>
 
             <EditText
                     android:id="@+id/sign_up_input_birthday"

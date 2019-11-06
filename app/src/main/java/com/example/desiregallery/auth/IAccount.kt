@@ -7,7 +7,6 @@ interface IAccount {
     val accessToken: String
     val displayName: String
     val photoUrl: String
-    val gender: String
     val birthday: String
 
     fun logOut()

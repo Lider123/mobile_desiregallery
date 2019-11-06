@@ -25,7 +25,6 @@
     <string name="sign_up_confirm">Sign Up</string>
     <string name="password">password</string>
     <string name="email">email</string>
-    <string name="gender">gender</string>
     <string name="birthday">birthday</string>
     <string name="confirm_password">confirm password</string>
     <string name="login_error">Unable to log in: %s</string>
@@ -34,9 +33,6 @@
     <string name="sign_in_with_google">Sign In with Google</string>
     <string name="sign_in_vk_failure">Failed to Sign In with VK</string>
     <string name="sign_in_google_failure">Failed to Sign In with Google</string>
-    <string name="male">male</string>
-    <string name="female">female</string>
-    <string name="gender_i_am">I am</string>
 
     <!-- Main menu -->
     <string name="Profile">Profile</string>
@@ -52,15 +48,13 @@
     <string name="share_image">Share image</string>
 
     <!-- Profile screen -->
-    <string name="not_specified">not specified</string>
     <string name="OK">OK</string>
     <string name="Cancel">Cancel</string>
-    <string name="gender_dialog_title">Gender</string>
     <string name="profile_image_upload_failure">There was an error while uploading image</string>
-    <string-array name="gender">
-        <item name="male">male</item>
-        <item name="female">female</item>
-    </string-array>
+    <string name="Edit">Edit</string>
+    <string name="profile_posts_title">Most starred posts</string>
+    <string name="Done">Done</string>
+    <string name="changes_saved">Changes have been saved</string>
 
     <!-- Settings screen -->
     <string name="reset_password_sent">Email for password reset was sent</string>
@@ -90,4 +84,7 @@
     <string name="date_format" translatable="false">%1$02d.%2$02d.%3$d</string>
     <string name="datetime_format" translatable="false">dd.MM.yyyy HH:mm</string>
     <string name="about_message">Version\n<b>%s</b>\n\nSource project\nhttps://github.com/Lider123/mobile_desiregallery</string>
+    <string name="profile_age_template">Age: <b>%d</b></string>
+    <string name="profile_posts_template">Posts: <b>%d</b></string>
+    <string name="profile_rating_template">Rating: <b>%1$.1f</b></string>
 </resources>

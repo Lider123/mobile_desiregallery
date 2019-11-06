@@ -9,7 +9,7 @@
         android:paddingEnd="32dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        tools:context=".ui.login.LoginActivity">
+        tools:context=".ui.screens.LoginActivity">
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

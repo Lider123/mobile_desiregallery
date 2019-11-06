@@ -12,13 +12,11 @@ private fun initUsers(): List<User> {
 
     var u = User("login1@example.com", "pass1")
     u.login = "login1"
-    u.gender = "male"
     u.birthday = "01.01.1970"
     users.add(u)
 
     u = User("login2@example.com", "pass2")
     u.login = "login2"
-    u.gender = "female"
     u.birthday = "21.12.2012"
     users.add(u)
 

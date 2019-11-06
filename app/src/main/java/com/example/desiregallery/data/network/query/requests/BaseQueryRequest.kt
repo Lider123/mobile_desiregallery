@@ -4,6 +4,7 @@ import com.example.desiregallery.data.network.*
 import com.example.desiregallery.data.network.query.OrderDirection
 import com.example.desiregallery.data.network.query.filters.CompositeFilter
 import com.example.desiregallery.data.network.query.filters.FieldFilter
+import com.example.desiregallery.utils.logDebug
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import java.io.Serializable
@@ -43,6 +44,7 @@ abstract class BaseQueryRequest : Serializable {
         structuredQuery.add(WHERE, JsonObject().apply {
             add(FIELD_FILTER, filter.json)
         })
+        logDebug("TEST", structuredQuery.toString())
         return this
     }
 

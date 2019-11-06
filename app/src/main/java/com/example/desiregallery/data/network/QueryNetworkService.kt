@@ -4,11 +4,13 @@ import com.example.desiregallery.data.models.Comment
 import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.data.network.query.requests.CommentsQueryRequest
 import com.example.desiregallery.data.network.query.requests.PostsQueryRequest
-import com.example.desiregallery.data.network.serializers.*
+import com.example.desiregallery.data.network.serializers.CommentDeserializer
+import com.example.desiregallery.data.network.serializers.CommentListDeserializer
+import com.example.desiregallery.data.network.serializers.PostDeserializer
+import com.example.desiregallery.data.network.serializers.PostListDeserializer
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import io.reactivex.Single
-import retrofit2.Response
+import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -21,10 +23,10 @@ import retrofit2.http.POST
 interface QueryNetworkService {
 
     @POST(" ")
-    fun getComments(@Body query: CommentsQueryRequest): Single<Response<List<Comment>>>
+    fun getComments(@Body query: CommentsQueryRequest): Call<List<Comment>>
 
     @POST(" ")
-    fun getPosts(@Body query: PostsQueryRequest): Single<Response<List<Post>>>
+    fun getPosts(@Body query: PostsQueryRequest): Call<List<Post>>
 
     companion object {
         private const val QUERY_URL = "https://firestore.googleapis.com/v1/projects/desiregallery-8072a/databases/(default)/documents:runQuery/"
