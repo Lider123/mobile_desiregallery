@@ -69,6 +69,10 @@ class PostListViewModel(
         })
     }
 
+    fun updatePosts() {
+        postDataSourceFactory.postDataSourceLiveData.value?.invalidate()
+    }
+
     companion object {
         private val TAG = PostListViewModel::class.java.simpleName
         private const val PAGE_SIZE = 10

@@ -42,6 +42,7 @@ class FeedFragment : Fragment() {
         }
         snackbar = SnackbarWrapper(feed_container)
         feed_fab.setOnClickListener { CropImage.activity().start(context!!, this) }
+        swipe_container.setOnRefreshListener { model.updatePosts() }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -92,13 +93,9 @@ class FeedFragment : Fragment() {
         })
     }
 
-    private fun showLoading() {
-        feed_progress.visibility = View.VISIBLE
-    }
+    private fun showLoading() { swipe_container.isRefreshing = true }
 
-    private fun hideLoading() {
-        feed_progress.visibility = View.GONE
-    }
+    private fun hideLoading() { swipe_container.isRefreshing = false }
 
     private fun updateHintVisibility(visible: Boolean) {
         feed_hint.visibility = if (visible) View.VISIBLE else View.GONE
