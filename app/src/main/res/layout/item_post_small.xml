@@ -13,11 +13,8 @@
             android:id="@+id/root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/modal_background"
-            android:layout_marginStart="@dimen/item_margin"
-            android:layout_marginEnd="@dimen/item_margin"
-            android:layout_marginBottom="@dimen/item_margin"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            style="@style/Post">
 
         <com.example.desiregallery.ui.widgets.SquareImageView
                 android:id="@+id/item_post_image"

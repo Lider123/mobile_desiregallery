@@ -13,11 +13,8 @@
         android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/modal_background"
-        android:layout_marginTop="@dimen/item_comment_margin"
-        android:layout_marginStart="@dimen/item_comment_margin"
-        android:layout_marginEnd="@dimen/item_comment_margin"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+            style="@style/Comment">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/item_author_photo"

@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
                 android:hint="@string/email"
-                style="@style/CustomEditText"
+                style="@style/CustomEditText.Solid"
                 android:layout_marginBottom="8dp"/>
 
         <EditText
@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:hint="@string/password"
-                style="@style/CustomEditText"
+                style="@style/CustomEditText.Solid"
                 android:layout_marginBottom="8dp"/>
 
         <Button
