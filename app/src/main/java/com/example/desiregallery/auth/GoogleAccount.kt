@@ -13,7 +13,6 @@ class GoogleAccount(
     override val accessToken = "" // TODO
     override val displayName = account.displayName as String
     override val photoUrl = account.photoUrl?.toString()?: ""
-    override val gender = ""
     override val birthday = ""
 
     override fun logOut() {

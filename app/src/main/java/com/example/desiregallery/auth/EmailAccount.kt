@@ -10,7 +10,6 @@ class EmailAccount(val user: User, private val auth: FirebaseAuth) : IAccount {
     override val accessToken = "" // TODO
     override val displayName = user.login
     override val photoUrl = user.photo
-    override val gender = user.gender
     override val birthday = user.birthday
 
     override fun logOut() {

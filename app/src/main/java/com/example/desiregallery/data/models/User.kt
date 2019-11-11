@@ -4,7 +4,6 @@ import java.io.Serializable
 
 class User(val email: String, val password: String) : Serializable {
     var login = ""
-    var gender = ""
     var birthday = ""
     var photo = ""
 
@@ -20,9 +19,9 @@ class User(val email: String, val password: String) : Serializable {
             return false
         if (email != other.email)
             return false
-        if (gender != other.gender)
-            return false
         if (birthday != other.birthday)
+            return false
+        if (photo != other.photo)
             return false
 
         return true
@@ -32,8 +31,8 @@ class User(val email: String, val password: String) : Serializable {
         var result = login.hashCode()
         result = 31 * result + password.hashCode()
         result = 31 * result + email.hashCode()
-        result = 31 * result + gender.hashCode()
         result = 31 * result + birthday.hashCode()
+        result = 31 * result + photo.hashCode()
         return result
     }
 
@@ -42,7 +41,6 @@ class User(val email: String, val password: String) : Serializable {
                 "email='$email', " +
                 "password='$password', " +
                 "login='$login', " +
-                "gender='$gender', " +
                 "birthday='$birthday', " +
                 "photo='$photo')"
     }

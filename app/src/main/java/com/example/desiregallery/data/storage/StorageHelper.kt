@@ -11,12 +11,12 @@ class StorageHelper(private val storage: FirebaseStorage) : IStorageHelper {
 
     override fun uploadProfileImage(bitmap: Bitmap, userLogin: String,
                                     callback: IStorageHelper.Callback) {
-        uploadImage(bitmap, "${STORAGE_PROFILE_IMAGES_DIR}/${userLogin}.jpg", callback)
+        uploadImage(bitmap, "$STORAGE_PROFILE_IMAGES_DIR/$userLogin.jpg", callback)
     }
 
     override fun uploadPostImage(bitmap: Bitmap, postId: String,
                                  callback: IStorageHelper.Callback) {
-        uploadImage(bitmap, "${STORAGE_POST_IMAGES_DIR}/${postId}.jpg", callback)
+        uploadImage(bitmap, "$STORAGE_POST_IMAGES_DIR/$postId.jpg", callback)
     }
 
     private fun uploadImage(bitmap: Bitmap, path: String, callback: IStorageHelper.Callback) {

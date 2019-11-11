@@ -12,12 +12,12 @@ import com.example.desiregallery.data.prefs.IDGSharedPreferencesHelper
 import com.example.desiregallery.data.prefs.PreferencesHelper
 import com.example.desiregallery.data.storage.IStorageHelper
 import com.example.desiregallery.data.storage.StorageHelper
-import com.example.desiregallery.ui.comments.CommentListViewModel
-import com.example.desiregallery.ui.feed.IPostContract
-import com.example.desiregallery.ui.feed.PostListViewModel
-import com.example.desiregallery.ui.feed.PostPresenter
-import com.example.desiregallery.ui.profile.IProfileContract
-import com.example.desiregallery.ui.profile.ProfilePresenter
+import com.example.desiregallery.ui.screens.comments.CommentListViewModel
+import com.example.desiregallery.ui.presenters.IPostContract
+import com.example.desiregallery.ui.screens.feed.PostListViewModel
+import com.example.desiregallery.ui.presenters.PostPresenter
+import com.example.desiregallery.ui.screens.profile.IProfileContract
+import com.example.desiregallery.ui.screens.profile.ProfilePresenter
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
@@ -45,7 +45,12 @@ val applicationModule = module(override = true) {
     }
 
     factory<IProfileContract.Presenter> { (view: IProfileContract.View) -> ProfilePresenter(view) }
-    factory<IPostContract.Presenter> { (view: IPostContract.View, post: Post) -> PostPresenter(view, post) }
+    factory<IPostContract.Presenter> { (view: IPostContract.View, post: Post) ->
+        PostPresenter(
+            view,
+            post
+        )
+    }
 }
 
 val networkModule = module {

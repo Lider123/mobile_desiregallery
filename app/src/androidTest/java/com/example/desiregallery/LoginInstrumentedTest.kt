@@ -10,9 +10,9 @@ import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
-import com.example.desiregallery.ui.login.LoginActivity
+import com.example.desiregallery.ui.screens.LoginActivity
 import org.junit.runner.RunWith
-import com.example.desiregallery.ui.signup.SignUpActivity
+import com.example.desiregallery.ui.screens.SignUpActivity
 import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before

@@ -3,7 +3,7 @@ package com.example.desiregallery
 import androidx.test.espresso.Espresso
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
-import com.example.desiregallery.ui.signup.SignUpActivity
+import com.example.desiregallery.ui.screens.SignUpActivity
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/modal_background"
+    android:layout_margin="8dp"
+    android:padding="8dp"
+    tools:context=".ui.screens.profile.EditProfileFragment">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:orientation="horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/edit_photo"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/material"
+            android:layout_gravity="center"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/edit_new_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_photo_camera_black_32dp"
+            app:layout_anchor="@id/edit_photo"
+            app:layout_anchorGravity="bottom|right|end"/>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <TextView
+        android:id="@+id/edit_error"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorError"
+        android:textAlignment="center"
+        android:padding="4dp"
+        android:text="@string/profile_image_upload_failure"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="8dp"
+        android:padding="8dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/birthday"
+            android:textColor="@color/colorPrimary"
+            android:paddingLeft="12dp"
+            android:paddingStart="12dp"
+            android:paddingRight="12dp"/>
+        <EditText
+            android:id="@+id/edit_birthday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/birthday"
+            android:inputType="text"
+            android:maxLines="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
+            style="@style/CustomEditText"/>
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
+
+        <Button
+            android:id="@+id/edit_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Cancel"
+            app:layout_constraintEnd_toStartOf="@id/edit_done"
+            app:layout_constraintBottom_toBottomOf="parent"
+            style="@style/CustomFlatButton"/>
+
+        <Button
+            android:id="@+id/edit_done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Done"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            style="@style/CustomFlatButton"/>
+
+        <ProgressBar
+            android:id="@+id/edit_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="visible"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

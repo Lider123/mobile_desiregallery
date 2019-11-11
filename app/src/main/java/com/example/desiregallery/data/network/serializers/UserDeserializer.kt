@@ -19,14 +19,12 @@ class UserDeserializer : JsonDeserializer<User> {
         val password = fieldsObject.getAsJsonObject("password").get(STRING_VALUE)
             .asString
         val email = fieldsObject.getAsJsonObject("email").get(STRING_VALUE).asString
-        val gender = fieldsObject.getAsJsonObject("gender").get(STRING_VALUE).asString
         val birthday = fieldsObject.getAsJsonObject("birthday").get(STRING_VALUE)
             .asString
         val photo = fieldsObject.getAsJsonObject("photo").get(STRING_VALUE).asString
 
         return User(email, password).also {
             it.login = login
-            it.gender = gender
             it.birthday = birthday
             it.photo = photo
         }
