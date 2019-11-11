@@ -6,7 +6,7 @@ import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.data.network.BaseNetworkService
 import com.example.desiregallery.ui.screens.comments.CommentsActivity
 import com.example.desiregallery.ui.dialogs.ImageRateDialog
-import com.example.desiregallery.ui.screens.splash.FullScreenImageActivity
+import com.example.desiregallery.ui.screens.FullScreenImageActivity
 import com.example.desiregallery.utils.logError
 import com.example.desiregallery.utils.logInfo
 import org.koin.core.KoinComponent

@@ -1,39 +1,55 @@
-package com.example.desiregallery.ui.screens
+package com.example.desiregallery.ui.screens.auth
 
 import android.app.DatePickerDialog
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_sign_up.*
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.transition.Slide
 import com.example.desiregallery.R
 import com.example.desiregallery.analytics.IDGAnalyticsTracker
 import com.example.desiregallery.auth.AuthMethod
-import com.example.desiregallery.utils.logError
-import com.example.desiregallery.utils.logInfo
 import com.example.desiregallery.data.models.User
 import com.example.desiregallery.data.network.BaseNetworkService
+import com.example.desiregallery.utils.logError
+import com.example.desiregallery.utils.logInfo
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.UserProfileChangeRequest
+import kotlinx.android.synthetic.main.fragment_signup.*
+import kotlinx.android.synthetic.main.toolbar_signup.*
+import org.koin.android.ext.android.get
+import org.koin.android.ext.android.inject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import com.google.firebase.auth.UserProfileChangeRequest
-import org.koin.android.ext.android.get
-import org.koin.android.ext.android.inject
 import java.util.*
 
-
-class SignUpActivity : AppCompatActivity() {
+/**
+ * @author babaetskv on 11.11.19
+ */
+class SignupFragment private constructor(manager: IAuthFragmentManager): BaseAuthFragment(manager) {
     private val analytics: IDGAnalyticsTracker by inject()
     private val auth: FirebaseAuth by inject()
 
     private lateinit var inputTextWatcher: TextWatcher
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sign_up)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_signup, container, false)
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        signup_button_back.setOnClickListener {
+            manager.setLoginFragment(Slide(Gravity.START), Slide(Gravity.START))
+        }
         inputTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {}
 
@@ -60,7 +76,7 @@ class SignUpActivity : AppCompatActivity() {
                 sign_up_input_birthday.setText(date)
             }
             val calendar = Calendar.getInstance()
-            DatePickerDialog(this, dateSetListener,
+            DatePickerDialog(requireActivity(), dateSetListener,
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH))
@@ -75,13 +91,13 @@ class SignUpActivity : AppCompatActivity() {
             val passwordConfirm = sign_up_input_confirm.text.toString()
 
             if (password != passwordConfirm) {
-                Toast.makeText(applicationContext, R.string.non_equal_passwords, Toast.LENGTH_SHORT)
+                Toast.makeText(requireContext(), R.string.non_equal_passwords, Toast.LENGTH_SHORT)
                     .show()
                 enableAll()
                 return@setOnClickListener
             }
 
-            auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
+            auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(requireActivity()) { task ->
                 if (task.isSuccessful) {
                     logInfo(TAG, "VKUser $login successfully signed up")
                     saveUserInfo(User(email, password).also {
@@ -90,10 +106,10 @@ class SignUpActivity : AppCompatActivity() {
                     })
                     enableAll()
                     analytics.trackSignUp(AuthMethod.EMAIL)
-                    onBackPressed()
+                    manager.setLoginFragment(Slide(Gravity.START), Slide(Gravity.START))
                 } else {
                     logError(TAG, "Failed to sign up: ${task.exception?.message}")
-                    Toast.makeText(this,
+                    Toast.makeText(requireContext(),
                         getString(R.string.sign_up_error, task.exception?.message),
                         Toast.LENGTH_LONG).show()
                     enableAll()
@@ -118,7 +134,7 @@ class SignUpActivity : AppCompatActivity() {
 
         val firebaseUser = auth.currentUser
         val profileUpdates = UserProfileChangeRequest.Builder().setDisplayName(user.login).build()
-        firebaseUser?.updateProfile(profileUpdates)?.addOnCompleteListener(this) { task ->
+        firebaseUser?.updateProfile(profileUpdates)?.addOnCompleteListener(requireActivity()) { task ->
             if (task.isSuccessful)
                 logInfo(TAG, "Data of user ${user.login} have successfully been saved to firebase auth")
             else
@@ -157,6 +173,9 @@ class SignUpActivity : AppCompatActivity() {
     private fun fieldIsValid(field: String) = Regex("\\S+").matches(field)
 
     companion object {
-        private val TAG = SignUpActivity::class.java.simpleName
+        private val TAG = SignupFragment::class.java.simpleName
+
+        fun createInstance(manager: IAuthFragmentManager) =
+            SignupFragment(manager)
     }
 }

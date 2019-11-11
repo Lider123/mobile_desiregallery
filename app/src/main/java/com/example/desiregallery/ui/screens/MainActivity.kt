@@ -19,6 +19,7 @@ import com.example.desiregallery.utils.logInfo
 import com.example.desiregallery.data.models.User
 import com.example.desiregallery.data.network.BaseNetworkService
 import com.example.desiregallery.data.prefs.IDGSharedPreferencesHelper
+import com.example.desiregallery.ui.screens.auth.AuthActivity
 import com.example.desiregallery.ui.screens.profile.ProfileFragment
 import com.example.desiregallery.ui.screens.feed.FeedFragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -142,7 +143,7 @@ class MainActivity : AppCompatActivity() {
                         return
                     }
 
-                    logInfo(TAG, "Got data for user ${user!!.login}")
+                    logInfo(TAG, "Got data for user ${user.login}")
                     accProvider.currAccount = EmailAccount(user, auth)
                 }
             })
@@ -163,7 +164,7 @@ class MainActivity : AppCompatActivity() {
                         return
                     }
 
-                    val user: VKApiUser = (response!!.parsedModel as VKList<*>)[0] as VKApiUser
+                    val user: VKApiUser = (response.parsedModel as VKList<*>)[0] as VKApiUser
                     accProvider.currAccount = VKAccount(user)
                     accProvider.currAccount?.let { account ->
                         logInfo(TAG, "Got data for user ${account.displayName}")
@@ -188,7 +189,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        accProvider.currAccount = GoogleAccount(account!!, get())
+        accProvider.currAccount = GoogleAccount(account, get())
         accProvider.currAccount?.let { it ->
             logInfo(TAG, "Got data for user ${it.displayName}")
             saveUserInfo(User("", "").apply {
@@ -201,7 +202,9 @@ class MainActivity : AppCompatActivity() {
     private fun handleLogout() {
         prefs.clearAuthMethod()
         accProvider.currAccount?.logOut()
-        val intent = Intent(this, LoginActivity::class.java)
+        val intent = Intent(this, AuthActivity::class.java).apply {
+            putExtra(AuthActivity.EXTRA_IS_LAUNCH, false)
+        }
         startActivity(intent)
         finish()
     }

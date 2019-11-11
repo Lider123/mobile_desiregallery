@@ -1,19 +1,23 @@
-package com.example.desiregallery.ui.screens
+package com.example.desiregallery.ui.screens.auth
 
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.transition.Slide
 import com.example.desiregallery.R
 import com.example.desiregallery.analytics.IDGAnalyticsTracker
 import com.example.desiregallery.auth.AuthMethod
+import com.example.desiregallery.data.prefs.IDGSharedPreferencesHelper
+import com.example.desiregallery.ui.screens.MainActivity
 import com.example.desiregallery.utils.logError
 import com.example.desiregallery.utils.logInfo
-import com.example.desiregallery.data.prefs.IDGSharedPreferencesHelper
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -26,21 +30,26 @@ import com.vk.sdk.VKCallback
 import com.vk.sdk.VKScope
 import com.vk.sdk.VKSdk
 import com.vk.sdk.api.VKError
-import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.fragment_login.*
 import org.koin.android.ext.android.get
 import org.koin.android.ext.android.inject
 
-class LoginActivity : AppCompatActivity() {
+/**
+ * @author babaetskv on 11.11.19
+ */
+class LoginFragment private constructor(manager: IAuthFragmentManager) : BaseAuthFragment(manager) {
     private val prefs: IDGSharedPreferencesHelper by inject()
     private val analytics: IDGAnalyticsTracker by inject()
     private val auth: FirebaseAuth by inject()
 
     private lateinit var inputTextWatcher: TextWatcher
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_login, container, false)
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         inputTextWatcher = object: TextWatcher {
 
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {}
@@ -56,7 +65,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (!VKSdk.onActivityResult(requestCode, resultCode, data, object: VKCallback<VKAccessToken> {
+        if (!VKSdk.onActivityResult(requestCode, resultCode, data, object:
+                VKCallback<VKAccessToken> {
 
                 override fun onResult(res: VKAccessToken?) {
                     logInfo(TAG, "Successfully logged in with vk")
@@ -72,7 +82,7 @@ class LoginActivity : AppCompatActivity() {
                         TAG,
                         "Failed to sign in with vk: ${error?.errorMessage}"
                     )
-                    Toast.makeText(this@LoginActivity, R.string.sign_in_vk_failure,
+                    Toast.makeText(requireActivity(), R.string.sign_in_vk_failure,
                         Toast.LENGTH_SHORT).show()
                 }
             })) {
@@ -96,7 +106,7 @@ class LoginActivity : AppCompatActivity() {
             if (e.statusCode == GoogleSignInStatusCodes.SIGN_IN_CANCELLED)
                 return
             logError(TAG, "Failed to sign in with google: ${e.message}")
-            Toast.makeText(this@LoginActivity, R.string.sign_in_google_failure,
+            Toast.makeText(requireContext(), R.string.sign_in_google_failure,
                 Toast.LENGTH_SHORT).show()
         }
     }
@@ -110,7 +120,7 @@ class LoginActivity : AppCompatActivity() {
             logIn(email, password)
         }
         button_sign_in_vk.setOnClickListener {
-            VKSdk.login(this, VKScope.FRIENDS, VKScope.OFFLINE)
+            VKSdk.login(requireActivity(), VKScope.FRIENDS, VKScope.OFFLINE)
         }
         button_sign_in_google.setOnClickListener {
             val client: GoogleSignInClient = get()
@@ -119,14 +129,13 @@ class LoginActivity : AppCompatActivity() {
             )
         }
         link_sign_up.setOnClickListener {
-            val intent = Intent(this, SignUpActivity::class.java)
-            startActivity(intent)
+            manager.setSignupFragment(Slide(Gravity.END), Slide(Gravity.END))
         }
     }
 
     private fun logIn(email: String, password: String) {
         showProgress()
-        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(requireActivity()) { task ->
             hideProgress()
             if (task.isSuccessful) {
                 val user = auth.currentUser
@@ -136,7 +145,7 @@ class LoginActivity : AppCompatActivity() {
                 goToMainActivity()
             } else {
                 logError(TAG, "Failed to login with email: ${task.exception}")
-                Toast.makeText(baseContext, getString(R.string.login_error, task.exception?.message),
+                Toast.makeText(requireContext(), getString(R.string.login_error, task.exception?.message),
                     Toast.LENGTH_LONG).show()
             }
         }
@@ -149,9 +158,9 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun goToMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(requireActivity(), MainActivity::class.java)
         startActivity(intent)
-        finish()
+        requireActivity().finish()
     }
 
     private fun showProgress() {
@@ -176,6 +185,8 @@ class LoginActivity : AppCompatActivity() {
 
     companion object {
         private const val GOOGLE_SIGN_IN_REQUEST_CODE = 1
-        private val TAG = LoginActivity::class.java.simpleName
+        private val TAG = LoginFragment::class.java.simpleName
+
+        fun createInstance(manager: IAuthFragmentManager) = LoginFragment(manager)
     }
 }
