@@ -9,19 +9,19 @@ import com.example.desiregallery.data.models.Comment
 import com.example.desiregallery.data.network.QueryNetworkService
 import com.example.desiregallery.data.network.RequestState
 import com.example.desiregallery.data.network.query.requests.CommentsQueryRequest
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
 /**
  * @author babaetskv on 30.10.19
  */
 class CommentDataSource(
     private val postId: String
-) : PageKeyedDataSource<Long, Comment>(), KoinComponent {
-    private val networkService: QueryNetworkService by inject()
+) : PageKeyedDataSource<Long, Comment>() {
+    @Inject
+    lateinit var networkService: QueryNetworkService
 
     var state: MutableLiveData<RequestState> = MutableLiveData()
 

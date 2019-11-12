@@ -9,17 +9,17 @@ import com.example.desiregallery.data.network.query.requests.PostsQueryRequest
 import com.example.desiregallery.utils.logError
 import com.example.desiregallery.utils.logInfo
 import com.example.desiregallery.utils.logWarning
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
 /**
  * @author babaetskv on 31.10.19
  */
-class PostDataSource : PageKeyedDataSource<Long, Post>(), KoinComponent {
-    private val networkService: QueryNetworkService by inject()
+class PostDataSource : PageKeyedDataSource<Long, Post>() {
+    @Inject
+    lateinit var networkService: QueryNetworkService
 
     var state: MutableLiveData<RequestState> = MutableLiveData()
 

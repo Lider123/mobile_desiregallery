@@ -5,13 +5,13 @@ import com.example.desiregallery.data.models.User
 import com.example.desiregallery.data.network.DOCUMENT
 import com.example.desiregallery.data.network.NetworkUtils
 import com.google.gson.*
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 
 import java.lang.reflect.Type
+import javax.inject.Inject
 
-class PostListDeserializer : JsonDeserializer<List<Post>>, KoinComponent {
-    private val networkUtils: NetworkUtils by inject()
+class PostListDeserializer : JsonDeserializer<List<Post>> {
+    @Inject
+    lateinit var networkUtils: NetworkUtils
 
     @Throws(JsonParseException::class)
     override fun deserialize(json: JsonElement, typeOfT: Type,

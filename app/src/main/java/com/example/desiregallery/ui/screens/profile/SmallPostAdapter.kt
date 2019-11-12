@@ -8,14 +8,12 @@ import com.example.desiregallery.R
 import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.databinding.ItemPostSmallBinding
 import com.example.desiregallery.ui.presenters.IPostContract
-import org.koin.core.KoinComponent
-import org.koin.core.get
-import org.koin.core.parameter.parametersOf
+import com.example.desiregallery.ui.presenters.PostPresenter
 
 /**
  * @author babaetskv on 06.11.19
  */
-class SmallPostAdapter(private val posts: List<Post>) : RecyclerView.Adapter<SmallPostViewHolder>(), KoinComponent {
+class SmallPostAdapter(private val posts: List<Post>) : RecyclerView.Adapter<SmallPostViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SmallPostViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -28,7 +26,7 @@ class SmallPostAdapter(private val posts: List<Post>) : RecyclerView.Adapter<Sma
 
     override fun onBindViewHolder(holder: SmallPostViewHolder, position: Int) {
         val item = posts[position]
-        val presenter: IPostContract.Presenter = get { parametersOf(holder, item) }
+        val presenter: IPostContract.Presenter = PostPresenter(holder, item)
         holder.bind(presenter)
     }
 }

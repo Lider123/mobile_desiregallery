@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.desiregallery.R
@@ -16,12 +17,11 @@ import com.example.desiregallery.ui.widgets.SnackbarWrapper
 import com.example.desiregallery.utils.hideSoftKeyboard
 import kotlinx.android.synthetic.main.activity_comments.*
 import kotlinx.android.synthetic.main.toolbar_comments.*
-import org.koin.android.ext.android.get
-import org.koin.android.ext.android.inject
-import org.koin.core.parameter.parametersOf
+import javax.inject.Inject
 
 class CommentsActivity : AppCompatActivity() {
-    private val accProvider: AccountProvider by inject()
+    @Inject
+    lateinit var accProvider: AccountProvider
 
     private lateinit var snackbar: SnackbarWrapper
 
@@ -46,7 +46,9 @@ class CommentsActivity : AppCompatActivity() {
     }
 
     private fun initModel() {
-        model = get { parametersOf(post.id) }
+        val factory = CommentListViewModelFactory(application, post.id)
+        model = ViewModelProviders.of(this, factory)
+            .get(CommentListViewModel::class.java)
         model.getState().observe(this, Observer { status ->
             status?: return@Observer
 

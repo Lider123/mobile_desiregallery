@@ -11,26 +11,30 @@ import com.example.desiregallery.data.network.QueryNetworkService
 import com.example.desiregallery.data.network.query.requests.PostsQueryRequest
 import com.example.desiregallery.utils.getAgeFromBirthday
 import com.example.desiregallery.utils.logError
-import org.koin.core.KoinComponent
-import org.koin.core.get
-import org.koin.core.inject
+import com.google.firebase.auth.FirebaseAuth
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 import kotlin.math.min
 
 /**
  * @author babaetskv on 29.10.19
  */
-class ProfilePresenter(private val view: IProfileContract.View) : IProfileContract.Presenter, KoinComponent {
-    private val resources: Resources by inject()
-    private val accProvider: AccountProvider by inject()
-    private val queryService: QueryNetworkService by inject()
+class ProfilePresenter(private val view: IProfileContract.View) : IProfileContract.Presenter {
+    @Inject
+    lateinit var resources: Resources
+    @Inject
+    lateinit var accProvider: AccountProvider
+    @Inject
+    lateinit var queryService: QueryNetworkService
+    @Inject
+    lateinit var auth: FirebaseAuth
 
     private var editFragment: EditProfileFragment? = null
 
     init {
-        accProvider.mObservable.subscribe { attach(get()) }
+        accProvider.mObservable.subscribe { attach(resources) }
     }
 
     override fun attach(resources: Resources) {
@@ -57,8 +61,8 @@ class ProfilePresenter(private val view: IProfileContract.View) : IProfileContra
                     fragmentManager.beginTransaction()
                         .remove(editFragment!!)
                         .commit()
-                    accProvider.currAccount = EmailAccount(user, get())
-                    attach(get())
+                    accProvider.currAccount = EmailAccount(user, auth)
+                    attach(resources)
                     view.showMessage(resources.getString(R.string.changes_saved))
                 }
 

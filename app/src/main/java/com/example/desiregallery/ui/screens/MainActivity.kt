@@ -22,22 +22,28 @@ import com.example.desiregallery.data.prefs.IDGSharedPreferencesHelper
 import com.example.desiregallery.ui.screens.profile.ProfileFragment
 import com.example.desiregallery.ui.screens.feed.FeedFragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
 import com.vk.sdk.api.*
 import com.vk.sdk.api.model.VKApiUser
 import com.vk.sdk.api.model.VKList
-import org.koin.android.ext.android.get
-import org.koin.android.ext.android.inject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
-    private val prefs: IDGSharedPreferencesHelper = get()
-    private val auth: FirebaseAuth by inject()
-    private val accProvider: AccountProvider = get()
-    private val baseService: BaseNetworkService by inject()
+    @Inject
+    lateinit var prefs: IDGSharedPreferencesHelper
+    @Inject
+    lateinit var auth: FirebaseAuth
+    @Inject
+    lateinit var accProvider: AccountProvider
+    @Inject
+    lateinit var baseService: BaseNetworkService
+    @Inject
+    lateinit var googleClient: GoogleSignInClient
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navigationView: NavigationView
@@ -188,7 +194,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        accProvider.currAccount = GoogleAccount(account!!, get())
+        accProvider.currAccount = GoogleAccount(account!!, googleClient)
         accProvider.currAccount?.let { it ->
             logInfo(TAG, "Got data for user ${it.displayName}")
             saveUserInfo(User("", "").apply {

@@ -19,14 +19,16 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import com.google.firebase.auth.UserProfileChangeRequest
-import org.koin.android.ext.android.get
-import org.koin.android.ext.android.inject
 import java.util.*
-
+import javax.inject.Inject
 
 class SignUpActivity : AppCompatActivity() {
-    private val analytics: IDGAnalyticsTracker by inject()
-    private val auth: FirebaseAuth by inject()
+    @Inject
+    lateinit var analytics: IDGAnalyticsTracker
+    @Inject
+    lateinit var auth: FirebaseAuth
+    @Inject
+    lateinit var networkService: BaseNetworkService
 
     private lateinit var inputTextWatcher: TextWatcher
 
@@ -104,8 +106,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun saveUserInfo(user: User) {
-        val baseService: BaseNetworkService = get()
-        baseService.createUser(user.login, user).enqueue(object: Callback<User> {
+        networkService.createUser(user.login, user).enqueue(object: Callback<User> {
 
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 logInfo(TAG, "Data of user ${user.login} have successfully been saved to firestore")

@@ -15,11 +15,12 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
+import javax.inject.Inject
 
-class PostListViewModel(
-    application: Application,
-    private val baseService: BaseNetworkService
-) : AndroidViewModel(application) {
+class PostListViewModel(application: Application) : AndroidViewModel(application) {
+    @Inject
+    lateinit var baseService: BaseNetworkService
+
     private val postDataSourceFactory: PostDataSourceFactory = PostDataSourceFactory()
 
     var postsLiveData: LiveData<PagedList<Post>>

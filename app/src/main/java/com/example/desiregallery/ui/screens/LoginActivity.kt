@@ -27,13 +27,17 @@ import com.vk.sdk.VKScope
 import com.vk.sdk.VKSdk
 import com.vk.sdk.api.VKError
 import kotlinx.android.synthetic.main.activity_login.*
-import org.koin.android.ext.android.get
-import org.koin.android.ext.android.inject
+import javax.inject.Inject
 
 class LoginActivity : AppCompatActivity() {
-    private val prefs: IDGSharedPreferencesHelper by inject()
-    private val analytics: IDGAnalyticsTracker by inject()
-    private val auth: FirebaseAuth by inject()
+    @Inject
+    lateinit var prefs: IDGSharedPreferencesHelper
+    @Inject
+    lateinit var analytics: IDGAnalyticsTracker
+    @Inject
+    lateinit var auth: FirebaseAuth
+    @Inject
+    lateinit var googleClient: GoogleSignInClient
 
     private lateinit var inputTextWatcher: TextWatcher
 
@@ -113,10 +117,7 @@ class LoginActivity : AppCompatActivity() {
             VKSdk.login(this, VKScope.FRIENDS, VKScope.OFFLINE)
         }
         button_sign_in_google.setOnClickListener {
-            val client: GoogleSignInClient = get()
-            startActivityForResult(client.signInIntent,
-                GOOGLE_SIGN_IN_REQUEST_CODE
-            )
+            startActivityForResult(googleClient.signInIntent, GOOGLE_SIGN_IN_REQUEST_CODE)
         }
         link_sign_up.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)

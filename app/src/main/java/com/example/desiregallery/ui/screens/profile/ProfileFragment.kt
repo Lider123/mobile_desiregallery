@@ -12,13 +12,11 @@ import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.ui.widgets.SnackbarWrapper
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_profile.*
-import org.koin.android.ext.android.inject
-import org.koin.core.parameter.parametersOf
 
 class ProfileFragment : Fragment(), IProfileContract.View {
     private lateinit var snackbar: SnackbarWrapper
 
-    private val presenter: IProfileContract.Presenter by inject { parametersOf(this) }
+    private val presenter: IProfileContract.Presenter = ProfilePresenter(this)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {

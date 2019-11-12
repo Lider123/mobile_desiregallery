@@ -8,11 +8,9 @@ import com.example.desiregallery.R
 import com.example.desiregallery.databinding.ItemPostBinding
 import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.ui.presenters.IPostContract
-import org.koin.core.KoinComponent
-import org.koin.core.get
-import org.koin.core.parameter.parametersOf
+import com.example.desiregallery.ui.presenters.PostPresenter
 
-class PostAdapter : PagedListAdapter<Post, PostViewHolder>(Post.CALLBACK),  KoinComponent {
+class PostAdapter : PagedListAdapter<Post, PostViewHolder>(Post.CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -23,7 +21,7 @@ class PostAdapter : PagedListAdapter<Post, PostViewHolder>(Post.CALLBACK),  Koin
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val item = getItem(position) as Post
-        val presenter: IPostContract.Presenter = get { parametersOf(holder, item) }
+        val presenter: IPostContract.Presenter = PostPresenter(holder, item)
         holder.bind(presenter)
     }
 }

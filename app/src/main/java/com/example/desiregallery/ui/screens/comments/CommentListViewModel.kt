@@ -11,15 +11,18 @@ import com.example.desiregallery.data.network.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
 /**
  * @author babaetskv on 20.09.19
  */
 class CommentListViewModel(
     application: Application,
-    postId: String,
-    private val baseService: BaseNetworkService
+    postId: String
 ) : AndroidViewModel(application) {
+    @Inject
+    lateinit var baseService: BaseNetworkService
+
     private val commentDataSourceFactory: CommentDataSourceFactory = CommentDataSourceFactory(postId)
 
     var commentsLiveData: LiveData<PagedList<Comment>>

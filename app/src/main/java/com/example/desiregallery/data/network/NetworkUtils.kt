@@ -3,14 +3,13 @@ package com.example.desiregallery.data.network
 
 import com.example.desiregallery.utils.logInfo
 import com.example.desiregallery.data.models.User
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-
-class NetworkUtils : KoinComponent {
-    private val networkService: BaseNetworkService by inject()
+class NetworkUtils {
+    @Inject
+    lateinit var networkService: BaseNetworkService
 
     fun getUsersByNames(userNames: Collection<String>): List<User> {
         logInfo(TAG, "Preparing to load ${userNames.size} users")

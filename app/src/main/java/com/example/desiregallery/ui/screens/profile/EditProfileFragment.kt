@@ -23,19 +23,22 @@ import com.google.firebase.auth.UserProfileChangeRequest
 import com.squareup.picasso.Picasso
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
-import org.koin.android.ext.android.inject
 import retrofit2.Call
 import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 /**
  * @author babaetskv on 06.11.19
  */
 class EditProfileFragment : Fragment() {
-    private val storageHelper: IStorageHelper by inject()
-    private val networkService: BaseNetworkService by inject()
-    private val auth: FirebaseAuth by inject()
+    @Inject
+    lateinit var storageHelper: IStorageHelper
+    @Inject
+    lateinit var networkService: BaseNetworkService
+    @Inject
+    lateinit var auth: FirebaseAuth
 
     private lateinit var user: User
     private var callback: Callback? = null

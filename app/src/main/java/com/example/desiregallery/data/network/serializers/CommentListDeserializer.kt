@@ -7,15 +7,15 @@ import com.example.desiregallery.data.network.NetworkUtils
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 import java.lang.reflect.Type
+import javax.inject.Inject
 
 /**
  * @author babaetskv on 20.09.19
  */
-class CommentListDeserializer : JsonDeserializer<List<Comment>>, KoinComponent {
-    private val networkUtils: NetworkUtils by inject()
+class CommentListDeserializer : JsonDeserializer<List<Comment>> {
+    @Inject
+    lateinit var networkUtils: NetworkUtils
 
     override fun deserialize(json: JsonElement, typeOfT: Type,
                              context: JsonDeserializationContext): List<Comment> {

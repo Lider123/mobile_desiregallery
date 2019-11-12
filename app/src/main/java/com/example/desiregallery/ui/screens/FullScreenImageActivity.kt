@@ -1,4 +1,4 @@
-package com.example.desiregallery.ui.screens.splash
+package com.example.desiregallery.ui.screens
 
 import android.Manifest
 import android.app.Activity
@@ -27,10 +27,11 @@ import com.example.desiregallery.utils.logWarning
 import com.example.desiregallery.utils.downloadBitmap
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import org.koin.android.ext.android.inject
+import javax.inject.Inject
 
 class FullScreenImageActivity : AppCompatActivity() {
-    private val analytics: IDGAnalyticsTracker by inject()
+    @Inject
+    lateinit var analytics: IDGAnalyticsTracker
 
     private lateinit var toolbar: Toolbar
 
@@ -73,7 +74,9 @@ class FullScreenImageActivity : AppCompatActivity() {
         return when(item?.itemId) {
             R.id.image_download -> {
                 val permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                ActivityCompat.requestPermissions(this, permissions, WRITE_REQUEST_CODE)
+                ActivityCompat.requestPermissions(this, permissions,
+                    WRITE_REQUEST_CODE
+                )
                 true
             }
             R.id.image_share -> {
@@ -112,7 +115,8 @@ class FullScreenImageActivity : AppCompatActivity() {
             shareIntent.putExtra(Intent.EXTRA_STREAM, it)
             shareIntent.type = "image/*"
             startActivityForResult(Intent.createChooser(shareIntent, getString(R.string.share_image)),
-                SHARING_REQUEST_CODE)
+                SHARING_REQUEST_CODE
+            )
         }
     }
 

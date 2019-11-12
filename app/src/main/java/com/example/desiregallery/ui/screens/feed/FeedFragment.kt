@@ -9,7 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.data.network.RequestState
 import com.example.desiregallery.ui.dialogs.PostCreationDialog
@@ -17,11 +19,10 @@ import com.example.desiregallery.ui.widgets.SnackbarWrapper
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.fragment_feed.*
 import kotlinx.android.synthetic.main.fragment_feed.view.*
-import org.koin.android.ext.android.inject
+import javax.inject.Inject
 
 class FeedFragment : Fragment() {
-    private val model: PostListViewModel by inject()
-
+    private lateinit var model: PostListViewModel
     private lateinit var snackbar: SnackbarWrapper
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -58,6 +59,9 @@ class FeedFragment : Fragment() {
     }
 
     private fun initModel() {
+        val factory = PostListViewModelFactory(MainApplication.instance)
+        model = ViewModelProviders.of(this, factory)
+            .get(PostListViewModel::class.java)
         model.postsLiveData.observe(this, Observer { posts ->
             val adapter = PostAdapter()
             adapter.submitList(posts)

@@ -1,27 +1,30 @@
-package com.example.desiregallery.ui.screens.splash
+package com.example.desiregallery.ui.screens
 
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
+import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.data.prefs.IDGSharedPreferencesHelper
-import com.example.desiregallery.ui.screens.LoginActivity
-import com.example.desiregallery.ui.screens.MainActivity
-import org.koin.android.ext.android.get
+import javax.inject.Inject
 
 class SplashScreenActivity : AppCompatActivity() {
-    private val prefs: IDGSharedPreferencesHelper = get()
+    @Inject
+    lateinit var prefs: IDGSharedPreferencesHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
+        MainApplication.component.inject(this)
 
         if (prefs.hasAuthMethod())
             goToMainActivity()
         else {
             val r = Runnable(this::goToLoginActivity)
-            Handler().postDelayed(r, TIMEOUT)
+            Handler().postDelayed(r,
+                TIMEOUT
+            )
         }
     }
 
