@@ -7,18 +7,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.ui.widgets.SnackbarWrapper
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_profile.*
-import org.koin.android.ext.android.inject
-import org.koin.core.parameter.parametersOf
+import javax.inject.Inject
 
 class ProfileFragment : Fragment(), IProfileContract.View {
+    @Inject
+    lateinit var presenter: ProfilePresenter
+
     private lateinit var snackbar: SnackbarWrapper
 
-    private val presenter: IProfileContract.Presenter by inject { parametersOf(this) }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        MainApplication.appComponent.inject(this)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -28,7 +34,7 @@ class ProfileFragment : Fragment(), IProfileContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         snackbar = SnackbarWrapper(profile_content)
-        presenter.attach(view.context.resources)
+        presenter.attach(this)
         initListeners()
     }
 

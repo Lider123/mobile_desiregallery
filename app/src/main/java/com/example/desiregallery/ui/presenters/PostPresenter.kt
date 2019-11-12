@@ -6,21 +6,22 @@ import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.data.network.BaseNetworkService
 import com.example.desiregallery.ui.screens.comments.CommentsActivity
 import com.example.desiregallery.ui.dialogs.ImageRateDialog
-import com.example.desiregallery.ui.screens.splash.FullScreenImageActivity
+import com.example.desiregallery.ui.screens.FullScreenImageActivity
 import com.example.desiregallery.utils.logError
 import com.example.desiregallery.utils.logInfo
-import org.koin.core.KoinComponent
-import org.koin.core.get
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class PostPresenter(
-    private val view: IPostContract.View,
-    private val post: Post = Post()
-): IPostContract.Presenter, KoinComponent {
+    private val networkService: BaseNetworkService
+): IPostContract.Presenter {
+    private lateinit var view: IPostContract.View
+    private lateinit var post: Post
 
-    override fun attach() {
+    override fun attach(view: IPostContract.View, post: Post) {
+        this.view = view
+        this.post = post
         view.updateImage(post.imageUrl.toString())
         view.updateRating(post.rating)
         view.updateAuthorName(post.author.login)
@@ -60,7 +61,6 @@ class PostPresenter(
     private fun updateRating(rate: Float) {
         post.updateRating(rate)
         view.updateRating(post.rating)
-        val networkService: BaseNetworkService = get()
         networkService.updatePost(post.id, post).enqueue(object: Callback<Post> {
 
             override fun onFailure(call: Call<Post>, t: Throwable) {

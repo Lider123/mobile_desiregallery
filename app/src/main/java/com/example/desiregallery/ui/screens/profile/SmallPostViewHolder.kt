@@ -1,10 +1,14 @@
 package com.example.desiregallery.ui.screens.profile
 
 import androidx.recyclerview.widget.RecyclerView
+import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
+import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.databinding.ItemPostSmallBinding
 import com.example.desiregallery.ui.presenters.IPostContract
+import com.example.desiregallery.ui.presenters.PostPresenter
 import com.squareup.picasso.Picasso
+import javax.inject.Inject
 
 /**
  * @author babaetskv on 06.11.19
@@ -12,7 +16,8 @@ import com.squareup.picasso.Picasso
 class SmallPostViewHolder(
     private val bind: ItemPostSmallBinding
 ) : RecyclerView.ViewHolder(bind.root), IPostContract.View {
-    private lateinit var presenter: IPostContract.Presenter
+    @Inject
+    lateinit var presenter: PostPresenter
 
     override fun updateRating(rating: Float) {
         bind.itemPostRating.text = bind.itemPostRating
@@ -47,9 +52,9 @@ class SmallPostViewHolder(
         }
     }
 
-    fun bind(presenter: IPostContract.Presenter) {
-        this.presenter = presenter
-        presenter.attach()
+    fun bind(post: Post) {
+        MainApplication.appComponent.inject(this)
+        presenter.attach(this, post)
         initListeners()
     }
 }

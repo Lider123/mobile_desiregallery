@@ -8,7 +8,7 @@ import com.example.desiregallery.R
 import com.example.desiregallery.databinding.ItemCommentBinding
 import com.example.desiregallery.data.models.Comment
 
-class CommentAdapter : PagedListAdapter<Comment, CommentViewHolder>(Comment.CALLBACK) {
+class CommentsAdapter : PagedListAdapter<Comment, CommentViewHolder>(Comment.CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): CommentViewHolder {
         val inflater = LayoutInflater.from(parent.context)

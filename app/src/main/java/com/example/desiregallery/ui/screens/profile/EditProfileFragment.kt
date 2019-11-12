@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.data.models.User
 import com.example.desiregallery.data.network.BaseNetworkService
@@ -23,23 +24,31 @@ import com.google.firebase.auth.UserProfileChangeRequest
 import com.squareup.picasso.Picasso
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
-import org.koin.android.ext.android.inject
 import retrofit2.Call
 import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 /**
  * @author babaetskv on 06.11.19
  */
 class EditProfileFragment : Fragment() {
-    private val storageHelper: IStorageHelper by inject()
-    private val networkService: BaseNetworkService by inject()
-    private val auth: FirebaseAuth by inject()
+    @Inject
+    lateinit var networkService: BaseNetworkService
+    @Inject
+    lateinit var auth: FirebaseAuth
+    @Inject
+    lateinit var storageHelper: IStorageHelper
 
     private lateinit var user: User
     private var callback: Callback? = null
     private var newImageUri: Uri? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        MainApplication.appComponent.inject(this)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater.inflate(R.layout.fragment_edit_profile, container, false)

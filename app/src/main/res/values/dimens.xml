@@ -14,11 +14,9 @@
     <dimen name="item_corners_radius">4dp</dimen>
 
     <dimen name="button_corners_radius">4dp</dimen>
-    <dimen name="button_margin">4dp</dimen>
     <dimen name="button_padding">0dp</dimen>
     <dimen name="edit_text_corners_radius">4dp</dimen>
 
     <dimen name="dialog_rate_padding">16dp</dimen>
-    <dimen name="dialog_rate_background_radius">4dp</dimen>
     <dimen name="dialog_rate_font_size">18sp</dimen>
 </resources>

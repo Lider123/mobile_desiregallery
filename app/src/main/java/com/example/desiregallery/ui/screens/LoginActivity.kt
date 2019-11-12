@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.analytics.IDGAnalyticsTracker
 import com.example.desiregallery.auth.AuthMethod
@@ -27,19 +28,24 @@ import com.vk.sdk.VKScope
 import com.vk.sdk.VKSdk
 import com.vk.sdk.api.VKError
 import kotlinx.android.synthetic.main.activity_login.*
-import org.koin.android.ext.android.get
-import org.koin.android.ext.android.inject
+import javax.inject.Inject
 
 class LoginActivity : AppCompatActivity() {
-    private val prefs: IDGSharedPreferencesHelper by inject()
-    private val analytics: IDGAnalyticsTracker by inject()
-    private val auth: FirebaseAuth by inject()
+    @Inject
+    lateinit var auth: FirebaseAuth
+    @Inject
+    lateinit var googleClient: GoogleSignInClient
+    @Inject
+    lateinit var analytics: IDGAnalyticsTracker
+    @Inject
+    lateinit var prefs: IDGSharedPreferencesHelper
 
     private lateinit var inputTextWatcher: TextWatcher
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        MainApplication.appComponent.inject(this)
 
         inputTextWatcher = object: TextWatcher {
 
@@ -113,8 +119,7 @@ class LoginActivity : AppCompatActivity() {
             VKSdk.login(this, VKScope.FRIENDS, VKScope.OFFLINE)
         }
         button_sign_in_google.setOnClickListener {
-            val client: GoogleSignInClient = get()
-            startActivityForResult(client.signInIntent,
+            startActivityForResult(googleClient.signInIntent,
                 GOOGLE_SIGN_IN_REQUEST_CODE
             )
         }
