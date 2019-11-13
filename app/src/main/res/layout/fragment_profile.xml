@@ -31,7 +31,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+                    app:layout_constraintBottom_toBottomOf="parent"
+                        tools:src="@tools:sample/avatars"/>
 
                 <TextView
                     android:id="@+id/profile_name"
@@ -43,7 +44,7 @@
                     android:textColor="@color/colorOnPrimary"
                     android:textSize="24sp"
                     android:padding="16dp"
-                    tools:text="John Doe"/>
+                    tools:text="@tools:sample/full_names"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
@@ -118,7 +119,10 @@
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
                 android:paddingTop="@dimen/item_post_margin"
-                tools:listitem="@layout/item_post" />
+                    tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    tools:spanCount="2"
+                    tools:listitem="@layout/item_post_small"
+                    tools:itemCount="3" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

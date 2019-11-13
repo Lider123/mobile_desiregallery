@@ -22,7 +22,8 @@
             android:layout_height="150dp"
             android:scaleType="centerCrop"
             android:src="@drawable/material"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+                tools:src="@tools:sample/avatars"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/edit_new_image"
