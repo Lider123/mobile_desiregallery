@@ -38,6 +38,11 @@ class ProfileFragment : Fragment(), IProfileContract.View {
         initListeners()
     }
 
+    override fun onStop() {
+        super.onStop()
+        presenter.detach()
+    }
+
     override fun updateName(title: String) {
         profile_name.text = title
     }
@@ -77,6 +82,10 @@ class ProfileFragment : Fragment(), IProfileContract.View {
 
     override fun showMessage(message: String) {
         snackbar.show(message)
+    }
+
+    override fun updateNoPostsHintVisibility(visible: Boolean) {
+        hint_no_posts.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
     private fun initListeners() {

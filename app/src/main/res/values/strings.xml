@@ -1,11 +1,14 @@
 <resources>
     <string name="app_name">DesireGallery</string>
     <string name="unknown_error">Unknown error</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
 
     <!-- Feed screen -->
     <string name="posts_download_error">There was an error while loading posts</string>
     <string name="post_upload_error">Unable to send a post</string>
     <string name="posts_empty">There are no posts yet</string>
+    <string name="post_publish_success">Post successfully published</string>
 
     <!-- Comments screen -->
     <string name="comments_input_hint">Add a comment</string>
@@ -45,8 +48,11 @@
     <string name="Download">Download</string>
     <string name="Share">Share</string>
     <string name="no_access_to_storage">Unable to download image. Have you granted access to storage?</string>
+    <string name="download_success">Image has been downloaded</string>
     <string name="download_error">Something went wrong while downloading image</string>
     <string name="share_image">Share image</string>
+    <string name="share_success">Successfully shared</string>
+    <string name="share_canceled">Image haven\'t been shared</string>
 
     <!-- Profile screen -->
     <string name="OK">OK</string>
@@ -56,19 +62,15 @@
     <string name="profile_posts_title">Most starred posts</string>
     <string name="Done">Done</string>
     <string name="changes_saved">Changes have been saved</string>
+    <string name="small_posts_empty">You haven\'t added any posts yet.</string>
 
     <!-- Settings screen -->
     <string name="reset_password_sent">Email for password reset was sent</string>
     <string name="reset_password_error">An error occurred while resetting password</string>
+    <string name="reset_password_unable">Unable to reset password</string>
     <string name="about">About</string>
-
-    <!-- Change password dialog -->
-    <string name="change_password">Change password</string>
-    <string name="old_password">old password</string>
-    <string name="new_password">new password</string>
-    <string name="current_password_wrong">You have entered wrong password</string>
-    <string name="fields_are_empty">All fields must be filled</string>
-    <string name="password_changed">Password has been changed</string>
+    <string name="reset_password">Reset password</string>
+    <string name="reset_password_message">We will send a message to your email address for receiving your password. Continue?</string>
 
     <!-- Create post dialog -->
     <string name="post_creation">Post creation</string>
@@ -76,7 +78,7 @@
     <string name="post_image_upload_failure">There was an error while creating post</string>
 
     <!-- Preferences -->
-    <string name="pref_change_password_key" translatable="false">pref_change_password_key</string>
+    <string name="pref_reset_password_key" translatable="false">pref_reset_password_key</string>
     <string name="pref_about_key" translatable="false">pref_about_key</string>
 
     <!-- Templates -->

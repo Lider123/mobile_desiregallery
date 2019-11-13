@@ -17,11 +17,13 @@ interface IProfileContract {
         fun updatePhoto(bitmap: Bitmap)
         fun updatePosts(posts: List<Post>)
         fun updateEditButtonVisibility(visible: Boolean)
+        fun updateNoPostsHintVisibility(visible: Boolean)
         fun showMessage(message: String)
     }
 
     interface Presenter {
         fun attach(view: View)
+        fun detach()
         fun onEditClick(fragmentManager: FragmentManager)
     }
 }

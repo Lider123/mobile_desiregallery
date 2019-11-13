@@ -59,7 +59,6 @@ class MainActivity : AppCompatActivity() {
         setToolbar()
         setNavigationMenu()
         setDefaultFragment()
-        setCurrentUser()
 
         accProvider.mObservable.subscribe { account ->
             headerTextView.text = account.displayName
@@ -69,6 +68,8 @@ class MainActivity : AppCompatActivity() {
                     .into(headerImageView)
             }
         }
+
+        setCurrentUser()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

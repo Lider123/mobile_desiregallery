@@ -21,6 +21,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import com.google.firebase.auth.UserProfileChangeRequest
+import kotlinx.android.synthetic.main.toolbar_sign_up.*
 import java.util.*
 import javax.inject.Inject
 
@@ -42,6 +43,7 @@ class SignUpActivity : AppCompatActivity() {
         setContentView(R.layout.activity_sign_up)
         MainApplication.appComponent.inject(this)
         snackbar = SnackbarWrapper(sign_up_container)
+        sign_up_button_back.setOnClickListener { onBackPressed() }
 
         inputTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {}
@@ -172,7 +174,7 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun showError(message: String) {
         error_message.text = message
-        error_message.visibility = View.GONE
+        error_message.visibility = View.VISIBLE
     }
 
     companion object {
