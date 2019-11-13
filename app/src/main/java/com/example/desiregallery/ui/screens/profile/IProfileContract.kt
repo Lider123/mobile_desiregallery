@@ -23,6 +23,7 @@ interface IProfileContract {
 
     interface Presenter {
         fun attach(view: View)
+        fun detach()
         fun onEditClick(fragmentManager: FragmentManager)
     }
 }

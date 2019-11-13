@@ -6,8 +6,8 @@
         app:allowDividerAbove="true">
 
     <Preference
-            android:key="@string/pref_change_password_key"
-            android:title="@string/change_password"
+            android:key="@string/pref_reset_password_key"
+            android:title="@string/reset_password"
             app:iconSpaceReserved="false"
             app:allowDividerAbove="true"
             app:allowDividerBelow="true"/>

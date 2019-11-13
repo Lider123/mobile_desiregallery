@@ -38,6 +38,11 @@ class ProfileFragment : Fragment(), IProfileContract.View {
         initListeners()
     }
 
+    override fun onStop() {
+        super.onStop()
+        presenter.detach()
+    }
+
     override fun updateName(title: String) {
         profile_name.text = title
     }

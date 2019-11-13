@@ -12,6 +12,7 @@ import com.example.desiregallery.data.network.query.requests.PostsQueryRequest
 import com.example.desiregallery.utils.getAgeFromBirthday
 import com.example.desiregallery.utils.logError
 import com.google.firebase.auth.FirebaseAuth
+import io.reactivex.disposables.CompositeDisposable
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,10 +30,18 @@ class ProfilePresenter(
     private lateinit var view: IProfileContract.View
     private var editFragment: EditProfileFragment? = null
 
+    private val compositeDisposable = CompositeDisposable()
+
     override fun attach(view: IProfileContract.View) {
         this.view = view
-        accProvider.mObservable.subscribe { updateAll() }
+        compositeDisposable.add(
+            accProvider.mObservable.subscribe { updateAll() }
+        )
         updateAll()
+    }
+
+    override fun detach() {
+        compositeDisposable.dispose()
     }
 
     override fun onEditClick(fragmentManager: FragmentManager) {
