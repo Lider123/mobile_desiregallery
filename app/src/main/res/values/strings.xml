@@ -45,8 +45,11 @@
     <string name="Download">Download</string>
     <string name="Share">Share</string>
     <string name="no_access_to_storage">Unable to download image. Have you granted access to storage?</string>
+    <string name="download_success">Image has been downloaded</string>
     <string name="download_error">Something went wrong while downloading image</string>
     <string name="share_image">Share image</string>
+    <string name="share_success">Successfully shared</string>
+    <string name="share_canceled">Image haven\'t been shared</string>
 
     <!-- Profile screen -->
     <string name="OK">OK</string>

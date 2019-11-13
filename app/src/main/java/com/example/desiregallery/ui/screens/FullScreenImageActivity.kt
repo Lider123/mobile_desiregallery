@@ -15,17 +15,10 @@ import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
-import android.os.Environment
-import java.io.FileOutputStream
-import java.io.File
-import java.io.IOException
-import android.net.Uri
 import com.example.desiregallery.MainApplication
-import com.example.desiregallery.utils.logError
 import com.example.desiregallery.analytics.IDGAnalyticsTracker
 import com.example.desiregallery.ui.widgets.SnackbarWrapper
-import com.example.desiregallery.utils.logWarning
-import com.example.desiregallery.utils.downloadBitmap
+import com.example.desiregallery.utils.*
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
@@ -101,7 +94,18 @@ class FullScreenImageActivity : AppCompatActivity() {
                                             grantResults: IntArray) {
         when (requestCode) {
             WRITE_REQUEST_CODE -> if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                downloadBitmap(image, this)
+                downloadBitmap(image, object: DownloadCallback {
+
+                    override fun onSuccess() {
+                        logInfo(TAG, "Image has been downloaded")
+                        snackbar.show(getString(R.string.download_success))
+                    }
+
+                    override fun onFailure(e: Exception) {
+                        logError(TAG, "Unable to download image")
+                        snackbar.show(getString(R.string.download_error))
+                    }
+                })
             } else {
                 logWarning(TAG, "There is no permission to write to external storage")
                 snackbar.show(getString(R.string.no_access_to_storage))
@@ -112,13 +116,17 @@ class FullScreenImageActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == SHARING_REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK)
+            if (resultCode == Activity.RESULT_OK) {
                 analytics.trackSharePhoto(postId)
+                snackbar.show(getString(R.string.share_success))
+            }
+            else
+                snackbar.show(getString(R.string.share_canceled))
         }
     }
 
     private fun shareImage() {
-        val bmpUri = getLocalBitmapUri(image)
+        val bmpUri = getLocalBitmapUri(image, this)
         bmpUri?.let {
             val shareIntent = Intent()
             shareIntent.action = Intent.ACTION_SEND
@@ -128,29 +136,6 @@ class FullScreenImageActivity : AppCompatActivity() {
                 SHARING_REQUEST_CODE
             )
         }
-    }
-
-    /**
-     * Method returns the URI path to given bitmap
-     *
-     * @param bmp Bitmap to save temporarily in storage and get URI
-     * @return URI path of given bitmap
-    * */
-    private fun getLocalBitmapUri(bmp: Bitmap): Uri? {
-        var bmpUri: Uri? = null
-        try {
-            val file = File(
-                getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                "share_image_" + System.currentTimeMillis() + ".png"
-            )
-            val out = FileOutputStream(file)
-            bmp.compress(Bitmap.CompressFormat.PNG, 90, out)
-            out.close()
-            bmpUri = Uri.fromFile(file)
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-        return bmpUri
     }
 
     companion object {

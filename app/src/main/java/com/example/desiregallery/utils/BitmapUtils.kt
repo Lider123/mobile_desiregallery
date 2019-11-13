@@ -1,13 +1,12 @@
 @file:JvmName("BitmapUtils")
 package com.example.desiregallery.utils
 
-import android.app.Activity
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Environment
 import android.util.Base64
-import android.widget.Toast
-import com.example.desiregallery.R
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -24,8 +23,7 @@ fun bitmapToBytes(bmp: Bitmap): ByteArray {
 
 fun bytesToBitmap(bytes: ByteArray): Bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
 
-fun downloadBitmap(bitmap: Bitmap, activity: Activity) {
-    val tag = activity::class.java.simpleName
+fun downloadBitmap(bitmap: Bitmap, callback: DownloadCallback) {
     val root = Environment.getExternalStorageDirectory()
     val path = File(root, DOWNLOAD_FOLDER_DEFAULT)
     path.mkdir()
@@ -36,11 +34,9 @@ fun downloadBitmap(bitmap: Bitmap, activity: Activity) {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
         out.flush()
         out.close()
-        logInfo(tag, "Image has been downloaded")
+        callback.onSuccess()
     } catch (e: IOException) {
-        logError(tag, "Unable to download image")
-        Toast.makeText(activity, R.string.download_error, Toast.LENGTH_LONG).show()
-        e.printStackTrace()
+        callback.onFailure(e)
     }
 }
 
@@ -54,4 +50,32 @@ fun bitmapToBase64(bitmap: Bitmap): String {
 fun base64ToBitmap(str: String): Bitmap {
     val decodedBytes = Base64.decode(str, Base64.DEFAULT)
     return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+}
+
+/**
+ * Method returns the URI path to given bitmap
+ *
+ * @param bmp Bitmap to save temporarily in storage and get URI
+ * @return URI path of given bitmap
+ * */
+fun getLocalBitmapUri(bmp: Bitmap, context: Context): Uri? {
+    var bmpUri: Uri? = null
+    try {
+        val file = File(
+            context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+            "share_image_" + System.currentTimeMillis() + ".png"
+        )
+        val out = FileOutputStream(file)
+        bmp.compress(Bitmap.CompressFormat.PNG, 90, out)
+        out.close()
+        bmpUri = Uri.fromFile(file)
+    } catch (e: IOException) {
+        e.printStackTrace()
+    }
+    return bmpUri
+}
+
+interface DownloadCallback {
+    fun onSuccess()
+    fun onFailure(e: Exception)
 }
