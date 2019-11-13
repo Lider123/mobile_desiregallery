@@ -56,6 +56,7 @@
     <string name="profile_posts_title">Most starred posts</string>
     <string name="Done">Done</string>
     <string name="changes_saved">Changes have been saved</string>
+    <string name="small_posts_empty">You haven\'t added any posts yet.</string>
 
     <!-- Settings screen -->
     <string name="reset_password_sent">Email for password reset was sent</string>

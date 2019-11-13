@@ -17,6 +17,7 @@ interface IProfileContract {
         fun updatePhoto(bitmap: Bitmap)
         fun updatePosts(posts: List<Post>)
         fun updateEditButtonVisibility(visible: Boolean)
+        fun updateNoPostsHintVisibility(visible: Boolean)
         fun showMessage(message: String)
     }
 

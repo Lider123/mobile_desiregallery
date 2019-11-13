@@ -102,6 +102,16 @@
                 android:textSize="16sp"
                 android:text="@string/profile_posts_title"/>
 
+            <TextView
+                    android:id="@+id/hint_no_posts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorHint"
+                    android:textAlignment="center"
+                    android:text="@string/small_posts_empty"
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/profile_posts"
                 android:layout_width="match_parent"

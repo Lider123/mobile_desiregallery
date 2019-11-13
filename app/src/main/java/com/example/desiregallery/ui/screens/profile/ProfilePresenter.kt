@@ -74,10 +74,13 @@ class ProfilePresenter(
                 if (posts.isEmpty()) {
                     view.updatePostsCount(0)
                     view.updateAverageRating(0f)
+                    view.updateNoPostsHintVisibility(true)
                     return
                 }
+
                 view.updatePostsCount(posts.size)
                 view.updateAverageRating(posts.map { p -> p.rating }.average().toFloat())
+                view.updateNoPostsHintVisibility(false)
 
                 posts = posts.sortedByDescending { p -> p.rating }.subList(0, min(3, posts.size))
                 view.updatePosts(posts)

@@ -79,6 +79,10 @@ class ProfileFragment : Fragment(), IProfileContract.View {
         snackbar.show(message)
     }
 
+    override fun updateNoPostsHintVisibility(visible: Boolean) {
+        hint_no_posts.visibility = if (visible) View.VISIBLE else View.GONE
+    }
+
     private fun initListeners() {
         profile_edit.setOnClickListener { presenter.onEditClick(requireFragmentManager()) }
     }

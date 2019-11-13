@@ -172,7 +172,7 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun showError(message: String) {
         error_message.text = message
-        error_message.visibility = View.GONE
+        error_message.visibility = View.VISIBLE
     }
 
     companion object {
