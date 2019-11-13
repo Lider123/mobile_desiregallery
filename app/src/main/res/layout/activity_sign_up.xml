@@ -3,6 +3,7 @@
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/sign_up_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -75,6 +76,16 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <TextView
+            android:id="@+id/error_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:textAlignment="center"
+            tools:text="Error"
+            tools:visibility="visible"
+            style="@style/ErrorText"/>
 
     <Button
             android:id="@+id/sign_up_button"

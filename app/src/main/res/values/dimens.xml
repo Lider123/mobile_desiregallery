@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="corners">4dp</dimen>
+
     <dimen name="item_post_margin">8dp</dimen>
     <dimen name="item_status_padding">8dp</dimen>
     <dimen name="item_rating_font_size">18sp</dimen>
@@ -11,11 +13,8 @@
 
     <dimen name="comments_input_view_padding">12dp</dimen>
     <dimen name="item_comment_margin">16dp</dimen>
-    <dimen name="item_corners_radius">4dp</dimen>
 
-    <dimen name="button_corners_radius">4dp</dimen>
     <dimen name="button_padding">0dp</dimen>
-    <dimen name="edit_text_corners_radius">4dp</dimen>
 
     <dimen name="dialog_rate_padding">16dp</dimen>
     <dimen name="dialog_rate_font_size">18sp</dimen>

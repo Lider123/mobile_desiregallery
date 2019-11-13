@@ -23,7 +23,7 @@ import javax.inject.Inject
  * @since 24.07.19
  */
 class PostCreationDialog(
-    private val activity: Activity,
+    activity: Activity,
     private val image: Bitmap,
     private val onPublish: (Post) -> Unit
 ) : AlertDialog(activity) {
@@ -39,12 +39,7 @@ class PostCreationDialog(
         content = View.inflate(context, R.layout.dialog_create_post, null)
         setView(content)
         setTitle(R.string.post_creation)
-        setButton(DialogInterface.BUTTON_POSITIVE, context.getString(R.string.Publish)) { dialog, which ->
-            dialog as AlertDialog
-            dialog.getButton(which).isEnabled = false
-            dialog.getButton(BUTTON_NEGATIVE).isEnabled = false
-            handlePublish()
-        }
+        setButton(DialogInterface.BUTTON_POSITIVE, context.getString(R.string.Publish)) { _, _ -> handlePublish() }
         setButton(DialogInterface.BUTTON_NEGATIVE, context.getString(R.string.Cancel)) { _, _ -> handleCancel() }
         content.dialog_post_image.setImageBitmap(image)
         setCancelable(false)
@@ -53,7 +48,7 @@ class PostCreationDialog(
     }
 
     private fun handlePublish() {
-        content.dialog_post_progress.visibility = View.VISIBLE
+        showProgress()
         val post = Post()
         post.author = User("", "").apply {
             login = accProvider.currAccount?.displayName?: ""
@@ -69,15 +64,31 @@ class PostCreationDialog(
 
             override fun onFailure(error: Exception) {
                 logError(TAG, "Failed to upload image for new post ${post.id}: ${error.message}")
-                Toast.makeText(activity, R.string.post_image_upload_failure, Toast.LENGTH_LONG)
-                    .show()
+                updateErrorMessageVisibility(true)
             }
         })
-        content.dialog_post_progress.visibility = View.GONE
+        hideProgress()
         dismiss()
     }
 
     private fun handleCancel() = dismiss()
+
+    private fun showProgress() {
+        content.dialog_post_progress.visibility = View.VISIBLE
+        getButton(BUTTON_POSITIVE).isEnabled = false
+        getButton(BUTTON_NEGATIVE).isEnabled = false
+        updateErrorMessageVisibility(false)
+    }
+
+    private fun hideProgress() {
+        content.dialog_post_progress.visibility = View.GONE
+        getButton(BUTTON_POSITIVE).isEnabled = true
+        getButton(BUTTON_NEGATIVE).isEnabled = true
+    }
+
+    private fun updateErrorMessageVisibility(visible: Boolean) {
+        content.error_message.visibility = if (visible) View.VISIBLE else View.GONE
+    }
 
     companion object {
         private val TAG = PostCreationDialog::class.java.simpleName

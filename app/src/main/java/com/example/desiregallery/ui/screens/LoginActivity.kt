@@ -6,7 +6,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
@@ -15,6 +14,7 @@ import com.example.desiregallery.auth.AuthMethod
 import com.example.desiregallery.utils.logError
 import com.example.desiregallery.utils.logInfo
 import com.example.desiregallery.data.prefs.IDGSharedPreferencesHelper
+import com.example.desiregallery.ui.widgets.SnackbarWrapper
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -40,12 +40,15 @@ class LoginActivity : AppCompatActivity() {
     @Inject
     lateinit var prefs: IDGSharedPreferencesHelper
 
+    private lateinit var snackbar: SnackbarWrapper
+
     private lateinit var inputTextWatcher: TextWatcher
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         MainApplication.appComponent.inject(this)
+        snackbar = SnackbarWrapper(login_container)
 
         inputTextWatcher = object: TextWatcher {
 
@@ -78,8 +81,7 @@ class LoginActivity : AppCompatActivity() {
                         TAG,
                         "Failed to sign in with vk: ${error?.errorMessage}"
                     )
-                    Toast.makeText(this@LoginActivity, R.string.sign_in_vk_failure,
-                        Toast.LENGTH_SHORT).show()
+                    snackbar.show(getString(R.string.sign_in_vk_failure))
                 }
             })) {
             super.onActivityResult(requestCode, resultCode, data)
@@ -102,8 +104,7 @@ class LoginActivity : AppCompatActivity() {
             if (e.statusCode == GoogleSignInStatusCodes.SIGN_IN_CANCELLED)
                 return
             logError(TAG, "Failed to sign in with google: ${e.message}")
-            Toast.makeText(this@LoginActivity, R.string.sign_in_google_failure,
-                Toast.LENGTH_SHORT).show()
+            snackbar.show(getString(R.string.sign_in_google_failure))
         }
     }
 
@@ -141,8 +142,7 @@ class LoginActivity : AppCompatActivity() {
                 goToMainActivity()
             } else {
                 logError(TAG, "Failed to login with email: ${task.exception}")
-                Toast.makeText(baseContext, getString(R.string.login_error, task.exception?.message),
-                    Toast.LENGTH_LONG).show()
+                snackbar.show(getString(R.string.login_error, task.exception?.localizedMessage))
             }
         }
     }

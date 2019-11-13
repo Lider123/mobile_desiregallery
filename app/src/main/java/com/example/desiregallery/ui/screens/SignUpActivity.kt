@@ -3,11 +3,11 @@ package com.example.desiregallery.ui.screens
 import android.app.DatePickerDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_sign_up.*
 import android.text.Editable
 import android.text.TextWatcher
 import com.example.desiregallery.MainApplication
+import android.view.View
 import com.example.desiregallery.R
 import com.example.desiregallery.analytics.IDGAnalyticsTracker
 import com.example.desiregallery.auth.AuthMethod
@@ -15,6 +15,7 @@ import com.example.desiregallery.utils.logError
 import com.example.desiregallery.utils.logInfo
 import com.example.desiregallery.data.models.User
 import com.example.desiregallery.data.network.BaseNetworkService
+import com.example.desiregallery.ui.widgets.SnackbarWrapper
 import com.google.firebase.auth.FirebaseAuth
 import retrofit2.Call
 import retrofit2.Callback
@@ -32,12 +33,15 @@ class SignUpActivity : AppCompatActivity() {
     @Inject
     lateinit var analytics: IDGAnalyticsTracker
 
+    private lateinit var snackbar: SnackbarWrapper
+
     private lateinit var inputTextWatcher: TextWatcher
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
         MainApplication.appComponent.inject(this)
+        snackbar = SnackbarWrapper(sign_up_container)
 
         inputTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {}
@@ -46,6 +50,7 @@ class SignUpActivity : AppCompatActivity() {
 
             override fun afterTextChanged(editable: Editable) {
                 checkForEmptyFields()
+                hideError()
             }
         }
         sign_up_button.isEnabled = false
@@ -60,6 +65,7 @@ class SignUpActivity : AppCompatActivity() {
         sign_up_input_confirm.addTextChangedListener(inputTextWatcher)
 
         sign_up_input_birthday.setOnClickListener {
+            hideError()
             val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
                 val date = getString(R.string.date_format, dayOfMonth, month+1, year)
                 sign_up_input_birthday.setText(date)
@@ -73,6 +79,7 @@ class SignUpActivity : AppCompatActivity() {
         }
         sign_up_button.setOnClickListener {
             disableAll()
+            hideError()
             val login = sign_up_input_login.text.toString()
             val email = sign_up_input_email.text.toString()
             val birthday = sign_up_input_birthday.text.toString()
@@ -80,8 +87,7 @@ class SignUpActivity : AppCompatActivity() {
             val passwordConfirm = sign_up_input_confirm.text.toString()
 
             if (password != passwordConfirm) {
-                Toast.makeText(applicationContext, R.string.non_equal_passwords, Toast.LENGTH_SHORT)
-                    .show()
+                showError(getText(R.string.non_equal_passwords).toString())
                 enableAll()
                 return@setOnClickListener
             }
@@ -98,9 +104,9 @@ class SignUpActivity : AppCompatActivity() {
                     onBackPressed()
                 } else {
                     logError(TAG, "Failed to sign up: ${task.exception?.message}")
-                    Toast.makeText(this,
-                        getString(R.string.sign_up_error, task.exception?.message),
-                        Toast.LENGTH_LONG).show()
+                    val message = task.exception?.localizedMessage
+                        ?: getString(R.string.sign_up_error, getString(R.string.unknown_error))
+                    snackbar.show(message)
                     enableAll()
                 }
 
@@ -159,6 +165,15 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun fieldIsValid(field: String) = Regex("\\S+").matches(field)
+
+    private fun hideError() {
+        error_message.visibility = View.GONE
+    }
+
+    private fun showError(message: String) {
+        error_message.text = message
+        error_message.visibility = View.GONE
+    }
 
     companion object {
         private val TAG = SignUpActivity::class.java.simpleName

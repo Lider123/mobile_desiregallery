@@ -33,22 +33,10 @@
             app:layout_anchorGravity="bottom|right|end"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <TextView
-        android:id="@+id/edit_error"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorError"
-        android:textAlignment="center"
-        android:padding="4dp"
-        android:text="@string/profile_image_upload_failure"
-        android:visibility="gone"
-        tools:visibility="visible"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="8dp"
         android:padding="8dp">
         <TextView
             android:layout_width="match_parent"
@@ -74,7 +62,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp">
+            android:padding="8dp">
 
         <Button
             android:id="@+id/edit_cancel"
@@ -93,6 +81,20 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             style="@style/CustomFlatButton"/>
+
+        <TextView
+                android:id="@+id/edit_error"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:text="@string/profile_image_upload_failure"
+                android:visibility="gone"
+                android:maxLines="2"
+                tools:visibility="visible"
+                style="@style/ErrorText"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/edit_cancel"/>
 
         <ProgressBar
             android:id="@+id/edit_progress"
