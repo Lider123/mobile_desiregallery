@@ -8,22 +8,64 @@
         <item name="colorAccent">@color/colorSecondary</item>
         <item name="android:windowBackground">@color/colorBackground</item>
     </style>
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="AppTheme.SplashScreen" parent="@style/AppTheme">
+        <item name="android:windowBackground">@color/colorPrimary</item>
     </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
-
     <style name="CustomButton" parent="Widget.AppCompat.Button.Colored">
         <item name="android:background">@drawable/button_background</item>
         <item name="android:textColor">@drawable/button_text_color</item>
+        <item name="android:padding">@dimen/button_padding</item>
+    </style>
+    <style name="CustomFlatButton" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:textColor">@drawable/button_flat_text_color</item>
+        <item name="android:padding">@dimen/button_padding</item>
+    </style>
+    <style name="VKButton" parent="CustomButton">
+        <item name="android:background">@drawable/button_vk_background</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
     <style name="CustomEditText" parent="Widget.AppCompat.EditText">
         <item name="android:textColor">@color/colorOnBackground</item>
         <item name="android:textColorHint">@color/colorHint</item>
-        <item name="android:background">@drawable/comment_input_text_background</item>
+        <item name="android:background">@drawable/input_text_transparent</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:padding">@dimen/comments_input_view_padding</item>
+    </style>
+    <style name="CustomEditText.Solid" parent="CustomEditText">
+        <item name="android:background">@drawable/input_text_background</item>
+    </style>
+    <style name="SurfaceView">
+        <item name="android:background">@drawable/surface_background</item>
+        <item name="android:layout_margin">8dp</item>
+    </style>
+    <style name="ModalView">
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:background">@color/colorModal</item>
+    </style>
+    <style name="Post">
+        <item name="android:background">@drawable/surface_background</item>
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:layout_marginBottom">@dimen/item_post_margin</item>
+        <item name="android:layout_marginStart">@dimen/item_post_margin</item>
+        <item name="android:layout_marginLeft">@dimen/item_post_margin</item>
+        <item name="android:layout_marginEnd">@dimen/item_post_margin</item>
+        <item name="android:layout_marginRight">@dimen/item_post_margin</item>
+    </style>
+    <style name="Comment">
+        <item name="android:background">@drawable/surface_background</item>
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:layout_marginTop">@dimen/item_comment_margin</item>
+        <item name="android:layout_marginStart">@dimen/item_comment_margin</item>
+        <item name="android:layout_marginLeft">@dimen/item_comment_margin</item>
+        <item name="android:layout_marginEnd">@dimen/item_comment_margin</item>
+        <item name="android:layout_marginRight">@dimen/item_comment_margin</item>
+    </style>
+    <style name="ErrorText">
+        <item name="android:background">@drawable/error_background</item>
+        <item name="android:textColor">@color/colorOnError</item>
+        <item name="android:padding">8dp</item>
     </style>
 </resources>

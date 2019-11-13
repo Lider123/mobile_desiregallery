@@ -14,6 +14,15 @@ jobs:
     #         name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
     #         command: sudo chmod +x ./gradlew
     - run:
+        name: Add google-services
+        command: echo $GOOGLE_SERVICES | base64 --decode > app/google-services.json
+    - run:
+        name: Add properties
+        command: |
+          cp app/vk.properties.sample app/vk.properties
+          cp app/sentry.properties.sample app/sentry.properties
+          cp app/keystore.properties.sample app/keystore.properties
+    - run:
         name: Download Dependencies
         command: ./gradlew androidDependencies
     - save_cache:

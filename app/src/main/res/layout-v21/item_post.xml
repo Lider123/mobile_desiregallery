@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="post"
+            type="com.example.desiregallery.data.models.Post" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="1dp"
+        style="@style/Post"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/item_author_container_padding"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/item_author_image"
+                android:layout_width="@dimen/item_author_image_size"
+                android:layout_height="@dimen/item_author_image_size"
+                tools:src="@drawable/material" />
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="@dimen/item_author_text_margin_left"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/item_author_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/item_author_font_size"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/colorPrimary"
+                        android:textStyle="bold"
+                        tools:text="Author Name" />
+
+                <TextView
+                        android:id="@+id/item_timestamp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/item_time_font_size"
+                        android:textColor="@color/colorDatetime"
+                        tools:text="01.01.1970 00:00"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/item_post_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            tools:src="@drawable/material"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/item_status_padding">
+
+            <TextView
+                android:id="@+id/item_post_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_centerHorizontal="true"
+                android:drawableStart="@drawable/ic_grade_gold_32dp"
+                android:textColor="@color/colorOnBackground"
+                android:textSize="@dimen/item_rating_font_size"
+                android:text="@string/item_post_rating_placeholder" />
+
+            <ImageView
+                android:id="@+id/item_post_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                app:srcCompat="@drawable/ic_comment_colorsecondary_32dp" />
+        </RelativeLayout>
+    </LinearLayout>
+</layout>

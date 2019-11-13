@@ -1,19 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-            android:id="@+id/item_comment_text_view"
+    <data>
+        <variable
+            name="comment"
+            type="com.example.desiregallery.data.models.Comment" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+            style="@style/Comment">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/item_author_photo"
+            android:layout_width="@dimen/item_author_image_size"
+            android:layout_height="@dimen/item_author_image_size"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            tools:src="@drawable/material"/>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/item_comment_background"
-            android:textColor="@color/colorOnSurface"
-            android:layout_marginTop="@dimen/item_comment_margin"
-            android:layout_marginLeft="@dimen/item_comment_margin"
-            android:layout_marginRight="@dimen/item_comment_margin"
-            android:padding="16dp"
-            android:text="Comment text"/>
+            android:padding="8dp"
+            android:orientation="vertical">
 
-</FrameLayout>
+            <TextView
+                android:id="@+id/item_author_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:textColor="@color/colorPrimary"
+                tools:text="Author Name"/>
+
+            <TextView
+                android:id="@+id/item_comment_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorOnSurface"
+                android:textSize="14sp"
+                android:gravity="start"
+                tools:text="Comment text"/>
+
+            <TextView
+                android:id="@+id/item_comment_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:gravity="end"
+                android:textColor="@color/colorDatetime"
+                tools:text="00:00, 00.00.0000"/>
+        </LinearLayout>
+    </LinearLayout>
+</layout>

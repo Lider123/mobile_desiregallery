@@ -4,19 +4,18 @@
               android:padding="@dimen/dialog_rate_padding"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:background="@drawable/dialog_rate_background">
+              style="@style/SurfaceView">
 
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/dialog_rate_text"
-            android:textColor="@color/colorOnBackground"
+            android:textColor="@color/colorOnSurface"
             android:textSize="@dimen/dialog_rate_font_size"
-            android:layout_marginBottom="@dimen/dialog_rate_padding"
-    />
+            android:layout_marginBottom="@dimen/dialog_rate_padding"/>
 
-    <android.support.v7.widget.AppCompatRatingBar
+    <androidx.appcompat.widget.AppCompatRatingBar
             android:id="@+id/dialog_rate_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

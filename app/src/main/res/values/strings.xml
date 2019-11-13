@@ -1,29 +1,93 @@
 <resources>
     <string name="app_name">DesireGallery</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
 
-    <string name="item_post_rating_placeholder">0.0</string>
-    <string name="item_post_rating_format">%1$.1f</string>
+    <!-- Feed screen -->
+    <string name="posts_download_error">There was an error while loading posts</string>
+    <string name="post_upload_error">Unable to send a post</string>
+    <string name="posts_empty">There are no posts yet</string>
+    <string name="post_publish_success">Post successfully published</string>
 
+    <!-- Comments screen -->
     <string name="comments_input_hint">Add a comment</string>
     <string name="send">Send</string>
     <string name="comments">Comments</string>
+    <string name="comments_download_error">There was an error while loading comments</string>
+    <string name="comment_upload_error">Unable to send a comment</string>
+    <string name="comments_empty">No one has left a comment yet. Be the first.</string>
 
+    <!-- Rate post dialog -->
     <string name="dialog_rate_text">Rate this post!</string>
 
-    <string name="Login">Login</string>
+    <!-- LogIn and SignUp screens -->
+    <string name="sign_in">Sign In</string>
     <string name="login">login</string>
-    <string name="SignUp">Sign Up</string>
+    <string name="sign_in_with_vk">Sign In with VK</string>
+    <string name="sign_up_offer"><u>Don\'t have an account? Sign Up</u></string>
+    <string name="sign_up_confirm">Sign Up</string>
     <string name="password">password</string>
+    <string name="email">email</string>
+    <string name="birthday">birthday</string>
     <string name="confirm_password">confirm password</string>
-    <string name="login_error">Unable to log in. Check your network connection</string>
-    <string name="invalid_login">Invalid login</string>
-    <string name="invalid_password">Invalid password</string>
+    <string name="login_error">Unable to log in: %s</string>
     <string name="non_equal_passwords">Passwords are note equal</string>
-    <string name="non_unique_login">Login is already exists</string>
-    <string name="sign_up_error">Unable to sign up. Check your network connection</string>
+    <string name="sign_up_error">Unable to sign up: %s</string>
+    <string name="sign_in_with_google">Sign In with Google</string>
+    <string name="sign_in_vk_failure">Failed to Sign In with VK</string>
+    <string name="sign_in_google_failure">Failed to Sign In with Google</string>
 
+    <!-- Main menu -->
     <string name="Profile">Profile</string>
     <string name="Feed">Feed</string>
     <string name="Settings">Settings</string>
     <string name="LogOut">Log out</string>
+
+    <!-- Fullscreen image -->
+    <string name="Download">Download</string>
+    <string name="Share">Share</string>
+    <string name="no_access_to_storage">Unable to download image. Have you granted access to storage?</string>
+    <string name="download_success">Image has been downloaded</string>
+    <string name="download_error">Something went wrong while downloading image</string>
+    <string name="share_image">Share image</string>
+    <string name="share_success">Successfully shared</string>
+    <string name="share_canceled">Image haven\'t been shared</string>
+
+    <!-- Profile screen -->
+    <string name="OK">OK</string>
+    <string name="Cancel">Cancel</string>
+    <string name="profile_image_upload_failure">There was an error while uploading image</string>
+    <string name="Edit">Edit</string>
+    <string name="profile_posts_title">Most starred posts</string>
+    <string name="Done">Done</string>
+    <string name="changes_saved">Changes have been saved</string>
+    <string name="small_posts_empty">You haven\'t added any posts yet.</string>
+
+    <!-- Settings screen -->
+    <string name="reset_password_sent">Email for password reset was sent</string>
+    <string name="reset_password_error">An error occurred while resetting password</string>
+    <string name="reset_password_unable">Unable to reset password</string>
+    <string name="about">About</string>
+    <string name="reset_password">Reset password</string>
+    <string name="reset_password_message">We will send a message to your email address for receiving your password. Continue?</string>
+
+    <!-- Create post dialog -->
+    <string name="post_creation">Post creation</string>
+    <string name="Publish">Publish</string>
+    <string name="post_image_upload_failure">There was an error while creating post</string>
+
+    <!-- Preferences -->
+    <string name="pref_reset_password_key" translatable="false">pref_reset_password_key</string>
+    <string name="pref_about_key" translatable="false">pref_about_key</string>
+
+    <!-- Templates -->
+    <string name="item_post_rating_placeholder" translatable="false">0.0</string>
+    <string name="item_post_rating_format" translatable="false">%1$.1f</string>
+    <string name="date_format" translatable="false">%1$02d.%2$02d.%3$d</string>
+    <string name="datetime_format" translatable="false">dd.MM.yyyy HH:mm</string>
+    <string name="about_message">Version\n<b>%s</b>\n\nSource project\nhttps://github.com/Lider123/mobile_desiregallery</string>
+    <string name="profile_age_template">Age: <b>%d</b></string>
+    <string name="profile_posts_template">Posts: <b>%d</b></string>
+    <string name="profile_rating_template">Rating: <b>%1$.1f</b></string>
 </resources>

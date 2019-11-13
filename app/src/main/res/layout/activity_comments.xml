@@ -1,27 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/comments_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".ui.activities.CommentsActivity">
+        tools:context=".ui.screens.comments.CommentsActivity">
 
     <include
             android:id="@+id/comments_app_bar"
-            layout="@layout/toolbar_comments" />
+            layout="@layout/toolbar_comments"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-    <android.support.v7.widget.RecyclerView
+    <TextView
+            android:id="@+id/comments_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:padding="4dp"
+            android:textColor="@color/colorHint"
+            android:visibility="gone"
+            android:text="@string/comments_empty"
+            app:layout_constraintTop_toBottomOf="@id/comments_app_bar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="visible"/>
+
+    <ProgressBar
+            android:id="@+id/comments_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/comments_app_bar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="visible"/>
+
+    <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/comments_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:scrollbars="vertical"
+            android:layout_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/comments_app_bar"
+            app:layout_constraintBottom_toTopOf="@id/comments_actions" />
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/comments_actions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="@dimen/comments_input_view_padding">
+            android:padding="@dimen/comments_input_view_padding"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
         <EditText
                 android:id="@+id/comments_input"
@@ -31,21 +67,21 @@
                 android:inputType="textMultiLine"
                 android:minLines="1"
                 android:maxLines="5"
-                android:layout_gravity="center_vertical"
                 android:hint="@string/comments_input_hint"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/comments_button_send"
                 style="@style/CustomEditText"/>
 
         <Button
                 android:id="@+id/comments_button_send"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
                 android:text="@string/send"
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="2dp"
-                style="@style/CustomButton"/>
-
-    </LinearLayout>
-
-</LinearLayout>
+                style="@style/CustomButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

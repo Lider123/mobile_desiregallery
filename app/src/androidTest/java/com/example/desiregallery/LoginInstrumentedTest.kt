@@ -1,18 +1,18 @@
 package com.example.desiregallery
 
-import android.support.test.espresso.Espresso
-import android.support.test.espresso.action.ViewActions.*
-import android.support.test.espresso.assertion.ViewAssertions.matches
-import android.support.test.espresso.intent.Intents
-import android.support.test.espresso.intent.Intents.intended
-import android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent
-import android.support.test.espresso.matcher.ViewMatchers.isEnabled
-import android.support.test.espresso.matcher.ViewMatchers.withId
-import android.support.test.rule.ActivityTestRule
-import android.support.test.runner.AndroidJUnit4
-import com.example.desiregallery.ui.activities.LoginActivity
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.intended
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import androidx.test.espresso.matcher.ViewMatchers.isEnabled
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.rule.ActivityTestRule
+import androidx.test.runner.AndroidJUnit4
+import com.example.desiregallery.ui.screens.LoginActivity
 import org.junit.runner.RunWith
-import com.example.desiregallery.ui.activities.SignUpActivity
+import com.example.desiregallery.ui.screens.SignUpActivity
 import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
@@ -44,14 +44,14 @@ class LoginInstrumentedTest {
     }
 
     private fun checkInput(login: String, password: String, correct: Boolean) {
-        Espresso.onView(withId(R.id.input_login)).perform(typeText(login)).perform(closeSoftKeyboard())
+        Espresso.onView(withId(R.id.input_email)).perform(typeText(login)).perform(closeSoftKeyboard())
         Espresso.onView(withId(R.id.input_password)).perform(typeText(password)).perform(closeSoftKeyboard())
         if (correct)
-            Espresso.onView(withId(R.id.button_login)).check(matches(isEnabled()))
+            Espresso.onView(withId(R.id.button_sign_in)).check(matches(isEnabled()))
         else
-            Espresso.onView(withId(R.id.button_login)).check(matches(not(isEnabled())))
+            Espresso.onView(withId(R.id.button_sign_in)).check(matches(not(isEnabled())))
 
-        Espresso.onView(withId(R.id.input_login)).perform(clearText())
+        Espresso.onView(withId(R.id.input_email)).perform(clearText())
         Espresso.onView(withId(R.id.input_password)).perform(clearText())
     }
 

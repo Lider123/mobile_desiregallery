@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:allowDividerBelow="true"
+        app:allowDividerAbove="true">
+
+    <Preference
+            android:key="@string/pref_reset_password_key"
+            android:title="@string/reset_password"
+            app:iconSpaceReserved="false"
+            app:allowDividerAbove="true"
+            app:allowDividerBelow="true"/>
+
+    <Preference
+            android:key="@string/pref_about_key"
+            android:title="@string/about"
+            app:iconSpaceReserved="false"
+            app:allowDividerAbove="true"
+            app:allowDividerBelow="true"/>
+</PreferenceScreen>

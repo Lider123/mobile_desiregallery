@@ -19,4 +19,6 @@
     <color name="colorOnDisabled">#555</color>
 
     <color name="colorHint">#4000</color>
+    <color name="colorDatetime">#AAA</color>
+    <color name="colorModal">#8000</color>
 </resources>

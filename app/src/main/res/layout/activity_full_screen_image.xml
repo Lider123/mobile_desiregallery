@@ -2,14 +2,24 @@
 <FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/full_screen_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.activities.FullScreenImageActivity">
+        tools:context=".ui.screens.FullScreenImageActivity">
 
-    <ImageView
+    <com.github.chrisbanes.photoview.PhotoView
             android:id="@+id/image_view_full_screen"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitCenter"/>
+
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/image_screen_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#0000"
+            style="@style/Widget.AppCompat.Toolbar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
 </FrameLayout>
