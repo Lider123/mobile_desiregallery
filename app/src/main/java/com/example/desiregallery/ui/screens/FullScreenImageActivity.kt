@@ -50,6 +50,7 @@ class FullScreenImageActivity : AppCompatActivity() {
         toolbar = findViewById(R.id.image_screen_toolbar)
         toolbar.title = ""
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val imageUrl = intent.getStringExtra(EXTRA_IMAGE_URL)
         Picasso.with(this)
@@ -67,6 +68,11 @@ class FullScreenImageActivity : AppCompatActivity() {
             })
 
         postId = intent.getStringExtra(EXTRA_POST_ID)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
