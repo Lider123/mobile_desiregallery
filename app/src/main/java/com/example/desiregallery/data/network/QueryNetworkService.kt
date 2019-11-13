@@ -42,7 +42,7 @@ interface QueryNetworkService {
             return GsonConverterFactory.create(gsonBuilder.create())
         }
 
-        fun getService(): QueryNetworkService {
+        fun createService(): QueryNetworkService {
             val retrofit = Retrofit.Builder()
                 .baseUrl(QUERY_URL)
                 .addConverterFactory(createQueryGson())

@@ -1,13 +1,13 @@
 package com.example.desiregallery.ui.screens.feed
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.data.network.BaseNetworkService
+import com.example.desiregallery.data.network.NetworkUtils
+import com.example.desiregallery.data.network.QueryNetworkService
 import com.example.desiregallery.data.network.RequestState
 import com.example.desiregallery.utils.logError
 import com.example.desiregallery.utils.logInfo
@@ -16,11 +16,13 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.*
 
-class PostListViewModel(
+class PostsViewModel(
     application: Application,
-    private val baseService: BaseNetworkService
+    private val baseService: BaseNetworkService,
+    queryService: QueryNetworkService,
+    networkUtils: NetworkUtils
 ) : AndroidViewModel(application) {
-    private val postDataSourceFactory: PostDataSourceFactory = PostDataSourceFactory()
+    private val postDataSourceFactory = PostsDataSource.Factory(queryService, networkUtils)
 
     var postsLiveData: LiveData<PagedList<Post>>
 
@@ -39,9 +41,9 @@ class PostListViewModel(
     }
 
     fun getState(): LiveData<RequestState> {
-        return Transformations.switchMap<PostDataSource, RequestState>(
+        return Transformations.switchMap<PostsDataSource, RequestState>(
             postDataSourceFactory.postDataSourceLiveData,
-            PostDataSource::state)
+            PostsDataSource::state)
     }
 
     fun addPost(post: Post) {
@@ -71,7 +73,20 @@ class PostListViewModel(
     }
 
     companion object {
-        private val TAG = PostListViewModel::class.java.simpleName
+        private val TAG = PostsViewModel::class.java.simpleName
         private const val PAGE_SIZE = 10
+    }
+
+    class Factory(
+        private val application: Application,
+        private val baseService: BaseNetworkService,
+        private val queryService: QueryNetworkService,
+        private val networkUtils: NetworkUtils
+    ) : ViewModelProvider.Factory {
+
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            return PostsViewModel(application, baseService, queryService, networkUtils) as T
+        }
+
     }
 }

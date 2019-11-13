@@ -3,25 +3,31 @@ package com.example.desiregallery
 import android.app.Application
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.core.CrashlyticsCore
-import com.example.desiregallery.di.applicationModule
-import com.example.desiregallery.di.networkModule
-import com.example.desiregallery.di.viewModelModule
+import com.example.desiregallery.di.components.AppComponent
+import com.example.desiregallery.di.components.CommentsComponent
+import com.example.desiregallery.di.components.DaggerAppComponent
+import com.example.desiregallery.di.modules.*
 import com.vk.sdk.VKSdk
 import io.fabric.sdk.android.Fabric
 import io.sentry.Sentry
 import io.sentry.android.AndroidSentryClientFactory
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.loadKoinModules
-import org.koin.core.context.startKoin
 
 class MainApplication : Application() {
+    private var commentsComponent: CommentsComponent? = null
 
     override fun onCreate() {
         super.onCreate()
-        startKoin {
-            androidContext(this@MainApplication)
-            loadKoinModules(listOf(applicationModule, networkModule, viewModelModule))
-        }
+        instance = this
+        appComponent = DaggerAppComponent.builder()
+            .appModule(AppModule(this))
+            .authModule(AuthModule(applicationContext))
+            .networkModule(NetworkModule())
+            .analyticsModule(AnalyticsModule(applicationContext))
+            .dataModule(DataModule(applicationContext))
+            .profileModule(ProfileModule())
+            .postsModule(PostsModule())
+            .build()
+
         if (!BuildConfig.DEBUG)
             initSentry()
         initCrashlytics()
@@ -40,5 +46,22 @@ class MainApplication : Application() {
             .core(core)
             .build()
         Fabric.with(this, crashlytics)
+    }
+
+    fun plusCommentComponent(postId: String): CommentsComponent {
+        if (commentsComponent == null)
+            commentsComponent = appComponent.plusCommentsComponent(CommentsModule(postId))
+        return commentsComponent as CommentsComponent
+    }
+
+    fun clearCommentComponent() {
+        commentsComponent = null
+    }
+
+    companion object {
+        lateinit var instance: MainApplication
+            private set
+        lateinit var appComponent: AppComponent
+            private set
     }
 }

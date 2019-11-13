@@ -15,12 +15,14 @@ import retrofit2.Response
 /**
  * @author babaetskv on 20.09.19
  */
-class CommentListViewModel(
+class CommentsViewModel(
     application: Application,
     postId: String,
-    private val baseService: BaseNetworkService
+    private val baseService: BaseNetworkService,
+    queryService: QueryNetworkService,
+    networkUtils: NetworkUtils
 ) : AndroidViewModel(application) {
-    private val commentDataSourceFactory: CommentDataSourceFactory = CommentDataSourceFactory(postId)
+    private val commentDataSourceFactory = CommentsDataSource.Factory(postId, queryService, networkUtils)
 
     var commentsLiveData: LiveData<PagedList<Comment>>
 
@@ -36,13 +38,13 @@ class CommentListViewModel(
     }
 
     fun getState(): LiveData<RequestState> {
-        return Transformations.switchMap<CommentDataSource, RequestState>(
-            commentDataSourceFactory.commentDataSourceLiveData,
-            CommentDataSource::state)
+        return Transformations.switchMap<CommentsDataSource, RequestState>(
+            commentDataSourceFactory.commentsDataSourceLiveData,
+            CommentsDataSource::state)
     }
 
     private fun setState(state: RequestState) {
-        commentDataSourceFactory.commentDataSourceLiveData.value?.updateState(state)
+        commentDataSourceFactory.commentsDataSourceLiveData.value?.updateState(state)
     }
 
     fun addComment(comment: Comment) {
@@ -62,13 +64,26 @@ class CommentListViewModel(
                 logInfo(TAG, "Comment successfully uploaded")
 
                 setState(RequestState.SUCCESS)
-                commentDataSourceFactory.commentDataSourceLiveData.value?.invalidate()
+                commentDataSourceFactory.commentsDataSourceLiveData.value?.invalidate()
             }
         })
     }
 
     companion object {
-        private val TAG = CommentListViewModel::class.java.simpleName
+        private val TAG = CommentsViewModel::class.java.simpleName
         const val PAGE_SIZE = 10
+    }
+
+    class Factory(
+        private val postId: String,
+        private val application: Application,
+        private val baseService: BaseNetworkService,
+        private val queryService: QueryNetworkService,
+        private val networkUtils: NetworkUtils
+    ) : ViewModelProvider.Factory {
+
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            return CommentsViewModel(application, postId, baseService, queryService, networkUtils) as T
+        }
     }
 }

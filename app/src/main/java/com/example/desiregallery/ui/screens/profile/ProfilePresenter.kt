@@ -11,9 +11,7 @@ import com.example.desiregallery.data.network.QueryNetworkService
 import com.example.desiregallery.data.network.query.requests.PostsQueryRequest
 import com.example.desiregallery.utils.getAgeFromBirthday
 import com.example.desiregallery.utils.logError
-import org.koin.core.KoinComponent
-import org.koin.core.get
-import org.koin.core.inject
+import com.google.firebase.auth.FirebaseAuth
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,30 +20,19 @@ import kotlin.math.min
 /**
  * @author babaetskv on 29.10.19
  */
-class ProfilePresenter(private val view: IProfileContract.View) : IProfileContract.Presenter, KoinComponent {
-    private val resources: Resources by inject()
-    private val accProvider: AccountProvider by inject()
-    private val queryService: QueryNetworkService by inject()
-
+class ProfilePresenter(
+    private val resources: Resources,
+    private val accProvider: AccountProvider,
+    private val queryService: QueryNetworkService,
+    private val auth: FirebaseAuth
+) : IProfileContract.Presenter {
+    private lateinit var view: IProfileContract.View
     private var editFragment: EditProfileFragment? = null
 
-    init {
-        accProvider.mObservable.subscribe { attach(get()) }
-    }
-
-    override fun attach(resources: Resources) {
-        val account = accProvider.currAccount
-        account?.let {
-            view.updateName(it.displayName)
-
-            view.updateAge(getAgeFromBirthday(it.birthday))
-            updateStats(it.displayName)
-            if (it.photoUrl.isNotEmpty())
-                view.updatePhoto(it.photoUrl)
-
-            if (it !is EmailAccount)
-                view.updateEditButtonVisibility(false)
-        }
+    override fun attach(view: IProfileContract.View) {
+        this.view = view
+        accProvider.mObservable.subscribe { updateAll() }
+        updateAll()
     }
 
     override fun onEditClick(fragmentManager: FragmentManager) {
@@ -57,8 +44,8 @@ class ProfilePresenter(private val view: IProfileContract.View) : IProfileContra
                     fragmentManager.beginTransaction()
                         .remove(editFragment!!)
                         .commit()
-                    accProvider.currAccount = EmailAccount(user, get())
-                    attach(get())
+                    accProvider.currAccount = EmailAccount(user, auth)
+                    updateAll()
                     view.showMessage(resources.getString(R.string.changes_saved))
                 }
 
@@ -102,6 +89,21 @@ class ProfilePresenter(private val view: IProfileContract.View) : IProfileContra
                 view.updateAverageRating(null)
             }
         })
+    }
+
+    private fun updateAll() {
+        val account = accProvider.currAccount
+        account?.let {
+            view.updateName(it.displayName)
+
+            view.updateAge(getAgeFromBirthday(it.birthday))
+            updateStats(it.displayName)
+            if (it.photoUrl.isNotEmpty())
+                view.updatePhoto(it.photoUrl)
+
+            if (it !is EmailAccount)
+                view.updateEditButtonVisibility(false)
+        }
     }
 
     companion object {

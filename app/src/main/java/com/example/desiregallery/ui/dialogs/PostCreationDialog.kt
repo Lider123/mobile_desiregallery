@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.auth.AccountProvider
 import com.example.desiregallery.data.models.Post
@@ -15,25 +16,26 @@ import com.example.desiregallery.data.storage.IStorageHelper
 import com.example.desiregallery.utils.logError
 import com.example.desiregallery.utils.logInfo
 import kotlinx.android.synthetic.main.dialog_create_post.view.*
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import javax.inject.Inject
 
 /**
  * @author babaetskv
  * @since 24.07.19
  */
-
 class PostCreationDialog(
     private val activity: Activity,
     private val image: Bitmap,
     private val onPublish: (Post) -> Unit
-) : AlertDialog(activity), KoinComponent {
-    private val accProvider: AccountProvider by inject()
-    private val storageHelper: IStorageHelper by inject()
+) : AlertDialog(activity) {
+    @Inject
+    lateinit var accProvider: AccountProvider
+    @Inject
+    lateinit var storageHelper: IStorageHelper
 
     private lateinit var content: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        MainApplication.appComponent.inject(this)
         content = View.inflate(context, R.layout.dialog_create_post, null)
         setView(content)
         setTitle(R.string.post_creation)

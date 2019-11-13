@@ -7,6 +7,7 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_sign_up.*
 import android.text.Editable
 import android.text.TextWatcher
+import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.analytics.IDGAnalyticsTracker
 import com.example.desiregallery.auth.AuthMethod
@@ -19,20 +20,24 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import com.google.firebase.auth.UserProfileChangeRequest
-import org.koin.android.ext.android.get
-import org.koin.android.ext.android.inject
 import java.util.*
+import javax.inject.Inject
 
 
 class SignUpActivity : AppCompatActivity() {
-    private val analytics: IDGAnalyticsTracker by inject()
-    private val auth: FirebaseAuth by inject()
+    @Inject
+    lateinit var baseService: BaseNetworkService
+    @Inject
+    lateinit var auth: FirebaseAuth
+    @Inject
+    lateinit var analytics: IDGAnalyticsTracker
 
     private lateinit var inputTextWatcher: TextWatcher
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
+        MainApplication.appComponent.inject(this)
 
         inputTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {}
@@ -104,7 +109,6 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun saveUserInfo(user: User) {
-        val baseService: BaseNetworkService = get()
         baseService.createUser(user.login, user).enqueue(object: Callback<User> {
 
             override fun onResponse(call: Call<User>, response: Response<User>) {

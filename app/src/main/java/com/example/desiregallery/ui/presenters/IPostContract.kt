@@ -1,6 +1,7 @@
 package com.example.desiregallery.ui.presenters
 
 import android.content.Context
+import com.example.desiregallery.data.models.Post
 
 /**
  * @author babaetskv on 29.10.19
@@ -15,7 +16,7 @@ interface IPostContract {
     }
 
     interface Presenter {
-        fun attach()
+        fun attach(view: View, post: Post)
         fun onImageClick(context: Context)
         fun onRatingClick(context: Context)
         fun onCommentsClick(context: Context)

@@ -1,6 +1,5 @@
 package com.example.desiregallery.ui.screens.profile
 
-import android.content.res.Resources
 import android.graphics.Bitmap
 import androidx.fragment.app.FragmentManager
 import com.example.desiregallery.data.models.Post
@@ -22,7 +21,7 @@ interface IProfileContract {
     }
 
     interface Presenter {
-        fun attach(resources: Resources)
+        fun attach(view: View)
         fun onEditClick(fragmentManager: FragmentManager)
     }
 }

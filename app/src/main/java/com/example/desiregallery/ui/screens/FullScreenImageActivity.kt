@@ -1,4 +1,4 @@
-package com.example.desiregallery.ui.screens.splash
+package com.example.desiregallery.ui.screens
 
 import android.Manifest
 import android.app.Activity
@@ -21,16 +21,18 @@ import java.io.FileOutputStream
 import java.io.File
 import java.io.IOException
 import android.net.Uri
+import com.example.desiregallery.MainApplication
 import com.example.desiregallery.utils.logError
 import com.example.desiregallery.analytics.IDGAnalyticsTracker
 import com.example.desiregallery.utils.logWarning
 import com.example.desiregallery.utils.downloadBitmap
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import org.koin.android.ext.android.inject
+import javax.inject.Inject
 
 class FullScreenImageActivity : AppCompatActivity() {
-    private val analytics: IDGAnalyticsTracker by inject()
+    @Inject
+    lateinit var analytics: IDGAnalyticsTracker
 
     private lateinit var toolbar: Toolbar
 
@@ -41,6 +43,7 @@ class FullScreenImageActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
         setContentView(R.layout.activity_full_screen_image)
+        MainApplication.appComponent.inject(this)
 
         toolbar = findViewById(R.id.image_screen_toolbar)
         toolbar.title = ""
@@ -73,7 +76,9 @@ class FullScreenImageActivity : AppCompatActivity() {
         return when(item?.itemId) {
             R.id.image_download -> {
                 val permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                ActivityCompat.requestPermissions(this, permissions, WRITE_REQUEST_CODE)
+                ActivityCompat.requestPermissions(this, permissions,
+                    WRITE_REQUEST_CODE
+                )
                 true
             }
             R.id.image_share -> {
@@ -112,7 +117,8 @@ class FullScreenImageActivity : AppCompatActivity() {
             shareIntent.putExtra(Intent.EXTRA_STREAM, it)
             shareIntent.type = "image/*"
             startActivityForResult(Intent.createChooser(shareIntent, getString(R.string.share_image)),
-                SHARING_REQUEST_CODE)
+                SHARING_REQUEST_CODE
+            )
         }
     }
 

@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.auth.AccountProvider
 import com.example.desiregallery.data.models.Comment
@@ -16,21 +18,23 @@ import com.example.desiregallery.ui.widgets.SnackbarWrapper
 import com.example.desiregallery.utils.hideSoftKeyboard
 import kotlinx.android.synthetic.main.activity_comments.*
 import kotlinx.android.synthetic.main.toolbar_comments.*
-import org.koin.android.ext.android.get
-import org.koin.android.ext.android.inject
-import org.koin.core.parameter.parametersOf
+import javax.inject.Inject
 
 class CommentsActivity : AppCompatActivity() {
-    private val accProvider: AccountProvider by inject()
+    @Inject
+    lateinit var accProvider: AccountProvider
+    @Inject
+    lateinit var vmFactory: CommentsViewModel.Factory
 
     private lateinit var snackbar: SnackbarWrapper
 
     private lateinit var post: Post
-    private lateinit var model: CommentListViewModel
+    private lateinit var model: CommentsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_comments)
+
         comments_button_back.setOnClickListener { onBackPressed() }
         comments_button_send.setOnClickListener {
             val commentText = comments_input.text.trim()
@@ -41,12 +45,18 @@ class CommentsActivity : AppCompatActivity() {
         snackbar = SnackbarWrapper(comments_container)
 
         post = intent.getSerializableExtra(EXTRA_POST) as Post
+        MainApplication.instance.plusCommentComponent(post.id).inject(this)
 
         initModel()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        MainApplication.instance.clearCommentComponent()
+    }
+
     private fun initModel() {
-        model = get { parametersOf(post.id) }
+        model = ViewModelProviders.of(this, vmFactory).get(CommentsViewModel::class.java)
         model.getState().observe(this, Observer { status ->
             status?: return@Observer
 
@@ -76,7 +86,7 @@ class CommentsActivity : AppCompatActivity() {
             }
         })
         model.commentsLiveData.observe(this, Observer<PagedList<Comment>> { comments ->
-            val adapter = CommentAdapter()
+            val adapter = CommentsAdapter()
             adapter.submitList(comments)
             comments_list.adapter = adapter
             updateHintVisibility(comments.isEmpty())

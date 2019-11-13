@@ -4,14 +4,21 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.ui.dialogs.AboutDialog
 import com.example.desiregallery.utils.logInfo
 import com.google.firebase.auth.FirebaseAuth
-import org.koin.android.ext.android.inject
+import javax.inject.Inject
 
 class SettingsFragment : PreferenceFragmentCompat() {
-    private val auth: FirebaseAuth by inject()
+    @Inject
+    lateinit var auth: FirebaseAuth
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        MainApplication.appComponent.inject(this)
+    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         addPreferencesFromResource(R.xml.prefs)

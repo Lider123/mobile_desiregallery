@@ -1,16 +1,17 @@
 package com.example.desiregallery.ui.screens.comments
 
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.DataSource
 import androidx.paging.PageKeyedDataSource
 import com.example.desiregallery.utils.logError
 import com.example.desiregallery.utils.logInfo
 import com.example.desiregallery.utils.logWarning
 import com.example.desiregallery.data.models.Comment
+import com.example.desiregallery.data.models.User
+import com.example.desiregallery.data.network.NetworkUtils
 import com.example.desiregallery.data.network.QueryNetworkService
 import com.example.desiregallery.data.network.RequestState
 import com.example.desiregallery.data.network.query.requests.CommentsQueryRequest
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,11 +19,11 @@ import retrofit2.Response
 /**
  * @author babaetskv on 30.10.19
  */
-class CommentDataSource(
-    private val postId: String
-) : PageKeyedDataSource<Long, Comment>(), KoinComponent {
-    private val networkService: QueryNetworkService by inject()
-
+class CommentsDataSource(
+    private val postId: String,
+    private val networkService: QueryNetworkService,
+    private val networkUtils: NetworkUtils
+) : PageKeyedDataSource<Long, Comment>() {
     var state: MutableLiveData<RequestState> = MutableLiveData()
 
     override fun loadInitial(params: LoadInitialParams<Long>,
@@ -54,6 +55,14 @@ class CommentDataSource(
                     }
                     else {
                         logInfo(TAG, "Successfully loaded ${it.size} comments for page 1")
+
+                        val authors: Set<String> = LinkedHashSet(comments.map { comment -> comment.author.login })
+                        val users = networkUtils.getUsersByNames(authors)
+                        comments.map { comment ->
+                            val authorName = comment.author.login
+                            comment.author = users.find { user -> user.login == authorName } as User
+                        }
+
                         updateState(RequestState.SUCCESS)
                     }
                     callback.onResult(it, null, 2L)
@@ -91,6 +100,14 @@ class CommentDataSource(
                 val comments = response.body()
                 comments?.let {
                     logInfo(TAG, "Successfully loaded ${it.size} comments for page $key")
+
+                    val authors: Set<String> = LinkedHashSet(comments.map { comment -> comment.author.login })
+                    val users = networkUtils.getUsersByNames(authors)
+                    comments.map { comment ->
+                        val authorName = comment.author.login
+                        comment.author = users.find { user -> user.login == authorName } as User
+                    }
+
                     callback.onResult(it, key+1)
                 }?: logWarning(TAG, "Failed to load comments for page $key. Received an empty body")
                 updateState(RequestState.SUCCESS)
@@ -105,6 +122,21 @@ class CommentDataSource(
     override fun loadBefore(params: LoadParams<Long>, callback: LoadCallback<Long, Comment>) {}
 
     companion object {
-        private val TAG = CommentDataSource::class.java.simpleName
+        private val TAG = CommentsDataSource::class.java.simpleName
+    }
+
+    class Factory(
+        private val postId: String,
+        private val networkService: QueryNetworkService,
+        private val networkUtils: NetworkUtils
+    ) : DataSource.Factory<Long, Comment>() {
+
+        val commentsDataSourceLiveData: MutableLiveData<CommentsDataSource> = MutableLiveData()
+
+        override fun create(): DataSource<Long, Comment> {
+            val commentDataSource = CommentsDataSource(postId, networkService, networkUtils)
+            commentsDataSourceLiveData.postValue(commentDataSource)
+            return commentDataSource
+        }
     }
 }
