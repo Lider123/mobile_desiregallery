@@ -6,6 +6,7 @@
     <string name="posts_download_error">There was an error while loading posts</string>
     <string name="post_upload_error">Unable to send a post</string>
     <string name="posts_empty">There are no posts yet</string>
+    <string name="post_publish_success">Post successfully published</string>
 
     <!-- Comments screen -->
     <string name="comments_input_hint">Add a comment</string>

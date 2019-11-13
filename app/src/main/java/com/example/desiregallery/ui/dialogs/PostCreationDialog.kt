@@ -1,12 +1,10 @@
 package com.example.desiregallery.ui.dialogs
 
 import android.app.Activity
-import android.app.AlertDialog
-import android.content.DialogInterface
+import android.app.Dialog
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.auth.AccountProvider
@@ -26,7 +24,7 @@ class PostCreationDialog(
     activity: Activity,
     private val image: Bitmap,
     private val onPublish: (Post) -> Unit
-) : AlertDialog(activity) {
+) : Dialog(activity) {
     @Inject
     lateinit var accProvider: AccountProvider
     @Inject
@@ -36,12 +34,14 @@ class PostCreationDialog(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         MainApplication.appComponent.inject(this)
-        content = View.inflate(context, R.layout.dialog_create_post, null)
-        setView(content)
+        content = View.inflate(context, R.layout.dialog_create_post, null).apply {
+            post_creation_publish.setOnClickListener { handlePublish() }
+            post_creation_cancel.setOnClickListener { handleCancel() }
+            dialog_post_image.setImageBitmap(image)
+        }.also {
+            setContentView(it)
+        }
         setTitle(R.string.post_creation)
-        setButton(DialogInterface.BUTTON_POSITIVE, context.getString(R.string.Publish)) { _, _ -> handlePublish() }
-        setButton(DialogInterface.BUTTON_NEGATIVE, context.getString(R.string.Cancel)) { _, _ -> handleCancel() }
-        content.dialog_post_image.setImageBitmap(image)
         setCancelable(false)
 
         super.onCreate(savedInstanceState)
@@ -59,31 +59,36 @@ class PostCreationDialog(
             override fun onComplete(resultUrl: String) {
                 logInfo(TAG, "Image for new post ${post.id} successfully uploaded")
                 post.setImageUrl(resultUrl)
+                hideProgress()
+                dismiss()
                 onPublish(post)
             }
 
             override fun onFailure(error: Exception) {
                 logError(TAG, "Failed to upload image for new post ${post.id}: ${error.message}")
+                hideProgress()
                 updateErrorMessageVisibility(true)
             }
         })
-        hideProgress()
-        dismiss()
     }
 
     private fun handleCancel() = dismiss()
 
     private fun showProgress() {
-        content.dialog_post_progress.visibility = View.VISIBLE
-        getButton(BUTTON_POSITIVE).isEnabled = false
-        getButton(BUTTON_NEGATIVE).isEnabled = false
+        with(content) {
+            dialog_post_progress.visibility = View.VISIBLE
+            post_creation_publish.isEnabled = false
+            post_creation_cancel.isEnabled = false
+        }
         updateErrorMessageVisibility(false)
     }
 
     private fun hideProgress() {
-        content.dialog_post_progress.visibility = View.GONE
-        getButton(BUTTON_POSITIVE).isEnabled = true
-        getButton(BUTTON_NEGATIVE).isEnabled = true
+        with(content) {
+            dialog_post_progress.visibility = View.GONE
+            post_creation_publish.isEnabled = true
+            post_creation_cancel.isEnabled = true
+        }
     }
 
     private fun updateErrorMessageVisibility(visible: Boolean) {

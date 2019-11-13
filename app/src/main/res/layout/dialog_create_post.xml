@@ -1,20 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical">
 
-    <RelativeLayout
+    <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
-
         <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/dialog_post_image"/>
+    </FrameLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp">
+
+        <Button
+                android:id="@+id/post_creation_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Cancel"
+                app:layout_constraintEnd_toStartOf="@id/post_creation_publish"
+                app:layout_constraintBottom_toBottomOf="parent"
+                style="@style/CustomFlatButton"/>
+
+        <Button
+                android:id="@+id/post_creation_publish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Publish"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                style="@style/CustomFlatButton"/>
+
+        <TextView
+                android:id="@+id/error_message"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="@string/post_image_upload_failure"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/post_creation_cancel"
+                tools:visibility="visible"
+                style="@style/ErrorText"/>
 
         <ProgressBar
                 android:id="@+id/dialog_post_progress"
@@ -22,17 +57,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:visibility="gone"
-                tools:visibility="visible"
-                style="?android:attr/progressBarStyleLarge" />
-    </RelativeLayout>
-
-    <TextView
-            android:id="@+id/error_message"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:visibility="gone"
-            android:text="@string/post_image_upload_failure"
-            tools:visibility="visible"
-            style="@style/ErrorText"/>
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:visibility="visible"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

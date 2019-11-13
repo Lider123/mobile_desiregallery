@@ -63,6 +63,7 @@ class FeedFragment : Fragment() {
             val selectedImage = BitmapFactory.decodeStream(istream)
             PostCreationDialog(activity!!, selectedImage) { post ->
                 model.addPost(post)
+                snackbar.show(getString(R.string.post_publish_success))
             }.show()
         }
     }
