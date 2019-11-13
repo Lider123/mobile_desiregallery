@@ -9,7 +9,6 @@ import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import com.example.desiregallery.R
 import kotlinx.android.synthetic.main.activity_full_screen_image.*
 import android.content.pm.PackageManager
@@ -24,6 +23,7 @@ import android.net.Uri
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.utils.logError
 import com.example.desiregallery.analytics.IDGAnalyticsTracker
+import com.example.desiregallery.ui.widgets.SnackbarWrapper
 import com.example.desiregallery.utils.logWarning
 import com.example.desiregallery.utils.downloadBitmap
 import com.squareup.picasso.Callback
@@ -35,6 +35,7 @@ class FullScreenImageActivity : AppCompatActivity() {
     lateinit var analytics: IDGAnalyticsTracker
 
     private lateinit var toolbar: Toolbar
+    private lateinit var snackbar: SnackbarWrapper
 
     private lateinit var image: Bitmap
     private lateinit var postId: String
@@ -44,6 +45,7 @@ class FullScreenImageActivity : AppCompatActivity() {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
         setContentView(R.layout.activity_full_screen_image)
         MainApplication.appComponent.inject(this)
+        snackbar = SnackbarWrapper(full_screen_container)
 
         toolbar = findViewById(R.id.image_screen_toolbar)
         toolbar.title = ""
@@ -96,7 +98,7 @@ class FullScreenImageActivity : AppCompatActivity() {
                 downloadBitmap(image, this)
             } else {
                 logWarning(TAG, "There is no permission to write to external storage")
-                Toast.makeText(this, R.string.no_access_to_storage, Toast.LENGTH_LONG).show()
+                snackbar.show(getString(R.string.no_access_to_storage))
             }
         }
     }

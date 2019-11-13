@@ -63,4 +63,9 @@
         <item name="android:layout_marginEnd">@dimen/item_comment_margin</item>
         <item name="android:layout_marginRight">@dimen/item_comment_margin</item>
     </style>
+    <style name="ErrorText">
+        <item name="android:background">@drawable/error_background</item>
+        <item name="android:textColor">@color/colorOnError</item>
+        <item name="android:padding">8dp</item>
+    </style>
 </resources>

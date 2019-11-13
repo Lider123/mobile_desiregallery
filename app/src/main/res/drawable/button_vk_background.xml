@@ -3,21 +3,21 @@
     <item android:state_pressed="true" android:state_enabled="true">
         <shape>
             <solid android:color="@color/vk_light_color"/>
-            <corners android:radius="@dimen/button_corners_radius"/>
+            <corners android:radius="@dimen/corners"/>
         </shape>
     </item>
 
     <item android:state_enabled="false">
         <shape>
             <solid android:color="@color/colorDisabled"/>
-            <corners android:radius="@dimen/button_corners_radius"/>
+            <corners android:radius="@dimen/corners"/>
         </shape>
     </item>
 
     <item android:state_enabled="true">
         <shape>
             <solid android:color="@color/vk_color"/>
-            <corners android:radius="@dimen/button_corners_radius"/>
+            <corners android:radius="@dimen/corners"/>
         </shape>
     </item>
 </selector>
