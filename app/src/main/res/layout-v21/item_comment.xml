@@ -24,7 +24,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:layout_marginStart="8dp"
-            tools:src="@drawable/material"/>
+            tools:src="@tools:sample/avatars"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,7 +39,7 @@
                 android:textStyle="bold"
                 android:textSize="14sp"
                 android:textColor="@color/colorPrimary"
-                tools:text="Author Name"/>
+                tools:text="@tools:sample/full_names"/>
 
             <TextView
                 android:id="@+id/item_comment_text"
@@ -48,7 +48,7 @@
                 android:textColor="@color/colorOnSurface"
                 android:textSize="14sp"
                 android:gravity="start"
-                tools:text="Comment text"/>
+                    tools:text="@tools:sample/lorem/random"/>
 
             <TextView
                 android:id="@+id/item_comment_time"
@@ -57,7 +57,7 @@
                 android:textSize="12sp"
                 android:gravity="end"
                 android:textColor="@color/colorDatetime"
-                tools:text="00:00, 00.00.0000"/>
+                tools:text="@sample/comments.json/data/timestamp"/>
         </LinearLayout>
     </LinearLayout>
 </layout>

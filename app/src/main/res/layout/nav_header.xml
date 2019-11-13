@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="192dp" xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_height="192dp"
         android:padding="16dp"
         android:orientation="vertical"
         android:gravity="bottom"
@@ -18,7 +20,8 @@
             app:srcCompat="@drawable/ic_person_black_100dp"
             app:civ_border_width="2dp"
             app:civ_circle_background_color="@color/colorBackground"
-            app:civ_border_color="@color/colorOnSecondary"/>
+            app:civ_border_color="@color/colorOnSecondary"
+            tools:src="@tools:sample/avatars"/>
 
     <TextView
             android:id="@+id/nav_header_login"
@@ -29,6 +32,7 @@
             android:textStyle="bold"
             android:textSize="16sp"
             android:textColor="@color/colorOnSecondary"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            tools:text="@tools:sample/full_names"/>
 
 </LinearLayout>

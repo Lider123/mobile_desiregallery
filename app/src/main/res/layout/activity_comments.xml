@@ -48,7 +48,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/comments_app_bar"
-            app:layout_constraintBottom_toTopOf="@id/comments_actions" />
+            app:layout_constraintBottom_toTopOf="@id/comments_actions"
+            tools:listitem="@layout/item_comment"
+            tools:itemCount="5"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/comments_actions"

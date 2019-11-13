@@ -1,0 +1,19 @@
+{
+  "data": [
+    {
+      "author": "login1",
+      "rating": 4.0,
+      "timestamp": "10.10.2019 10:00"
+    },
+    {
+      "author": "lider",
+      "rating": 4.5,
+      "timestamp": "16.01.2019 18:00"
+    },
+    {
+      "author": "lider",
+      "rating": 0.0,
+      "timestamp": "16.01.2019 19:03"
+    }
+  ]
+}
