@@ -30,19 +30,17 @@ class ProfilePresenter(
     private lateinit var view: IProfileContract.View
     private var editFragment: EditProfileFragment? = null
 
-    private val compositeDisposable = CompositeDisposable()
+    private val mDisposable = CompositeDisposable()
 
     override fun attach(view: IProfileContract.View) {
         this.view = view
-        compositeDisposable.add(
+        mDisposable.add(
             accProvider.mObservable.subscribe { updateAll() }
         )
         updateAll()
     }
 
-    override fun detach() {
-        compositeDisposable.dispose()
-    }
+    override fun detach() { mDisposable.dispose() }
 
     override fun onEditClick(fragmentManager: FragmentManager) {
         val account = accProvider.currAccount

@@ -41,7 +41,6 @@ class PostViewHolder(
             Picasso.with(bind.itemAuthorImage.context)
                 .load(R.drawable.material)
                 .resize(100, 100)
-                .error(R.drawable.image_error)
                 .into(bind.itemAuthorImage)
         else
             Picasso.with(bind.itemAuthorImage.context)
