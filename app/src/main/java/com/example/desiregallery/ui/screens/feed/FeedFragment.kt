@@ -13,8 +13,11 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
+import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.data.network.RequestState
-import com.example.desiregallery.ui.dialogs.PostCreationDialog
+import com.example.desiregallery.ui.screens.post.PostAdapter
+import com.example.desiregallery.ui.screens.postcreation.IPostCreationListener
+import com.example.desiregallery.ui.screens.postcreation.PostCreationDialog
 import com.example.desiregallery.ui.widgets.SnackbarWrapper
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.fragment_feed.*
@@ -61,17 +64,25 @@ class FeedFragment : Fragment() {
             val imageUri = CropImage.getActivityResult(data).uri
             val istream = activity!!.contentResolver.openInputStream(imageUri)
             val selectedImage = BitmapFactory.decodeStream(istream)
-            PostCreationDialog(activity!!, selectedImage) { post ->
-                model.addPost(post)
-                snackbar.show(getString(R.string.post_publish_success))
-            }.show()
+            PostCreationDialog(
+                activity!!,
+                selectedImage,
+                object : IPostCreationListener {
+
+                    override fun onPostCreationSubmit(post: Post) {
+                        model.addPost(post)
+                        snackbar.show(getString(R.string.post_publish_success))
+                    }
+
+                    override fun onPostCreationCancel() {}
+                }).show()
         }
     }
 
     private fun initModel() {
         model = ViewModelProviders.of(this, vmFactory).get(PostsViewModel::class.java)
         model.postsLiveData.observe(this, Observer { posts ->
-            val adapter = PostsAdapter()
+            val adapter = PostAdapter()
             adapter.submitList(posts)
             post_list.adapter = adapter
         })

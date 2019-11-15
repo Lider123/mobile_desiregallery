@@ -12,39 +12,19 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import com.example.desiregallery.*
-import com.example.desiregallery.auth.*
-import com.example.desiregallery.utils.logError
-import com.example.desiregallery.utils.logInfo
-import com.example.desiregallery.data.models.User
-import com.example.desiregallery.data.network.BaseNetworkService
-import com.example.desiregallery.data.prefs.IDGSharedPreferencesHelper
+import com.example.desiregallery.MainApplication
+import com.example.desiregallery.R
+import com.example.desiregallery.auth.AccountProvider
+import com.example.desiregallery.ui.screens.auth.LoginActivity
 import com.example.desiregallery.ui.screens.profile.ProfileFragment
 import com.example.desiregallery.ui.screens.feed.FeedFragment
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
-import com.vk.sdk.api.*
-import com.vk.sdk.api.model.VKApiUser
-import com.vk.sdk.api.model.VKList
 import io.reactivex.disposables.CompositeDisposable
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
     @Inject
-    lateinit var baseService: BaseNetworkService
-    @Inject
-    lateinit var auth: FirebaseAuth
-    @Inject
     lateinit var accProvider: AccountProvider
-    @Inject
-    lateinit var googleClient: GoogleSignInClient
-    @Inject
-    lateinit var prefs: IDGSharedPreferencesHelper
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navigationView: NavigationView
@@ -85,7 +65,7 @@ class MainActivity : AppCompatActivity() {
             }
         )
 
-        setCurrentUser()
+        accProvider.setCurrentUser()
     }
 
     override fun onStop() {
@@ -149,88 +129,8 @@ class MainActivity : AppCompatActivity() {
         toolbar.title = resources.getString(id)
     }
 
-    private fun setCurrentUser() {
-        when (prefs.getAuthMethod()) {
-            AuthMethod.EMAIL -> setCurrentEmailUser()
-            AuthMethod.VK -> setCurrentVKUser()
-            AuthMethod.GOOGLE -> setCurrentGoogleUser()
-        }
-    }
-
-    private fun setCurrentEmailUser() {
-        auth.currentUser?.let {
-            baseService.getUser(it.displayName!!).enqueue(object: Callback<User> {
-
-                override fun onFailure(call: Call<User>, t: Throwable) {
-                    logError(TAG, "Failed to get data for user ${it.displayName}: ${t.message}")
-                }
-
-                override fun onResponse(call: Call<User>, response: Response<User>) {
-                    val user = response.body()
-                    user?: run {
-                        logError(TAG, "Unable to get data for user ${it.displayName}: response received an empty body")
-                        return
-                    }
-
-                    logInfo(TAG, "Got data for user ${user.login}")
-                    accProvider.currAccount = EmailAccount(user, auth)
-                }
-            })
-        }
-    }
-
-    private fun setCurrentVKUser() {
-        VKApi.users().get(VKParameters.from(VKApiConst.FIELDS, "photo_max,sex,bdate"))
-            .executeWithListener(object: VKRequest.VKRequestListener() {
-
-                override fun onComplete(response: VKResponse?) {
-                    super.onComplete(response)
-                    response?: run {
-                        logError(
-                            TAG,
-                            "Failed to get response for user info"
-                        )
-                        return
-                    }
-
-                    val user: VKApiUser = (response.parsedModel as VKList<*>)[0] as VKApiUser
-                    accProvider.currAccount = VKAccount(user)
-                    accProvider.currAccount?.let { account ->
-                        logInfo(TAG, "Got data for user ${account.displayName}")
-                        saveUserInfo(User("", "").apply {
-                            photo = account.photoUrl
-                            login = account.displayName
-                        })
-                    }
-                }
-
-            override fun onError(error: VKError?) {
-                super.onError(error)
-                logError(TAG, "There was an error with code ${error?.errorCode} while getting user info: ${error?.errorMessage}")
-            }
-        })
-    }
-
-    private fun setCurrentGoogleUser() {
-        val account = GoogleSignIn.getLastSignedInAccount(this)
-        account?: run {
-            logError(TAG, "Failed to get google account")
-            return
-        }
-
-        accProvider.currAccount = GoogleAccount(account, googleClient)
-        accProvider.currAccount?.let { it ->
-            logInfo(TAG, "Got data for user ${it.displayName}")
-            saveUserInfo(User("", "").apply {
-                photo = it.photoUrl
-                login = it.displayName
-            })
-        }
-    }
-
     private fun handleLogout() {
-        prefs.clearAuthMethod()
-        accProvider.currAccount?.logOut()
+        accProvider.logOut()
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         finish()
@@ -239,22 +139,5 @@ class MainActivity : AppCompatActivity() {
     private fun setDefaultFragment() {
         replaceFragment(FeedFragment(), R.string.app_name)
         navigationView.setCheckedItem(R.id.nav_feed)
-    }
-
-    private fun saveUserInfo(user: User) {
-        baseService.updateUser(user.login, user).enqueue(object: Callback<User> {
-
-            override fun onResponse(call: Call<User>, response: Response<User>) {
-                logInfo(TAG, "Data of user ${user.login} have successfully been saved to firestore")
-            }
-
-            override fun onFailure(call: Call<User>, t: Throwable) {
-                logError(TAG, "Unable to save user data to firestore: ${t.message}")
-            }
-        })
-    }
-
-    companion object {
-        private val TAG = MainActivity::class.java.simpleName
     }
 }

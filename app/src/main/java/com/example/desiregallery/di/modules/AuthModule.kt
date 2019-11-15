@@ -2,6 +2,9 @@ package com.example.desiregallery.di.modules
 
 import android.content.Context
 import com.example.desiregallery.auth.AccountProvider
+import com.example.desiregallery.data.network.BaseNetworkService
+import com.example.desiregallery.data.network.NetworkUtils
+import com.example.desiregallery.data.prefs.IDGSharedPreferencesHelper
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -18,8 +21,12 @@ class AuthModule(private val context: Context) {
 
     @Singleton
     @Provides
-    fun provideAccountProvider(): AccountProvider {
-        return AccountProvider()
+    fun provideAccountProvider(prefs: IDGSharedPreferencesHelper,
+                               auth: FirebaseAuth,
+                               baseService: BaseNetworkService,
+                               networkUtils: NetworkUtils,
+                               googleClient: GoogleSignInClient): AccountProvider {
+        return AccountProvider(context, prefs, auth, baseService, networkUtils, googleClient)
     }
 
     @Singleton

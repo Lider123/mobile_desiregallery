@@ -1,4 +1,4 @@
-package com.example.desiregallery.ui.screens.profile
+package com.example.desiregallery.ui.screens.post
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

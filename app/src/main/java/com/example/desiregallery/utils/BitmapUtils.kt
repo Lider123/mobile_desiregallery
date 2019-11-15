@@ -12,6 +12,10 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.util.*
+import android.content.ContentResolver
+import android.provider.MediaStore
+
+
 
 private const val DOWNLOAD_FOLDER_DEFAULT = "DesireDownloads/"
 
@@ -73,6 +77,10 @@ fun getLocalBitmapUri(bmp: Bitmap, context: Context): Uri? {
         e.printStackTrace()
     }
     return bmpUri
+}
+
+fun getBitmapFromUri(uri: Uri, resolver: ContentResolver): Bitmap {
+    return MediaStore.Images.Media.getBitmap(resolver, uri)
 }
 
 interface DownloadCallback {

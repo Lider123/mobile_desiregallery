@@ -60,12 +60,18 @@ class EditProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Picasso.with(requireContext())
-            .load(user.photo)
-            .resize(200, 200)
-            .error(R.drawable.image_error)
-            .placeholder(R.drawable.material)
-            .into(edit_photo)
+        if (user.photo.isEmpty())
+            Picasso.with(requireContext())
+                .load(R.drawable.material)
+                .resize(200, 200)
+                .into(edit_photo)
+        else
+            Picasso.with(requireContext())
+                .load(user.photo)
+                .resize(200, 200)
+                .error(R.drawable.image_error)
+                .placeholder(R.drawable.material)
+                .into(edit_photo)
         edit_birthday.setText(user.birthday)
 
         initListeners()
