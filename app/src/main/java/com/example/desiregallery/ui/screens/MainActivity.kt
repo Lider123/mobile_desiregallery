@@ -28,6 +28,7 @@ import com.squareup.picasso.Picasso
 import com.vk.sdk.api.*
 import com.vk.sdk.api.model.VKApiUser
 import com.vk.sdk.api.model.VKList
+import io.reactivex.disposables.CompositeDisposable
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -51,6 +52,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var headerImageView: ImageView
     private lateinit var toolbar: Toolbar
 
+    private val mDisposable = CompositeDisposable()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -59,17 +62,35 @@ class MainActivity : AppCompatActivity() {
         setToolbar()
         setNavigationMenu()
         setDefaultFragment()
+    }
 
-        accProvider.mObservable.subscribe { account ->
-            headerTextView.text = account.displayName
-            if (account.photoUrl.isNotEmpty()) {
-                Picasso.with(this)
-                    .load(account.photoUrl)
-                    .into(headerImageView)
+    override fun onStart() {
+        super.onStart()
+        mDisposable.add(
+            accProvider.mObservable.subscribe {
+                val account = it.value
+                headerTextView.text = account?.displayName ?: getString(R.string.login)
+                if (account == null || account.photoUrl.isEmpty())
+                    Picasso.with(this)
+                        .load(R.drawable.material)
+                        .resize(200, 200)
+                        .into(headerImageView)
+                else
+                    Picasso.with(this)
+                        .load(account.photoUrl)
+                        .resize(200, 200)
+                        .placeholder(R.drawable.material)
+                        .error(R.drawable.image_error)
+                        .into(headerImageView)
             }
-        }
+        )
 
         setCurrentUser()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mDisposable.dispose()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

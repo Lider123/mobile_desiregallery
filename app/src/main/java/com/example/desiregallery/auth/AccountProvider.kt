@@ -8,8 +8,10 @@ import io.reactivex.subjects.PublishSubject
 class AccountProvider {
     var currAccount: IAccount? = null
         set(value) {
-            mObservable.onNext(value)
+            mObservable.onNext(Wrapper(value))
             field = value
         }
-    val mObservable: PublishSubject<IAccount> = PublishSubject.create()
+    val mObservable = PublishSubject.create<Wrapper<IAccount>>()
+
+    data class Wrapper<T>(val value: T?)
 }

@@ -12,7 +12,6 @@ import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import retrofit2.Call
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -46,7 +45,6 @@ interface QueryNetworkService {
             val retrofit = Retrofit.Builder()
                 .baseUrl(QUERY_URL)
                 .addConverterFactory(createQueryGson())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
             return retrofit.create(QueryNetworkService::class.java)
         }
