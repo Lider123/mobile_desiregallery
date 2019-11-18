@@ -7,7 +7,6 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
-import com.example.desiregallery.ui.dialogs.AboutDialog
 import com.example.desiregallery.ui.widgets.SnackbarWrapper
 import com.example.desiregallery.utils.logInfo
 import com.google.firebase.auth.FirebaseAuth

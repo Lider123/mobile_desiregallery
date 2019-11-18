@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.data.models.Post
+import com.example.desiregallery.ui.screens.post.SmallPostAdapter
 import com.example.desiregallery.ui.widgets.SnackbarWrapper
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_profile.*

@@ -1,4 +1,4 @@
-package com.example.desiregallery.ui.screens
+package com.example.desiregallery.ui.screens.auth
 
 import android.app.DatePickerDialog
 import androidx.appcompat.app.AppCompatActivity

@@ -1,4 +1,4 @@
-package com.example.desiregallery.ui.screens.feed
+package com.example.desiregallery.ui.screens.post
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,7 +8,7 @@ import com.example.desiregallery.R
 import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.databinding.ItemPostBinding
 
-class PostsAdapter : PagedListAdapter<Post, PostViewHolder>(Post.CALLBACK) {
+class PostAdapter : PagedListAdapter<Post, PostViewHolder>(Post.CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val inflater = LayoutInflater.from(parent.context)

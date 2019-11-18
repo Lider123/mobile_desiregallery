@@ -1,4 +1,4 @@
-package com.example.desiregallery.ui.dialogs
+package com.example.desiregallery.ui.screens
 
 import android.app.AlertDialog
 import android.content.Context

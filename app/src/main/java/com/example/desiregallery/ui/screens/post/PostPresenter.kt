@@ -1,11 +1,11 @@
-package com.example.desiregallery.ui.presenters
+package com.example.desiregallery.ui.screens.post
 
 import android.content.Context
 import android.content.Intent
 import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.data.network.BaseNetworkService
 import com.example.desiregallery.ui.screens.comments.CommentsActivity
-import com.example.desiregallery.ui.dialogs.ImageRateDialog
+import com.example.desiregallery.ui.screens.ImageRateDialog
 import com.example.desiregallery.ui.screens.FullScreenImageActivity
 import com.example.desiregallery.utils.logError
 import com.example.desiregallery.utils.logInfo
@@ -35,7 +35,9 @@ class PostPresenter(
     }
 
     override fun onRatingClick(context: Context) {
-        val rateDialog = ImageRateDialog(context) { rate -> updateRating(rate) }
+        val rateDialog = ImageRateDialog(context) { rate ->
+            updateRating(rate)
+        }
         rateDialog.show()
     }
 

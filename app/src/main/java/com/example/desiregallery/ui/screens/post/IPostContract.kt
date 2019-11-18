@@ -1,4 +1,4 @@
-package com.example.desiregallery.ui.presenters
+package com.example.desiregallery.ui.screens.post
 
 import android.content.Context
 import com.example.desiregallery.data.models.Post

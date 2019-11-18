@@ -1,6 +1,7 @@
 package com.example.desiregallery.di.modules
 
 import android.app.Application
+import android.content.ContentResolver
 import android.content.res.Resources
 import com.example.desiregallery.MainApplication
 import dagger.Module
@@ -23,5 +24,11 @@ class AppModule(private val app: MainApplication) {
     @Provides
     fun provideResources(): Resources {
         return app.resources
+    }
+
+    @Singleton
+    @Provides
+    fun provideContentResolver(): ContentResolver {
+        return app.contentResolver
     }
 }

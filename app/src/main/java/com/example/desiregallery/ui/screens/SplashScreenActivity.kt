@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.data.prefs.IDGSharedPreferencesHelper
+import com.example.desiregallery.ui.screens.auth.LoginActivity
 import javax.inject.Inject
 
 class SplashScreenActivity : AppCompatActivity() {

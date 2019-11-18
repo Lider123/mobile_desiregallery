@@ -1,12 +1,10 @@
-package com.example.desiregallery.ui.screens.profile
+package com.example.desiregallery.ui.screens.post
 
 import androidx.recyclerview.widget.RecyclerView
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.databinding.ItemPostSmallBinding
-import com.example.desiregallery.ui.presenters.IPostContract
-import com.example.desiregallery.ui.presenters.PostPresenter
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
 

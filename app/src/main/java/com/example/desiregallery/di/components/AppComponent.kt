@@ -1,18 +1,16 @@
 package com.example.desiregallery.di.components
 
 import com.example.desiregallery.di.modules.*
-import com.example.desiregallery.ui.dialogs.PostCreationDialog
-import com.example.desiregallery.ui.screens.LoginActivity
-import com.example.desiregallery.ui.screens.MainActivity
-import com.example.desiregallery.ui.screens.SettingsFragment
-import com.example.desiregallery.ui.screens.SignUpActivity
+import com.example.desiregallery.ui.screens.postcreation.PostCreationDialog
+import com.example.desiregallery.ui.screens.postcreation.PostCreationFragment
+import com.example.desiregallery.ui.screens.*
+import com.example.desiregallery.ui.screens.auth.LoginFragment
+import com.example.desiregallery.ui.screens.auth.SignUpActivity
 import com.example.desiregallery.ui.screens.feed.FeedFragment
-import com.example.desiregallery.ui.screens.feed.PostViewHolder
+import com.example.desiregallery.ui.screens.post.PostViewHolder
 import com.example.desiregallery.ui.screens.profile.EditProfileFragment
 import com.example.desiregallery.ui.screens.profile.ProfileFragment
-import com.example.desiregallery.ui.screens.profile.SmallPostViewHolder
-import com.example.desiregallery.ui.screens.FullScreenImageActivity
-import com.example.desiregallery.ui.screens.SplashScreenActivity
+import com.example.desiregallery.ui.screens.post.SmallPostViewHolder
 import dagger.Component
 import javax.inject.Singleton
 
@@ -27,19 +25,23 @@ import javax.inject.Singleton
     AnalyticsModule::class,
     DataModule::class,
     ProfileModule::class,
-    PostsModule::class
+    PostsModule::class,
+    PostCreationModule::class,
+    FeedModule::class
 ])
 interface AppComponent {
     fun inject(activity: SignUpActivity)
     fun inject(activity: MainActivity)
-    fun inject(activity: LoginActivity)
     fun inject(activity: FullScreenImageActivity)
     fun inject(activity: SplashScreenActivity)
+    fun inject(activity: ShareReceiverActivity)
 
     fun inject(fragment: EditProfileFragment)
     fun inject(fragment: FeedFragment)
     fun inject(fragment: ProfileFragment)
     fun inject(fragment: SettingsFragment)
+    fun inject(fragment: LoginFragment)
+    fun inject(fragment: PostCreationFragment)
 
     fun inject(viewHolder: SmallPostViewHolder)
     fun inject(viewHolder: PostViewHolder)

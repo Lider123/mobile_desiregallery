@@ -12,6 +12,7 @@ import javax.inject.Singleton
  */
 @Module
 class AnalyticsModule(private val context: Context) {
+
     @Singleton
     @Provides
     fun provideAnalytics(): IDGAnalyticsTracker {
