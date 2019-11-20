@@ -30,9 +30,8 @@ class PostCreationDialog(
             post_creation_publish.setOnClickListener { presenter.handlePublish() }
             post_creation_cancel.setOnClickListener { presenter.handleCancel() }
             dialog_post_image.setImageBitmap(image)
-        }.also {
-            setContentView(it)
         }
+        setContentView(content)
         presenter.attach(this, image, callback)
         setTitle(R.string.post_creation)
         setCancelable(false)
@@ -61,7 +60,5 @@ class PostCreationDialog(
         content.error_message.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    override fun finish() {
-        dismiss()
-    }
+    override fun finish() = dismiss()
 }

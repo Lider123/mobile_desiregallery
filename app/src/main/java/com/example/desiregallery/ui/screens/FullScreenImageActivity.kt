@@ -120,8 +120,7 @@ class FullScreenImageActivity : AppCompatActivity() {
                 analytics.trackSharePhoto(postId)
                 snackbar.show(getString(R.string.share_success))
             }
-            else
-                snackbar.show(getString(R.string.share_canceled))
+            else snackbar.show(getString(R.string.share_canceled))
         }
     }
 

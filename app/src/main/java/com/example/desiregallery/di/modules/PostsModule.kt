@@ -1,6 +1,6 @@
 package com.example.desiregallery.di.modules
 
-import com.example.desiregallery.data.network.BaseNetworkService
+import com.example.desiregallery.data.network.NetworkManager
 import com.example.desiregallery.ui.screens.post.PostPresenter
 import dagger.Module
 import dagger.Provides
@@ -12,7 +12,7 @@ import dagger.Provides
 class PostsModule {
 
     @Provides
-    fun providePresenter(networkService: BaseNetworkService): PostPresenter {
-        return PostPresenter(networkService)
+    fun providePresenter(networkManager: NetworkManager): PostPresenter {
+        return PostPresenter(networkManager)
     }
 }

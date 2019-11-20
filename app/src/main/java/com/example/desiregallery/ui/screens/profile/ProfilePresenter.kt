@@ -5,17 +5,18 @@ import androidx.fragment.app.FragmentManager
 import com.example.desiregallery.R
 import com.example.desiregallery.auth.AccountProvider
 import com.example.desiregallery.auth.EmailAccount
-import com.example.desiregallery.data.models.Post
+import com.example.desiregallery.data.Result
 import com.example.desiregallery.data.models.User
-import com.example.desiregallery.data.network.QueryNetworkService
+import com.example.desiregallery.data.network.NetworkManager
 import com.example.desiregallery.data.network.query.requests.PostsQueryRequest
 import com.example.desiregallery.utils.getAgeFromBirthday
 import com.example.desiregallery.utils.logError
+import com.example.desiregallery.utils.logInfo
 import com.google.firebase.auth.FirebaseAuth
 import io.reactivex.disposables.CompositeDisposable
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlin.math.min
 
 /**
@@ -24,7 +25,7 @@ import kotlin.math.min
 class ProfilePresenter(
     private val resources: Resources,
     private val accProvider: AccountProvider,
-    private val queryService: QueryNetworkService,
+    private val networkManager: NetworkManager,
     private val auth: FirebaseAuth
 ) : IProfileContract.Presenter {
     private lateinit var view: IProfileContract.View
@@ -72,33 +73,33 @@ class ProfilePresenter(
 
     private fun updateStats(login: String) {
         val query = PostsQueryRequest(0, 0, login)
-        queryService.getPosts(query).enqueue(object: Callback<List<Post>> {
+        GlobalScope.launch(Dispatchers.Main) {
+            when (val result = networkManager.getPosts(query)) {
+                is Result.Success -> {
+                    logInfo(TAG, "Successfully got posts")
+                    var posts = result.data
 
-            override fun onResponse(call: Call<List<Post>>, response: Response<List<Post>>) {
-                var posts = response.body()
-                posts?: return
+                    if (posts.isEmpty()) {
+                        view.updatePostsCount(0)
+                        view.updateAverageRating(0f)
+                        view.updateNoPostsHintVisibility(true)
+                        return@launch
+                    }
 
-                if (posts.isEmpty()) {
-                    view.updatePostsCount(0)
-                    view.updateAverageRating(0f)
-                    view.updateNoPostsHintVisibility(true)
-                    return
+                    view.updatePostsCount(posts.size)
+                    view.updateAverageRating(posts.map { p -> p.rating }.average().toFloat())
+                    view.updateNoPostsHintVisibility(false)
+
+                    posts = posts.sortedByDescending { p -> p.rating }.subList(0, min(3, posts.size))
+                    view.updatePosts(posts)
                 }
-
-                view.updatePostsCount(posts.size)
-                view.updateAverageRating(posts.map { p -> p.rating }.average().toFloat())
-                view.updateNoPostsHintVisibility(false)
-
-                posts = posts.sortedByDescending { p -> p.rating }.subList(0, min(3, posts.size))
-                view.updatePosts(posts)
+                is Result.Error -> {
+                    logError(TAG, result.exception.message ?: "Failed to get posts")
+                    view.updatePostsCount(null)
+                    view.updateAverageRating(null)
+                }
             }
-
-            override fun onFailure(call: Call<List<Post>>, t: Throwable) {
-                logError(TAG, "Unable to load posts for user $login: ${t.message}")
-                view.updatePostsCount(null)
-                view.updateAverageRating(null)
-            }
-        })
+        }
     }
 
     private fun updateAll() {

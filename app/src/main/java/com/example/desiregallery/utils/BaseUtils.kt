@@ -57,11 +57,10 @@ fun getAgeFromBirthday(birthday: String): Int? {
     return age
 }
 
-fun getAppVersion(context: Context): String {
-    return try {
-        val pInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-        pInfo.versionName
-    } catch (e: PackageManager.NameNotFoundException) {
-        ""
-    }
+fun getAppVersion(context: Context): String = try {
+    val pInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+    pInfo.versionName
+} catch (e: PackageManager.NameNotFoundException) {
+    ""
 }
+

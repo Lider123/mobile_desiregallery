@@ -8,28 +8,33 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.auth.AccountProvider
+import com.example.desiregallery.data.Result
 import com.example.desiregallery.data.models.Post
-import com.example.desiregallery.data.network.NetworkUtils
-import com.example.desiregallery.data.network.UploadCallback
+import com.example.desiregallery.data.network.NetworkManager
 import com.example.desiregallery.ui.screens.postcreation.IPostCreationListener
 import com.example.desiregallery.ui.screens.postcreation.PostCreationFragment
 import com.example.desiregallery.ui.screens.auth.ILoginListener
 import com.example.desiregallery.ui.screens.auth.LoginFragment
 import com.example.desiregallery.utils.getBitmapFromUri
+import com.example.desiregallery.utils.logError
+import com.example.desiregallery.utils.logInfo
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 /**
  * @author babaetskv on 15.11.19
  */
-class ShareReceiverActivity : AppCompatActivity(), ILoginListener,
-    IPostCreationListener {
+class ShareReceiverActivity : AppCompatActivity(), ILoginListener, IPostCreationListener {
     @Inject
-    lateinit var networkUtils: NetworkUtils
+    lateinit var networkManager: NetworkManager
     @Inject
     lateinit var accProvider: AccountProvider
 
     private val mDisposable = CompositeDisposable()
+    private val parentJob = Job()
+    private val coroutineScope = CoroutineScope(Dispatchers.Main + parentJob)
+
     private lateinit var loginFragment: LoginFragment
     private lateinit var postCreationFragment: PostCreationFragment
 
@@ -63,18 +68,28 @@ class ShareReceiverActivity : AppCompatActivity(), ILoginListener,
         mDisposable.dispose()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        parentJob.cancel()
+    }
+
     override fun onSuccessfulLogin() {
         supportFragmentManager.beginTransaction().remove(loginFragment).commit()
         accProvider.setCurrentUser()
     }
 
     override fun onPostCreationSubmit(post: Post) {
-        uploadPost(post)
+        coroutineScope.launch(Dispatchers.Main) {
+            when (val result = networkManager.createPost(post)) {
+                is Result.Success -> logInfo(TAG, "Post ${post.id} has been successfully created")
+                is Result.Error -> logError(TAG, result.exception.message ?: "Failed to create post")
+            }
+            goToMainActivity()
+            finish()
+        }
     }
 
-    override fun onPostCreationCancel() {
-        finish()
-    }
+    override fun onPostCreationCancel() = finish()
 
     private fun handlePublishImage(intent: Intent) {
         (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let { uri ->
@@ -84,24 +99,13 @@ class ShareReceiverActivity : AppCompatActivity(), ILoginListener,
         }
     }
 
-    private fun uploadPost(post: Post) {
-        networkUtils.uploadPost(post, object: UploadCallback {
-
-            override fun onComplete() {
-                goToMainActivity()
-                finish()
-            }
-
-            override fun onFailure() {
-                goToMainActivity()
-                finish()
-            }
-        })
-    }
-
     private fun goToMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    companion object {
+        private val TAG = ShareReceiverActivity::class.java.simpleName
     }
 }

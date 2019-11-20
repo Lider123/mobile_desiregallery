@@ -54,14 +54,16 @@ class PostViewHolder(
     }
 
     private fun initListeners() {
-        bind.itemPostImage.setOnClickListener {
-            presenter.onImageClick(bind.itemPostImage.context)
-        }
-        bind.itemPostRating.setOnClickListener {
-            presenter.onRatingClick(bind.itemPostRating.context)
-        }
-        bind.itemPostComment.setOnClickListener {
-            presenter.onCommentsClick(bind.itemPostComment.context)
+        with (bind) {
+            itemPostImage.setOnClickListener {
+                presenter.onImageClick(bind.itemPostImage.context)
+            }
+            itemPostRating.setOnClickListener {
+                presenter.onRatingClick(bind.itemPostRating.context)
+            }
+            itemPostComment.setOnClickListener {
+                presenter.onCommentsClick(bind.itemPostComment.context)
+            }
         }
     }
 

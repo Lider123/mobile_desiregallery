@@ -2,20 +2,19 @@ package com.example.desiregallery.ui.screens.post
 
 import android.content.Context
 import android.content.Intent
+import com.example.desiregallery.data.Result
 import com.example.desiregallery.data.models.Post
-import com.example.desiregallery.data.network.BaseNetworkService
+import com.example.desiregallery.data.network.NetworkManager
 import com.example.desiregallery.ui.screens.comments.CommentsActivity
 import com.example.desiregallery.ui.screens.ImageRateDialog
 import com.example.desiregallery.ui.screens.FullScreenImageActivity
 import com.example.desiregallery.utils.logError
 import com.example.desiregallery.utils.logInfo
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
-class PostPresenter(
-    private val networkService: BaseNetworkService
-): IPostContract.Presenter {
+class PostPresenter(private val networkManager: NetworkManager): IPostContract.Presenter {
     private lateinit var view: IPostContract.View
     private lateinit var post: Post
 
@@ -35,15 +34,11 @@ class PostPresenter(
     }
 
     override fun onRatingClick(context: Context) {
-        val rateDialog = ImageRateDialog(context) { rate ->
-            updateRating(rate)
-        }
+        val rateDialog = ImageRateDialog(context) { updateRating(it) }
         rateDialog.show()
     }
 
-    override fun onCommentsClick(context: Context) {
-        goToCommentActivity(context)
-    }
+    override fun onCommentsClick(context: Context) = goToCommentActivity(context)
 
     private fun goToCommentActivity(context: Context) {
         val intent = Intent(context, CommentsActivity::class.java).apply {
@@ -63,17 +58,12 @@ class PostPresenter(
     private fun updateRating(rate: Float) {
         post.updateRating(rate)
         view.updateRating(post.rating)
-        networkService.updatePost(post.id, post).enqueue(object: Callback<Post> {
-
-            override fun onFailure(call: Call<Post>, t: Throwable) {
-                logError(TAG, "Unable to update post ${post.id}: ${t.message}")
+        GlobalScope.launch(Dispatchers.Main) {
+            when (val result = networkManager.updatePost(post)) {
+                is Result.Success -> logInfo(TAG, "Post ${post.id} has been successfully updated")
+                is Result.Error -> logError(TAG, result.exception.message ?: "Failed to update post ${post.id}")
             }
-
-            override fun onResponse(call: Call<Post>, response: Response<Post>) {
-                if (response.isSuccessful)
-                    logInfo(TAG, "Post ${post.id} has been successfully updated")
-            }
-        })
+        }
     }
 
     companion object {

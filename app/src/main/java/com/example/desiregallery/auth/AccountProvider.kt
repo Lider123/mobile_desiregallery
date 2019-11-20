@@ -1,9 +1,9 @@
 package com.example.desiregallery.auth
 
 import android.content.Context
+import com.example.desiregallery.data.Result
 import com.example.desiregallery.data.models.User
-import com.example.desiregallery.data.network.BaseNetworkService
-import com.example.desiregallery.data.network.NetworkUtils
+import com.example.desiregallery.data.network.NetworkManager
 import com.example.desiregallery.data.prefs.IDGSharedPreferencesHelper
 import com.example.desiregallery.utils.logError
 import com.example.desiregallery.utils.logInfo
@@ -14,9 +14,9 @@ import com.vk.sdk.api.*
 import com.vk.sdk.api.model.VKApiUser
 import com.vk.sdk.api.model.VKList
 import io.reactivex.subjects.PublishSubject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * @author babaetskv on 20.09.19
@@ -25,8 +25,7 @@ class AccountProvider(
     private val context: Context,
     private val prefs: IDGSharedPreferencesHelper,
     private val auth: FirebaseAuth,
-    private val baseService: BaseNetworkService,
-    private val networkUtils: NetworkUtils,
+    private val networkManager: NetworkManager,
     private val googleClient: GoogleSignInClient
 ) {
     var currAccount: IAccount? = null
@@ -34,9 +33,7 @@ class AccountProvider(
             mObservable.onNext(Wrapper(value))
             field = value
         }
-    val mObservable: PublishSubject<Wrapper<IAccount>> = PublishSubject.create<Wrapper<IAccount>>()
-
-    data class Wrapper<T>(val value: T?)
+    val mObservable = PublishSubject.create<Wrapper<IAccount>>()
 
     fun isAuthorized(): Boolean {
         val authMethod = prefs.getAuthMethod()
@@ -59,23 +56,16 @@ class AccountProvider(
 
     private fun setCurrentEmailUser() {
         auth.currentUser?.let {
-            baseService.getUser(it.displayName!!).enqueue(object: Callback<User> {
-
-                override fun onFailure(call: Call<User>, t: Throwable) {
-                    logError(TAG, "Failed to get data for user ${it.displayName}: ${t.message}")
-                }
-
-                override fun onResponse(call: Call<User>, response: Response<User>) {
-                    val user = response.body()
-                    user?: run {
-                        logError(TAG, "Unable to get data for user ${it.displayName}: response received an empty body")
-                        return
+            GlobalScope.launch(Dispatchers.Main) {
+                val login = it.displayName!!
+                when (val result = networkManager.getUser(login)) {
+                    is Result.Success -> {
+                        logInfo(TAG, "Successfully got user $login")
+                        currAccount = EmailAccount(result.data, auth)
                     }
-
-                    logInfo(TAG, "Got data for user ${user.login}")
-                    currAccount = EmailAccount(user, auth)
+                    is Result.Error -> logError(TAG, result.exception.message ?: "Failed to get user $login")
                 }
-            })
+            }
         }
     }
 
@@ -86,10 +76,7 @@ class AccountProvider(
                 override fun onComplete(response: VKResponse?) {
                     super.onComplete(response)
                     response?: run {
-                        logError(
-                            TAG,
-                            "Failed to get response for user info"
-                        )
+                        logError(TAG, "Failed to get response for user info")
                         return
                     }
 
@@ -97,10 +84,16 @@ class AccountProvider(
                     currAccount = VKAccount(user)
                     currAccount?.let { account ->
                         logInfo(TAG, "Got data for user ${account.displayName}")
-                        networkUtils.saveUserInfo(User("", "").apply {
-                            photo = account.photoUrl
-                            login = account.displayName
-                        })
+                        GlobalScope.launch(Dispatchers.Main) {
+                            val vkUser = User("", "").apply {
+                                photo = account.photoUrl
+                                login = account.displayName
+                            }
+                            when (val result = networkManager.updateUser(vkUser)) {
+                                is Result.Success -> logInfo(TAG, "User ${vkUser.login} has been successfully updated")
+                                is Result.Error -> logError(TAG, result.exception.message ?: "Failed to update user ${vkUser.login}")
+                            }
+                        }
                     }
                 }
 
@@ -121,14 +114,22 @@ class AccountProvider(
         currAccount = GoogleAccount(account, googleClient)
         currAccount?.let { it ->
             logInfo(TAG, "Got data for user ${it.displayName}")
-            networkUtils.saveUserInfo(User("", "").apply {
-                photo = it.photoUrl
-                login = it.displayName
-            })
+            GlobalScope.launch(Dispatchers.Main) {
+                val googleUser = User("", "").apply {
+                    photo = it.photoUrl
+                    login = it.displayName
+                }
+                when (val result = networkManager.updateUser(googleUser)) {
+                    is Result.Success -> logInfo(TAG, "User ${googleUser.login} has been successfully updated")
+                    is Result.Error -> logError(TAG, result.exception.message ?: "Failed to update user ${googleUser.login}")
+                }
+            }
         }
     }
 
     companion object {
         private val TAG = AccountProvider::class.java.simpleName
     }
+
+    data class Wrapper<T>(val value: T?)
 }

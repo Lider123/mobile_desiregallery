@@ -1,38 +1,39 @@
 package com.example.desiregallery.data.storage
 
 import android.graphics.Bitmap
+import com.example.desiregallery.data.Result
 import com.example.desiregallery.utils.bitmapToBytes
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.IOException
 
 /**
  * @author babaetskv on 31.10.19
  */
 class StorageHelper(private val storage: FirebaseStorage) : IStorageHelper {
 
-    override fun uploadProfileImage(bitmap: Bitmap, userLogin: String,
-                                    callback: IStorageHelper.Callback) {
-        uploadImage(bitmap, "$STORAGE_PROFILE_IMAGES_DIR/$userLogin.jpg", callback)
+    override suspend fun uploadProfileImage(bitmap: Bitmap, userLogin: String): Result<String> {
+        return uploadImage(bitmap, "$STORAGE_PROFILE_IMAGES_DIR/$userLogin.jpg")
     }
 
-    override fun uploadPostImage(bitmap: Bitmap, postId: String,
-                                 callback: IStorageHelper.Callback) {
-        uploadImage(bitmap, "$STORAGE_POST_IMAGES_DIR/$postId.jpg", callback)
+    override suspend fun uploadPostImage(bitmap: Bitmap, postId: String): Result<String> {
+        return uploadImage(bitmap, "$STORAGE_POST_IMAGES_DIR/$postId.jpg")
     }
 
-    private fun uploadImage(bitmap: Bitmap, path: String, callback: IStorageHelper.Callback) {
+    private suspend fun uploadImage(bitmap: Bitmap, path: String): Result<String> = withContext(Dispatchers.IO) {
         val imageRef = storage.getReferenceFromUrl(STORAGE_URL).child(path)
-        val uploadTask = imageRef.putBytes(bitmapToBytes(bitmap))
-        uploadTask.addOnFailureListener { error ->
-            callback.onFailure(error)
-        }.addOnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                callback.onFailure(Exception("Upload task wasn't successful"))
-                return@addOnCompleteListener
+        try {
+            val uploadTask = imageRef.putBytes(bitmapToBytes(bitmap))
+            Tasks.await(uploadTask)
+            if (!uploadTask.isSuccessful) {
+                return@withContext Result.Error(IOException("Upload task wasn't successful"))
             }
-
-            imageRef.downloadUrl.addOnCompleteListener { uriTask ->
-                callback.onComplete(uriTask.result.toString())
-            }
+            return@withContext Result.Success(uploadTask.result.toString())
+        }
+        catch (e: Exception) {
+            return@withContext Result.Error(e)
         }
     }
 

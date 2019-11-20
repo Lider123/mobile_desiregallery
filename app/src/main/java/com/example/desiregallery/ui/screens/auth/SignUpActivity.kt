@@ -11,31 +11,35 @@ import android.view.View
 import com.example.desiregallery.R
 import com.example.desiregallery.analytics.IDGAnalyticsTracker
 import com.example.desiregallery.auth.AuthMethod
+import com.example.desiregallery.data.Result
 import com.example.desiregallery.utils.logError
 import com.example.desiregallery.utils.logInfo
 import com.example.desiregallery.data.models.User
-import com.example.desiregallery.data.network.BaseNetworkService
+import com.example.desiregallery.data.network.NetworkManager
 import com.example.desiregallery.ui.widgets.SnackbarWrapper
 import com.google.firebase.auth.FirebaseAuth
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import com.google.firebase.auth.UserProfileChangeRequest
 import kotlinx.android.synthetic.main.toolbar_sign_up.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
 
 class SignUpActivity : AppCompatActivity() {
     @Inject
-    lateinit var baseService: BaseNetworkService
-    @Inject
     lateinit var auth: FirebaseAuth
     @Inject
     lateinit var analytics: IDGAnalyticsTracker
+    @Inject
+    lateinit var networkManager: NetworkManager
 
     private lateinit var snackbar: SnackbarWrapper
 
+    private val parentJob = Job()
+    private val coroutineScope = CoroutineScope(Dispatchers.Main + parentJob)
     private lateinit var inputTextWatcher: TextWatcher
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,6 +61,11 @@ class SignUpActivity : AppCompatActivity() {
         }
         sign_up_button.isEnabled = false
         initListeners()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        parentJob.cancel()
     }
 
     private fun initListeners() {
@@ -117,16 +126,12 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun saveUserInfo(user: User) {
-        baseService.createUser(user.login, user).enqueue(object: Callback<User> {
-
-            override fun onResponse(call: Call<User>, response: Response<User>) {
-                logInfo(TAG, "Data of user ${user.login} have successfully been saved to firestore")
+        coroutineScope.launch(Dispatchers.Main) {
+            when (val result = networkManager.createUser(user)) {
+                is Result.Success -> logInfo(TAG, "User ${user.login} has been successfully created")
+                is Result.Error -> logError(TAG, result.exception.message ?: "Failed to create user ${user.login}")
             }
-
-            override fun onFailure(call: Call<User>, t: Throwable) {
-                logError(TAG, "Unable to save user data to firestore: ${t.message}")
-            }
-        })
+        }
 
         val firebaseUser = auth.currentUser
         val profileUpdates = UserProfileChangeRequest.Builder().setDisplayName(user.login).build()

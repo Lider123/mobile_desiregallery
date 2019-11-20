@@ -19,7 +19,7 @@ import retrofit2.http.POST
 /**
  * @author babaetskv on 19.09.19
  */
-interface QueryNetworkService {
+interface QueryService {
 
     @POST(" ")
     fun getComments(@Body query: CommentsQueryRequest): Call<List<Comment>>
@@ -41,12 +41,12 @@ interface QueryNetworkService {
             return GsonConverterFactory.create(gsonBuilder.create())
         }
 
-        fun createService(): QueryNetworkService {
+        fun createService(): QueryService {
             val retrofit = Retrofit.Builder()
                 .baseUrl(QUERY_URL)
                 .addConverterFactory(createQueryGson())
                 .build()
-            return retrofit.create(QueryNetworkService::class.java)
+            return retrofit.create(QueryService::class.java)
         }
     }
 }

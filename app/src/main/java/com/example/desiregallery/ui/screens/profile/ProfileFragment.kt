@@ -54,9 +54,7 @@ class ProfileFragment : Fragment(), IProfileContract.View {
             .into(profile_photo)
     }
 
-    override fun updatePhoto(bitmap: Bitmap) {
-        profile_photo.setImageBitmap(bitmap)
-    }
+    override fun updatePhoto(bitmap: Bitmap) = profile_photo.setImageBitmap(bitmap)
 
     override fun updateAge(age: Int?) {
         profile_age.text = getString(R.string.profile_age_template, age)
@@ -81,9 +79,7 @@ class ProfileFragment : Fragment(), IProfileContract.View {
         profile_posts.adapter = adapter
     }
 
-    override fun showMessage(message: String) {
-        snackbar.show(message)
-    }
+    override fun showMessage(message: String) = snackbar.show(message)
 
     override fun updateNoPostsHintVisibility(visible: Boolean) {
         hint_no_posts.visibility = if (visible) View.VISIBLE else View.GONE
