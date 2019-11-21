@@ -73,15 +73,14 @@ class MainActivity : AppCompatActivity() {
         mDisposable.dispose()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                drawerLayout.openDrawer(GravityCompat.START)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        android.R.id.home -> {
+            drawerLayout.openDrawer(GravityCompat.START)
+            true
         }
+        else -> super.onOptionsItemSelected(item)
     }
+
 
     private fun setToolbar() {
         toolbar = findViewById(R.id.main_toolbar)

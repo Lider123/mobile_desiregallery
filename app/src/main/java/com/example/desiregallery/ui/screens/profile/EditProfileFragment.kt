@@ -15,7 +15,8 @@ import androidx.fragment.app.Fragment
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.data.models.User
-import com.example.desiregallery.data.network.BaseNetworkService
+import com.example.desiregallery.data.Result
+import com.example.desiregallery.data.network.NetworkManager
 import com.example.desiregallery.data.storage.IStorageHelper
 import com.example.desiregallery.utils.logError
 import com.example.desiregallery.utils.logInfo
@@ -24,8 +25,10 @@ import com.google.firebase.auth.UserProfileChangeRequest
 import com.squareup.picasso.Picasso
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.fragment_edit_profile.*
-import retrofit2.Call
-import retrofit2.Response
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -35,11 +38,14 @@ import javax.inject.Inject
  */
 class EditProfileFragment : Fragment() {
     @Inject
-    lateinit var networkService: BaseNetworkService
-    @Inject
     lateinit var auth: FirebaseAuth
     @Inject
     lateinit var storageHelper: IStorageHelper
+    @Inject
+    lateinit var networkManager: NetworkManager
+
+    private val parentJob = Job()
+    private val coroutineScope = CoroutineScope(Dispatchers.Main + parentJob)
 
     private lateinit var user: User
     private var callback: Callback? = null
@@ -89,6 +95,11 @@ class EditProfileFragment : Fragment() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        parentJob.cancel()
+    }
+
     private fun initListeners() {
         edit_birthday.addTextChangedListener(object: TextWatcher {
 
@@ -135,19 +146,19 @@ class EditProfileFragment : Fragment() {
         val resolver = requireActivity().contentResolver
         val istream = resolver.openInputStream(uri)
         val selectedImage = BitmapFactory.decodeStream(istream)
-        storageHelper.uploadProfileImage(selectedImage, user.login, object: IStorageHelper.Callback {
-
-            override fun onComplete(resultUrl: String) {
-                logInfo(TAG, "Image for user ${user.login} successfully uploaded")
-                user.photo = resultUrl
-                onComplete()
+        coroutineScope.launch(Dispatchers.Main) {
+            when (val result = storageHelper.uploadProfileImage(selectedImage, user.login)) {
+                is Result.Success -> {
+                    logInfo(TAG, "Image for user ${user.login} successfully uploaded")
+                    user.photo = result.data
+                    onComplete()
+                }
+                is Result.Error -> {
+                    logError(TAG, "Failed to upload image for user ${user.login}: ${result.exception}")
+                    onFailure()
+                }
             }
-
-            override fun onFailure(error: Exception) {
-                logError(TAG, "Failed to upload image for user ${user.login}: ${error.message}")
-                onFailure()
-            }
-        })
+        }
     }
 
     private fun editBirthday() {
@@ -171,17 +182,12 @@ class EditProfileFragment : Fragment() {
     }
 
     private fun updateProfile() {
-        networkService.updateUser(user.login, user).enqueue(object: retrofit2.Callback<User> {
-
-            override fun onFailure(call: Call<User>, t: Throwable) {
-                logError(TAG, "Unable to update user ${user.login}: ${t.message}")
+        coroutineScope.launch(Dispatchers.Main) {
+            when (val result = networkManager.updateUser(user)) {
+                is Result.Success -> logInfo(TAG, "User ${user.login} successfully updated")
+                is Result.Error -> logError(TAG, result.exception.message ?: "Failed to update user ${user.login}")
             }
-
-            override fun onResponse(call: Call<User>, response: Response<User>) {
-                if (response.isSuccessful)
-                    logInfo(TAG, "VKUser ${user.login} has been successfully updated")
-            }
-        })
+        }
 
         val firebaseUser = auth.currentUser
         val profileUpdates = UserProfileChangeRequest.Builder()

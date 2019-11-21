@@ -10,7 +10,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 
-interface BaseNetworkService {
+interface ApiService {
 
     @GET("users/{login}")
     fun getUser(@Path("login") login: String): Call<User>
@@ -33,7 +33,7 @@ interface BaseNetworkService {
     companion object {
         private const val BASE_URL = "https://firestore.googleapis.com/v1/projects/desiregallery-8072a/databases/(default)/documents/"
 
-        private fun createBaseGson(): GsonConverterFactory {
+        private fun createApiGson(): GsonConverterFactory {
             val gsonBuilder = GsonBuilder()
                 .registerTypeAdapter(Post::class.java, PostDeserializer())
                 .registerTypeAdapter(Post::class.java, PostSerializer())
@@ -44,12 +44,12 @@ interface BaseNetworkService {
             return GsonConverterFactory.create(gsonBuilder.create())
         }
 
-        fun createService(): BaseNetworkService {
+        fun createService(): ApiService {
             val retrofit = Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .addConverterFactory(createBaseGson())
+                .addConverterFactory(createApiGson())
                 .build()
-            return retrofit.create(BaseNetworkService::class.java)
+            return retrofit.create(ApiService::class.java)
         }
     }
 }

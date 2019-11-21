@@ -4,13 +4,14 @@ import android.app.Application
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.example.desiregallery.utils.logError
-import com.example.desiregallery.utils.logInfo
+import com.example.desiregallery.data.Result
 import com.example.desiregallery.data.models.Comment
 import com.example.desiregallery.data.network.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.desiregallery.utils.logError
+import com.example.desiregallery.utils.logInfo
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * @author babaetskv on 20.09.19
@@ -18,11 +19,9 @@ import retrofit2.Response
 class CommentsViewModel(
     application: Application,
     postId: String,
-    private val baseService: BaseNetworkService,
-    queryService: QueryNetworkService,
-    networkUtils: NetworkUtils
+    private val networkManager: NetworkManager
 ) : AndroidViewModel(application) {
-    private val commentDataSourceFactory = CommentsDataSource.Factory(postId, queryService, networkUtils)
+    private val commentDataSourceFactory = CommentsDataSource.Factory(postId, networkManager)
 
     var commentsLiveData: LiveData<PagedList<Comment>>
 
@@ -48,25 +47,19 @@ class CommentsViewModel(
     }
 
     fun addComment(comment: Comment) {
-        baseService.createComment(comment.id, comment).enqueue(object: Callback<Comment> {
-
-            override fun onFailure(call: Call<Comment>, t: Throwable) {
-                logError(TAG, "Unable to upload comment: ${t.message}")
-                setState(RequestState.ERROR_UPLOAD)
-            }
-
-            override fun onResponse(call: Call<Comment>, response: Response<Comment>) {
-                if (!response.isSuccessful) {
-                    logError(TAG, "Failed to upload comment. Response has been received with code ${response.code()}")
-                    setState(RequestState.ERROR_UPLOAD)
-                    return
+        GlobalScope.launch(Dispatchers.Main) {
+            when (val result = networkManager.createComment(comment)) {
+                is Result.Success -> {
+                    logInfo(TAG, "Comment ${comment.id} has been successfully created")
+                    setState(RequestState.SUCCESS)
+                    commentDataSourceFactory.commentsDataSourceLiveData.value?.invalidate()
                 }
-                logInfo(TAG, "Comment successfully uploaded")
-
-                setState(RequestState.SUCCESS)
-                commentDataSourceFactory.commentsDataSourceLiveData.value?.invalidate()
+                is Result.Error -> {
+                    logError(TAG, result.exception.message ?: "Failed to create comment")
+                    setState(RequestState.ERROR_UPLOAD)
+                }
             }
-        })
+        }
     }
 
     companion object {
@@ -77,13 +70,11 @@ class CommentsViewModel(
     class Factory(
         private val postId: String,
         private val application: Application,
-        private val baseService: BaseNetworkService,
-        private val queryService: QueryNetworkService,
-        private val networkUtils: NetworkUtils
+        private val networkManager: NetworkManager
     ) : ViewModelProvider.Factory {
 
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return CommentsViewModel(application, postId, baseService, queryService, networkUtils) as T
+            return CommentsViewModel(application, postId, networkManager) as T
         }
     }
 }

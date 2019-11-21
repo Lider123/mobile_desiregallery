@@ -1,16 +1,12 @@
 package com.example.desiregallery.data.storage
 
 import android.graphics.Bitmap
+import com.example.desiregallery.data.Result
 
 /**
  * @author babaetskv on 31.10.19
  */
 interface IStorageHelper {
-    fun uploadProfileImage(bitmap: Bitmap, userLogin: String, callback: Callback)
-    fun uploadPostImage(bitmap: Bitmap, postId: String, callback: Callback)
-
-    interface Callback {
-        fun onComplete(resultUrl: String)
-        fun onFailure(error: Exception)
-    }
+    suspend fun uploadProfileImage(bitmap: Bitmap, userLogin: String): Result<String>
+    suspend fun uploadPostImage(bitmap: Bitmap, postId: String): Result<String>
 }

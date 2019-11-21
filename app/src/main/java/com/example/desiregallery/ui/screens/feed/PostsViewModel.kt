@@ -4,25 +4,22 @@ import android.app.Application
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
+import com.example.desiregallery.data.Result
 import com.example.desiregallery.data.models.Post
-import com.example.desiregallery.data.network.BaseNetworkService
-import com.example.desiregallery.data.network.NetworkUtils
-import com.example.desiregallery.data.network.QueryNetworkService
+import com.example.desiregallery.data.network.NetworkManager
 import com.example.desiregallery.data.network.RequestState
 import com.example.desiregallery.utils.logError
 import com.example.desiregallery.utils.logInfo
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 class PostsViewModel(
     application: Application,
-    private val baseService: BaseNetworkService,
-    queryService: QueryNetworkService,
-    networkUtils: NetworkUtils
+    private val networkManager: NetworkManager
 ) : AndroidViewModel(application) {
-    private val postDataSourceFactory = PostsDataSource.Factory(queryService, networkUtils)
+    private val postDataSourceFactory = PostsDataSource.Factory(networkManager)
 
     var postsLiveData: LiveData<PagedList<Post>>
 
@@ -48,29 +45,22 @@ class PostsViewModel(
 
     fun addPost(post: Post) {
         post.timestamp = Date().time
-        baseService.createPost(post.id, post).enqueue(object: Callback<Post> {
-            override fun onFailure(call: Call<Post>, t: Throwable) {
-                logError(TAG, "Unable to create post ${post.id}: ${t.message}")
-                setState(RequestState.ERROR_UPLOAD)
-            }
-
-            override fun onResponse(call: Call<Post>, response: Response<Post>) {
-                if (!response.isSuccessful) {
-                    logError(TAG, "Unable to create post ${post.id}: received response with code ${response.code()}")
-                    setState(RequestState.ERROR_UPLOAD)
-                    return
+        GlobalScope.launch(Dispatchers.Main) {
+            when (val result = networkManager.createPost(post)) {
+                is Result.Success -> {
+                    logInfo(TAG, "Post ${post.id} has been successfully created")
+                    setState(RequestState.SUCCESS)
+                    postDataSourceFactory.postDataSourceLiveData.value?.invalidate()
                 }
-                logInfo(TAG, "Post ${post.id} successfully created")
-
-                setState(RequestState.SUCCESS)
-                postDataSourceFactory.postDataSourceLiveData.value?.invalidate()
+                is Result.Error -> {
+                    logError(TAG, result.exception.message ?: "Failed to create post")
+                    setState(RequestState.ERROR_UPLOAD)
+                }
             }
-        })
+        }
     }
 
-    fun updatePosts() {
-        postDataSourceFactory.postDataSourceLiveData.value?.invalidate()
-    }
+    fun updatePosts() = postDataSourceFactory.postDataSourceLiveData.value?.invalidate()
 
     companion object {
         private val TAG = PostsViewModel::class.java.simpleName
@@ -79,13 +69,11 @@ class PostsViewModel(
 
     class Factory(
         private val application: Application,
-        private val baseService: BaseNetworkService,
-        private val queryService: QueryNetworkService,
-        private val networkUtils: NetworkUtils
+        private val networkManager: NetworkManager
     ) : ViewModelProvider.Factory {
 
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return PostsViewModel(application, baseService, queryService, networkUtils) as T
+            return PostsViewModel(application, networkManager) as T
         }
 
     }

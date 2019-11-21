@@ -33,28 +33,27 @@ class SettingsFragment : PreferenceFragmentCompat() {
         snackbar = SnackbarWrapper(view)
     }
 
-    override fun onPreferenceTreeClick(preference: Preference): Boolean {
-        return when (preference.key) {
-            getString(R.string.pref_reset_password_key) -> {
-                val user = auth.currentUser
-                user?.let {
-                    AlertDialog.Builder(requireActivity())
-                        .setTitle(R.string.reset_password)
-                        .setMessage(R.string.reset_password_message)
-                        .setPositiveButton(R.string.yes) { _, _ -> sendResetPasswordEmail(it) }
-                        .setNegativeButton(R.string.no) { dialog, _ -> dialog.cancel() }
-                        .create()
-                        .show()
-                }?: snackbar.show(getString(R.string.reset_password_unable))
-                true
-            }
-            getString(R.string.pref_about_key) -> {
-                AboutDialog(requireContext()).show()
-                true
-            }
-            else -> super.onPreferenceTreeClick(preference)
+    override fun onPreferenceTreeClick(preference: Preference) = when (preference.key) {
+        getString(R.string.pref_reset_password_key) -> {
+            val user = auth.currentUser
+            user?.let {
+                AlertDialog.Builder(requireActivity())
+                    .setTitle(R.string.reset_password)
+                    .setMessage(R.string.reset_password_message)
+                    .setPositiveButton(R.string.yes) { _, _ -> sendResetPasswordEmail(it) }
+                    .setNegativeButton(R.string.no) { dialog, _ -> dialog.cancel() }
+                    .create()
+                    .show()
+            }?: snackbar.show(getString(R.string.reset_password_unable))
+            true
         }
+        getString(R.string.pref_about_key) -> {
+            AboutDialog(requireContext()).show()
+            true
+        }
+        else -> super.onPreferenceTreeClick(preference)
     }
+
 
     private fun sendResetPasswordEmail(user: FirebaseUser) {
         auth.sendPasswordResetEmail(user.email!!).addOnCompleteListener { task ->

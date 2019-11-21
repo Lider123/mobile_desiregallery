@@ -1,8 +1,8 @@
 package com.example.desiregallery.di.modules
 
-import com.example.desiregallery.data.network.BaseNetworkService
-import com.example.desiregallery.data.network.NetworkUtils
-import com.example.desiregallery.data.network.QueryNetworkService
+import com.example.desiregallery.data.network.ApiService
+import com.example.desiregallery.data.network.NetworkManager
+import com.example.desiregallery.data.network.QueryService
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -15,19 +15,10 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun provideBaseNetworkService(): BaseNetworkService {
-        return BaseNetworkService.createService()
-    }
-
-    @Singleton
-    @Provides
-    fun provideQueryNetworkService(): QueryNetworkService {
-        return QueryNetworkService.createService()
-    }
-
-    @Singleton
-    @Provides
-    fun provideNetworkUtils(): NetworkUtils {
-        return NetworkUtils(provideBaseNetworkService())
+    fun provideNetworkManager(): NetworkManager {
+        return NetworkManager(
+            ApiService.createService(),
+            QueryService.createService()
+        )
     }
 }
