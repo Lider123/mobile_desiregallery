@@ -13,9 +13,8 @@ import dagger.Provides
 class FeedModule {
 
     @Provides
-    fun provideViewModelFactory(app: Application,
-                                networkManager: NetworkManager
-    ): PostsViewModel.Factory {
-        return PostsViewModel.Factory(app, networkManager)
-    }
+    fun provideViewModelFactory(
+        app: Application,
+        networkManager: NetworkManager
+    ): PostsViewModel.Factory = PostsViewModel.Factory(app, networkManager)
 }

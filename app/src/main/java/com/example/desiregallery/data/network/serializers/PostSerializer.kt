@@ -10,8 +10,11 @@ import java.lang.reflect.Type
 
 class PostSerializer : JsonSerializer<Post> {
 
-    override fun serialize(src: Post, typeOfSrc: Type?,
-                           context: JsonSerializationContext?): JsonElement {
+    override fun serialize(
+        src: Post,
+        typeOfSrc: Type?,
+        context: JsonSerializationContext?
+    ): JsonElement {
         val result = JsonObject()
         val fields = JsonObject()
         val imageUrl = JsonObject()

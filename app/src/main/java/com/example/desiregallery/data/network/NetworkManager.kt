@@ -1,4 +1,3 @@
-@file:JvmName("DGNetwork")
 package com.example.desiregallery.data.network
 
 import com.example.desiregallery.data.Result
@@ -12,7 +11,10 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
-class NetworkManager(private val networkService: ApiService, private val queryService: QueryService): BaseNetworkManager() {
+class NetworkManager(
+    private val networkService: ApiService,
+    private val queryService: QueryService
+) : BaseNetworkManager() {
 
     fun getUsersByNames(userNames: Collection<String>): List<User> {
         Timber.i("Preparing to load ${userNames.size} users")

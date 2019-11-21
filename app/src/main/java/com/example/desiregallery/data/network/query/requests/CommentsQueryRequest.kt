@@ -12,15 +12,9 @@ class CommentsQueryRequest(postId: String, limit: Int, offset: Long) : BaseQuery
 
     init {
         this.from("comments")
-        this.where(FieldFilter("postId", ComparisonOperator.EQUAL,
-            Value(postId)
-        ))
-        this.orderBy("timestamp",
-            OrderDirection.ASCENDING
-        )
-        if (limit > 0)
-            this.limit(limit)
-        if (offset > 0)
-            this.offset(offset)
+        this.where(FieldFilter("postId", ComparisonOperator.EQUAL, Value(postId)))
+        this.orderBy("timestamp", OrderDirection.ASCENDING)
+        if (limit > 0) this.limit(limit)
+        if (offset > 0) this.offset(offset)
     }
 }

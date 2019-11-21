@@ -27,7 +27,6 @@ class CommentsActivity : AppCompatActivity() {
     lateinit var vmFactory: CommentsViewModel.Factory
 
     private lateinit var snackbar: SnackbarWrapper
-
     private lateinit var post: Post
     private lateinit var model: CommentsViewModel
 
@@ -35,11 +34,12 @@ class CommentsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_comments)
 
-        comments_button_back.setOnClickListener { onBackPressed() }
+        comments_button_back.setOnClickListener {
+            onBackPressed()
+        }
         comments_button_send.setOnClickListener {
             val commentText = comments_input.text.trim()
-            if (commentText.isNotEmpty())
-                handleSend(commentText.toString())
+            if (commentText.isNotEmpty()) handleSend(commentText.toString())
         }
         comments_list.layoutManager = LinearLayoutManager(this)
         snackbar = SnackbarWrapper(comments_container)
@@ -58,9 +58,9 @@ class CommentsActivity : AppCompatActivity() {
     private fun initModel() {
         model = ViewModelProviders.of(this, vmFactory).get(CommentsViewModel::class.java)
         model.getState().observe(this, Observer { status ->
-            status?: return@Observer
+            status ?: return@Observer
 
-            when(status) {
+            when (status) {
                 RequestState.DOWNLOADING -> {
                     showLoading()
                     updateHintVisibility(false)
@@ -106,8 +106,8 @@ class CommentsActivity : AppCompatActivity() {
             this.text = text
             postId = post.id
             author = User("", "").apply {
-                login = accProvider.currAccount?.displayName?: ""
-                photo = accProvider.currAccount?.photoUrl?: ""
+                login = accProvider.currAccount?.displayName ?: ""
+                photo = accProvider.currAccount?.photoUrl ?: ""
             }
         }
         model.addComment(newComment)

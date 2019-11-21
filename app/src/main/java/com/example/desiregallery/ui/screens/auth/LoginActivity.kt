@@ -19,7 +19,5 @@ class LoginActivity : FragmentActivity(), ILoginListener {
         finish()
     }
 
-    override fun onSuccessfulLogin() {
-        goToMainActivity()
-    }
+    override fun onSuccessfulLogin() = goToMainActivity()
 }

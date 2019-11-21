@@ -18,13 +18,9 @@ class DataModule(private val context: Context) {
 
     @Singleton
     @Provides
-    fun providePrefsHelper(): IDGSharedPreferencesHelper {
-        return PreferencesHelper(context)
-    }
+    fun providePrefsHelper(): IDGSharedPreferencesHelper = PreferencesHelper(context)
 
     @Singleton
     @Provides
-    fun provideStorageHelper(): IStorageHelper {
-        return StorageHelper(FirebaseStorage.getInstance())
-    }
+    fun provideStorageHelper(): IStorageHelper = StorageHelper(FirebaseStorage.getInstance())
 }

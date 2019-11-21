@@ -22,8 +22,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         MainApplication.appComponent.inject(this)
         addPreferencesFromResource(R.xml.prefs)
-        auth.currentUser?: run {
-            val resetPreference = findPreference<Preference>(getString(R.string.pref_reset_password_key))
+        auth.currentUser ?: run {
+            val resetPreference =
+                findPreference<Preference>(getString(R.string.pref_reset_password_key))
             preferenceScreen.removePreference(resetPreference)
         }
     }
@@ -44,7 +45,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     .setNegativeButton(R.string.no) { dialog, _ -> dialog.cancel() }
                     .create()
                     .show()
-            }?: snackbar.show(getString(R.string.reset_password_unable))
+            } ?: snackbar.show(getString(R.string.reset_password_unable))
             true
         }
         getString(R.string.pref_about_key) -> {
@@ -60,8 +61,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             if (task.isSuccessful) {
                 Timber.i("Message for password reset was sent to email ${user.email}")
                 snackbar.show(getString(R.string.reset_password_sent))
-            }
-            else {
+            } else {
                 Timber.e(task.exception, "An error occurred while sending password reset email")
                 snackbar.show(getString(R.string.reset_password_error))
             }

@@ -1,28 +1,25 @@
 package com.example.desiregallery.data.models
 
+import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 class User(val email: String, val password: String) : Serializable {
+    @SerializedName("login")
     var login = ""
+    @SerializedName("birthday")
     var birthday = ""
+    @SerializedName("photo")
     var photo = ""
 
     override fun equals(other: Any?): Boolean {
-        if (this === other)
-            return true
-        if (other !is User)
-            return false
+        if (this === other) return true
+        if (other !is User) return false
 
-        if (login != other.login)
-            return false
-        if (password != other.password)
-            return false
-        if (email != other.email)
-            return false
-        if (birthday != other.birthday)
-            return false
-        if (photo != other.photo)
-            return false
+        if (login != other.login) return false
+        if (password != other.password) return false
+        if (email != other.email) return false
+        if (birthday != other.birthday) return false
+        if (photo != other.photo) return false
 
         return true
     }
@@ -36,12 +33,6 @@ class User(val email: String, val password: String) : Serializable {
         return result
     }
 
-    override fun toString(): String {
-        return "User(" +
-                "email='$email', " +
-                "password='$password', " +
-                "login='$login', " +
-                "birthday='$birthday', " +
-                "photo='$photo')"
-    }
+    override fun toString() =
+        "User(email='$email', password='$password', login='$login', birthday='$birthday', photo='$photo')"
 }

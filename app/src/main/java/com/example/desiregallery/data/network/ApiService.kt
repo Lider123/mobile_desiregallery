@@ -31,7 +31,8 @@ interface ApiService {
     fun updatePost(@Path("id") id: String, @Body post: Post): Call<Post>
 
     companion object {
-        private const val BASE_URL = "https://firestore.googleapis.com/v1/projects/desiregallery-8072a/databases/(default)/documents/"
+        private const val BASE_URL =
+            "https://firestore.googleapis.com/v1/projects/desiregallery-8072a/databases/(default)/documents/"
 
         private fun createApiGson(): GsonConverterFactory {
             val gsonBuilder = GsonBuilder()

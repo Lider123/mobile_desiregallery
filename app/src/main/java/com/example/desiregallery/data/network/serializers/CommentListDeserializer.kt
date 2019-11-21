@@ -12,8 +12,11 @@ import java.lang.reflect.Type
  */
 class CommentListDeserializer : JsonDeserializer<List<Comment>> {
 
-    override fun deserialize(json: JsonElement, typeOfT: Type,
-                             context: JsonDeserializationContext): List<Comment> {
+    override fun deserialize(
+        json: JsonElement,
+        typeOfT: Type,
+        context: JsonDeserializationContext
+    ): List<Comment> {
         val documents = json.asJsonArray.filter { it.asJsonObject.has(DOCUMENT) }
         return documents.map {
             context.deserialize(it.asJsonObject.get(DOCUMENT), Comment::class.java) as Comment

@@ -40,30 +40,34 @@ class ProfilePresenter(
         updateAll()
     }
 
-    override fun detach() { mDisposable.dispose() }
+    override fun detach() = mDisposable.dispose()
 
     override fun onEditClick(fragmentManager: FragmentManager) {
         val account = accProvider.currAccount
         if (account is EmailAccount) {
-            editFragment = EditProfileFragment.createInstance(account.user, object: EditProfileFragment.Callback {
+            editFragment = EditProfileFragment.createInstance(
+                account.user,
+                object : EditProfileFragment.Callback {
 
-                override fun onDoneClick(user: User) {
-                    fragmentManager.beginTransaction()
-                        .remove(editFragment!!)
-                        .commit()
-                    accProvider.currAccount = EmailAccount(user, auth)
-                    updateAll()
-                    view.showMessage(resources.getString(R.string.changes_saved))
-                }
+                    override fun onDoneClick(user: User) {
+                        fragmentManager.beginTransaction()
+                            .remove(editFragment!!)
+                            .commit()
+                        accProvider.currAccount = EmailAccount(user, auth)
+                        updateAll()
+                        view.showMessage(resources.getString(R.string.changes_saved))
+                    }
 
-                override fun onCancelClick() {
-                    fragmentManager.beginTransaction()
-                        .remove(editFragment!!)
-                        .commit()
-                }
-            })
-            val modalFragment = ModalFragmentFactory(fragmentManager)
-                .create(editFragment as EditProfileFragment, R.id.profile_container)
+                    override fun onCancelClick() {
+                        fragmentManager.beginTransaction()
+                            .remove(editFragment!!)
+                            .commit()
+                    }
+                })
+            val modalFragment = ModalFragmentFactory(fragmentManager).create(
+                editFragment as EditProfileFragment,
+                R.id.profile_container
+            )
             fragmentManager.beginTransaction()
                 .add(R.id.profile_container, modalFragment)
                 .commit()
@@ -89,7 +93,8 @@ class ProfilePresenter(
                     view.updateAverageRating(posts.map { p -> p.rating }.average().toFloat())
                     view.updateNoPostsHintVisibility(false)
 
-                    posts = posts.sortedByDescending { p -> p.rating }.subList(0, min(3, posts.size))
+                    posts =
+                        posts.sortedByDescending { p -> p.rating }.subList(0, min(3, posts.size))
                     view.updatePosts(posts)
                 }
                 is Result.Error -> {
@@ -108,11 +113,9 @@ class ProfilePresenter(
 
             view.updateAge(getAgeFromBirthday(it.birthday))
             updateStats(it.displayName)
-            if (it.photoUrl.isNotEmpty())
-                view.updatePhoto(it.photoUrl)
+            if (it.photoUrl.isNotEmpty()) view.updatePhoto(it.photoUrl)
 
-            if (it !is EmailAccount)
-                view.updateEditButtonVisibility(false)
+            if (it !is EmailAccount) view.updateEditButtonVisibility(false)
         }
     }
 }

@@ -15,10 +15,6 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun provideNetworkManager(): NetworkManager {
-        return NetworkManager(
-            ApiService.createService(),
-            QueryService.createService()
-        )
-    }
+    fun provideNetworkManager(): NetworkManager =
+        NetworkManager(ApiService.createService(), QueryService.createService())
 }

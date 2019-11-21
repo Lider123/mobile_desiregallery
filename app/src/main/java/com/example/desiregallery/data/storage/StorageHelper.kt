@@ -14,28 +14,24 @@ import java.io.IOException
  */
 class StorageHelper(private val storage: FirebaseStorage) : IStorageHelper {
 
-    override suspend fun uploadProfileImage(bitmap: Bitmap, userLogin: String): Result<String> {
-        return uploadImage(bitmap, "$STORAGE_PROFILE_IMAGES_DIR/$userLogin.jpg")
-    }
+    override suspend fun uploadProfileImage(bitmap: Bitmap, userLogin: String): Result<String> =
+        uploadImage(bitmap, "$STORAGE_PROFILE_IMAGES_DIR/$userLogin.jpg")
 
-    override suspend fun uploadPostImage(bitmap: Bitmap, postId: String): Result<String> {
-        return uploadImage(bitmap, "$STORAGE_POST_IMAGES_DIR/$postId.jpg")
-    }
+    override suspend fun uploadPostImage(bitmap: Bitmap, postId: String): Result<String> =
+        uploadImage(bitmap, "$STORAGE_POST_IMAGES_DIR/$postId.jpg")
 
-    private suspend fun uploadImage(bitmap: Bitmap, path: String): Result<String> = withContext(Dispatchers.IO) {
-        val imageRef = storage.getReferenceFromUrl(STORAGE_URL).child(path)
-        try {
-            val uploadTask = imageRef.putBytes(bitmapToBytes(bitmap))
-            Tasks.await(uploadTask)
-            if (!uploadTask.isSuccessful) {
-                return@withContext Result.Error(IOException("Upload task wasn't successful"))
+    private suspend fun uploadImage(bitmap: Bitmap, path: String): Result<String> =
+        withContext(Dispatchers.IO) {
+            val imageRef = storage.getReferenceFromUrl(STORAGE_URL).child(path)
+            try {
+                val uploadTask = imageRef.putBytes(bitmapToBytes(bitmap))
+                Tasks.await(uploadTask)
+                if (!uploadTask.isSuccessful) return@withContext Result.Error(IOException("Upload task wasn't successful"))
+                return@withContext Result.Success(uploadTask.result.toString())
+            } catch (e: Exception) {
+                return@withContext Result.Error(e)
             }
-            return@withContext Result.Success(uploadTask.result.toString())
         }
-        catch (e: Exception) {
-            return@withContext Result.Error(e)
-        }
-    }
 
     companion object {
         private const val STORAGE_URL = "gs://desiregallery-8072a.appspot.com"

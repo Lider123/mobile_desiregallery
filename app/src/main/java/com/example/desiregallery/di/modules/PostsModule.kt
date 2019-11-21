@@ -12,7 +12,6 @@ import dagger.Provides
 class PostsModule {
 
     @Provides
-    fun providePresenter(networkManager: NetworkManager): PostPresenter {
-        return PostPresenter(networkManager)
-    }
+    fun providePresenter(networkManager: NetworkManager): PostPresenter =
+        PostPresenter(networkManager)
 }

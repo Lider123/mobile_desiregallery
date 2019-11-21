@@ -30,7 +30,6 @@ class FullScreenImageActivity : AppCompatActivity() {
 
     private lateinit var toolbar: Toolbar
     private lateinit var snackbar: SnackbarWrapper
-
     private lateinit var image: Bitmap
     private lateinit var postId: String
 
@@ -50,7 +49,7 @@ class FullScreenImageActivity : AppCompatActivity() {
         Picasso.with(this)
             .load(imageUrl)
             .error(R.drawable.image_error)
-            .into(image_view_full_screen, object: Callback {
+            .into(image_view_full_screen, object : Callback {
 
                 override fun onSuccess() {
                     image = (image_view_full_screen.drawable as BitmapDrawable).bitmap
@@ -75,12 +74,10 @@ class FullScreenImageActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when(item?.itemId) {
+        return when (item?.itemId) {
             R.id.image_download -> {
                 val permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                ActivityCompat.requestPermissions(this, permissions,
-                    WRITE_REQUEST_CODE
-                )
+                ActivityCompat.requestPermissions(this, permissions, WRITE_REQUEST_CODE)
                 true
             }
             R.id.image_share -> {
@@ -98,7 +95,7 @@ class FullScreenImageActivity : AppCompatActivity() {
     ) {
         when (requestCode) {
             WRITE_REQUEST_CODE -> if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                downloadBitmap(image, object: DownloadCallback {
+                downloadBitmap(image, object : DownloadCallback {
 
                     override fun onSuccess() {
                         Timber.i("Image has been downloaded")
@@ -123,8 +120,7 @@ class FullScreenImageActivity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 analytics.trackSharePhoto(postId)
                 snackbar.show(getString(R.string.share_success))
-            }
-            else snackbar.show(getString(R.string.share_canceled))
+            } else snackbar.show(getString(R.string.share_canceled))
         }
     }
 
@@ -135,7 +131,8 @@ class FullScreenImageActivity : AppCompatActivity() {
             shareIntent.action = Intent.ACTION_SEND
             shareIntent.putExtra(Intent.EXTRA_STREAM, it)
             shareIntent.type = "image/*"
-            startActivityForResult(Intent.createChooser(shareIntent, getString(R.string.share_image)),
+            startActivityForResult(
+                Intent.createChooser(shareIntent, getString(R.string.share_image)),
                 SHARING_REQUEST_CODE
             )
         }

@@ -31,19 +31,18 @@ class CommentsViewModel(
             .setPageSize(PAGE_SIZE)
             .setPrefetchDistance(2)
             .build()
-        commentsLiveData = LivePagedListBuilder(commentDataSourceFactory, config)
-            .build()
+        commentsLiveData = LivePagedListBuilder(commentDataSourceFactory, config).build()
     }
 
-    fun getState(): LiveData<RequestState> {
-        return Transformations.switchMap<CommentsDataSource, RequestState>(
+    fun getState(): LiveData<RequestState> =
+        Transformations.switchMap<CommentsDataSource, RequestState>(
             commentDataSourceFactory.commentsDataSourceLiveData,
-            CommentsDataSource::state)
-    }
+            CommentsDataSource::state
+        )
 
-    private fun setState(state: RequestState) {
+
+    private fun setState(state: RequestState) =
         commentDataSourceFactory.commentsDataSourceLiveData.value?.updateState(state)
-    }
 
     fun addComment(comment: Comment) {
         GlobalScope.launch(Dispatchers.Main) {
@@ -71,8 +70,7 @@ class CommentsViewModel(
         private val networkManager: NetworkManager
     ) : ViewModelProvider.Factory {
 
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return CommentsViewModel(application, postId, networkManager) as T
-        }
+        override fun <T : ViewModel?> create(modelClass: Class<T>) =
+            CommentsViewModel(application, postId, networkManager) as T
     }
 }

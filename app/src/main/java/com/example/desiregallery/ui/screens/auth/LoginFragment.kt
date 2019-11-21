@@ -42,11 +42,11 @@ class LoginFragment : Fragment() {
     @Inject
     lateinit var analytics: IDGAnalyticsTracker
     @Inject
-    lateinit var prefs: IDGSharedPreferencesHelper
+    lateinit var prefsHelper: IDGSharedPreferencesHelper
 
     private lateinit var snackbar: SnackbarWrapper
-
     private lateinit var inputTextWatcher: TextWatcher
+
     lateinit var mLoginListener: ILoginListener
 
     override fun onCreateView(
@@ -56,11 +56,13 @@ class LoginFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_login, container, false)
         MainApplication.appComponent.inject(this)
-        inputTextWatcher = object: TextWatcher {
+        inputTextWatcher = object : TextWatcher {
 
-            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {}
+            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {
+            }
 
-            override fun onTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {}
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {
+            }
 
             override fun afterTextChanged(editable: Editable) {
                 checkForEmptyFields()
@@ -78,31 +80,34 @@ class LoginFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if (requireActivity() is ILoginListener)
+        if (requireActivity() is ILoginListener) {
             mLoginListener = requireActivity() as ILoginListener
-        else
-            throw Exception("Parent activity doesn't implement login interface")
+        } else throw Exception("Parent activity doesn't implement login interface")
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (!VKSdk.onActivityResult(requestCode, resultCode, data, object: VKCallback<VKAccessToken> {
+        if (!VKSdk.onActivityResult(
+                requestCode,
+                resultCode,
+                data,
+                object : VKCallback<VKAccessToken> {
 
-                override fun onResult(res: VKAccessToken?) {
-                    Timber.i("Successfully logged in with vk")
-                    prefs.setAuthMethod(AuthMethod.VK)
-                    analytics.trackLogin(AuthMethod.VK)
-                    mLoginListener.onSuccessfulLogin()
-                }
+                    override fun onResult(res: VKAccessToken?) {
+                        Timber.i("Successfully logged in with vk")
+                        prefsHelper.authMethod = AuthMethod.VK
+                        analytics.trackLogin(AuthMethod.VK)
+                        mLoginListener.onSuccessfulLogin()
+                    }
 
-                override fun onError(error: VKError?) {
-                    if (error?.errorCode == VKError.VK_CANCELED)
-                        return
-                    Timber.e("Failed to sign in with vk: ${error?.errorMessage}")
-                    snackbar.show(getString(R.string.sign_in_vk_failure))
-                }
-            })) {
+                    override fun onError(error: VKError?) {
+                        if (error?.errorCode == VKError.VK_CANCELED) return
+                        Timber.e("Failed to sign in with vk: ${error?.errorMessage}")
+                        snackbar.show(getString(R.string.sign_in_vk_failure))
+                    }
+                })
+        ) {
             super.onActivityResult(requestCode, resultCode, data)
-            if (requestCode  == GOOGLE_SIGN_IN_REQUEST_CODE) {
+            if (requestCode == GOOGLE_SIGN_IN_REQUEST_CODE) {
                 val task = GoogleSignIn.getSignedInAccountFromIntent(data)
                 handleGoogleSignInResult(task)
             }
@@ -113,13 +118,11 @@ class LoginFragment : Fragment() {
         try {
             val account = completedTask.getResult(ApiException::class.java)
             Timber.i("Successfully signed in google account ${account?.displayName}")
-            prefs.setAuthMethod(AuthMethod.GOOGLE)
+            prefsHelper.authMethod = AuthMethod.GOOGLE
             analytics.trackLogin(AuthMethod.GOOGLE)
             mLoginListener.onSuccessfulLogin()
-        }
-        catch (e: ApiException) {
-            if (e.statusCode == GoogleSignInStatusCodes.SIGN_IN_CANCELLED)
-                return
+        } catch (e: ApiException) {
+            if (e.statusCode == GoogleSignInStatusCodes.SIGN_IN_CANCELLED) return
             Timber.e(e, "Failed to sign in with google")
             snackbar.show(getString(R.string.sign_in_google_failure))
         }
@@ -137,9 +140,7 @@ class LoginFragment : Fragment() {
             VKSdk.login(requireActivity(), VKScope.FRIENDS, VKScope.OFFLINE)
         }
         button_sign_in_google.setOnClickListener {
-            startActivityForResult(googleClient.signInIntent,
-                GOOGLE_SIGN_IN_REQUEST_CODE
-            )
+            startActivityForResult(googleClient.signInIntent, GOOGLE_SIGN_IN_REQUEST_CODE)
         }
         link_sign_up.setOnClickListener {
             val intent = Intent(requireActivity(), SignUpActivity::class.java)
@@ -149,19 +150,20 @@ class LoginFragment : Fragment() {
 
     private fun logIn(email: String, password: String) {
         showProgress()
-        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(requireActivity()) { task ->
-            hideProgress()
-            if (task.isSuccessful) {
-                val user = auth.currentUser
-                Timber.i("uUer with email ${user?.email} successfully logged in")
-                prefs.setAuthMethod(AuthMethod.EMAIL)
-                analytics.trackLogin(AuthMethod.EMAIL)
-                mLoginListener.onSuccessfulLogin()
-            } else {
-                Timber.e(task.exception, "Failed to login with email")
-                snackbar.show(getString(R.string.login_error, task.exception?.localizedMessage))
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(requireActivity()) { task ->
+                hideProgress()
+                if (task.isSuccessful) {
+                    val user = auth.currentUser
+                    Timber.i("uUer with email ${user?.email} successfully logged in")
+                    prefsHelper.authMethod = AuthMethod.EMAIL
+                    analytics.trackLogin(AuthMethod.EMAIL)
+                    mLoginListener.onSuccessfulLogin()
+                } else {
+                    Timber.e(task.exception, "Failed to login with email")
+                    snackbar.show(getString(R.string.login_error, task.exception?.localizedMessage))
+                }
             }
-        }
     }
 
     private fun checkForEmptyFields() {

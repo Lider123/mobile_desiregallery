@@ -1,6 +1,7 @@
 package com.example.desiregallery.data.models
 
 import androidx.recyclerview.widget.DiffUtil
+import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 import java.util.*
 import kotlin.random.Random
@@ -9,21 +10,23 @@ import kotlin.random.Random
  * @author babaetskv
  * @since 08.08.19
  */
-class Comment: Serializable {
+class Comment : Serializable {
+    @SerializedName("id")
     var id: String = Random.nextLong(1e10.toLong()).toString()
+    @SerializedName("text")
     var text: String = ""
+    @SerializedName("postId")
     var postId: String = ""
+    @SerializedName("author")
     var author = User("", "")
+    @SerializedName("timestamp")
     var timestamp: Long = Date().time
 
-    override fun toString() = "Comment(" +
-            "text='$text', " +
-            "postId='$postId', " +
-            "author='$author', " +
-            "timestamp=$timestamp)"
+    override fun toString() =
+        "Comment(text='$text', postId='$postId', author='$author', timestamp=$timestamp)"
 
     companion object {
-        val CALLBACK: DiffUtil.ItemCallback<Comment> = object: DiffUtil.ItemCallback<Comment>() {
+        val CALLBACK: DiffUtil.ItemCallback<Comment> = object : DiffUtil.ItemCallback<Comment>() {
 
             override fun areItemsTheSame(oldItem: Comment, newItem: Comment): Boolean {
                 return oldItem.id == newItem.id

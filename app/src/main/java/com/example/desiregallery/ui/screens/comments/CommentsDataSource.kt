@@ -23,8 +23,10 @@ class CommentsDataSource(
 ) : PageKeyedDataSource<Long, Comment>() {
     var state: MutableLiveData<RequestState> = MutableLiveData()
 
-    override fun loadInitial(params: LoadInitialParams<Long>,
-                             callback: LoadInitialCallback<Long, Comment>) {
+    override fun loadInitial(
+        params: LoadInitialParams<Long>,
+        callback: LoadInitialCallback<Long, Comment>
+    ) {
         val query = CommentsQueryRequest(
             postId,
             params.requestedLoadSize,
@@ -38,11 +40,11 @@ class CommentsDataSource(
                     if (comments.isEmpty()) {
                         Timber.i("There are no comments to download")
                         updateState(RequestState.NO_DATA)
-                    }
-                    else {
+                    } else {
                         Timber.i("Successfully loaded ${comments.size} comments for page 1")
 
-                        val authors: Set<String> = LinkedHashSet(comments.map { comment -> comment.author.login })
+                        val authors: Set<String> =
+                            LinkedHashSet(comments.map { comment -> comment.author.login })
                         val users = networkManager.getUsersByNames(authors)
                         comments.map { comment ->
                             val authorName = comment.author.login
@@ -76,7 +78,8 @@ class CommentsDataSource(
                     val comments = result.data
                     Timber.i("Successfully loaded ${comments.size} comments for page $key")
 
-                    val authors: Set<String> = LinkedHashSet(comments.map { comment -> comment.author.login })
+                    val authors: Set<String> =
+                        LinkedHashSet(comments.map { comment -> comment.author.login })
                     val users = networkManager.getUsersByNames(authors)
                     comments.map { comment ->
                         val authorName = comment.author.login
@@ -94,7 +97,8 @@ class CommentsDataSource(
         }
     }
 
-    override fun loadBefore(params: LoadParams<Long>, callback: LoadCallback<Long, Comment>) {}
+    override fun loadBefore(params: LoadParams<Long>, callback: LoadCallback<Long, Comment>) {
+    }
 
     fun updateState(state: RequestState) = this.state.postValue(state)
 

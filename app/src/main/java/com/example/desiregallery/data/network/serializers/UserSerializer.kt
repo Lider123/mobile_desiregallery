@@ -12,8 +12,11 @@ import java.lang.reflect.Type
 
 class UserSerializer : JsonSerializer<User> {
 
-    override fun serialize(src: User, typeOfSrc: Type,
-                           context: JsonSerializationContext): JsonElement {
+    override fun serialize(
+        src: User,
+        typeOfSrc: Type,
+        context: JsonSerializationContext
+    ): JsonElement {
         val result = JsonObject()
         val fields = JsonObject()
         val password = JsonObject()
@@ -26,7 +29,7 @@ class UserSerializer : JsonSerializer<User> {
         birthday.addProperty(STRING_VALUE, src.birthday)
         photo.addProperty(STRING_VALUE, src.photo)
 
-        with (fields) {
+        with(fields) {
             add("password", password)
             add("email", email)
             add("birthday", birthday)

@@ -12,23 +12,22 @@ import java.lang.reflect.Type
 
 class PostDeserializer : JsonDeserializer<Post> {
 
-    override fun deserialize(json: JsonElement, typeOfT: Type,
-                             context: JsonDeserializationContext): Post {
+    override fun deserialize(
+        json: JsonElement,
+        typeOfT: Type,
+        context: JsonDeserializationContext
+    ): Post {
         val rootObject = json.asJsonObject
         val fieldsObject = rootObject.getAsJsonObject(FIELDS)
         val ratingObject = fieldsObject.getAsJsonObject("rating")
 
         val id = rootObject.get(NAME).asString.split("/").last()
-        val authorName = fieldsObject.getAsJsonObject("author").get(STRING_VALUE)
-            .asString
-        val imageUrl = fieldsObject.getAsJsonObject("imageUrl").get(STRING_VALUE)
-            .asString
-        val rating: Float = ratingObject.get("doubleValue")?.asFloat ?: ratingObject
-            .get(INTEGER_VALUE).asFloat
-        val numOfRates = fieldsObject.getAsJsonObject("numOfRates").get(INTEGER_VALUE)
-            .asInt
-        val timestamp = fieldsObject.getAsJsonObject("timestamp").get(INTEGER_VALUE)
-            .asLong
+        val authorName = fieldsObject.getAsJsonObject("author").get(STRING_VALUE).asString
+        val imageUrl = fieldsObject.getAsJsonObject("imageUrl").get(STRING_VALUE).asString
+        val rating =
+            ratingObject.get("doubleValue")?.asFloat ?: ratingObject.get(INTEGER_VALUE).asFloat
+        val numOfRates = fieldsObject.getAsJsonObject("numOfRates").get(INTEGER_VALUE).asInt
+        val timestamp = fieldsObject.getAsJsonObject("timestamp").get(INTEGER_VALUE).asLong
 
         return Post().also {
             it.id = id

@@ -1,4 +1,5 @@
 @file:JvmName("BitmapUtils")
+
 package com.example.desiregallery.utils
 
 import android.content.Context
@@ -14,8 +15,6 @@ import java.io.IOException
 import java.util.*
 import android.content.ContentResolver
 import android.provider.MediaStore
-
-
 
 private const val DOWNLOAD_FOLDER_DEFAULT = "DesireDownloads/"
 
@@ -79,9 +78,8 @@ fun getLocalBitmapUri(bmp: Bitmap, context: Context): Uri? {
     return bmpUri
 }
 
-fun getBitmapFromUri(uri: Uri, resolver: ContentResolver): Bitmap {
-    return MediaStore.Images.Media.getBitmap(resolver, uri)
-}
+fun getBitmapFromUri(uri: Uri, resolver: ContentResolver): Bitmap =
+    MediaStore.Images.Media.getBitmap(resolver, uri)
 
 interface DownloadCallback {
     fun onSuccess()

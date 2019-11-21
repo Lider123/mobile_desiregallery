@@ -15,7 +15,10 @@ import dagger.Provides
 class ProfileModule {
 
     @Provides
-    fun providePresenter(resources: Resources, accProvider: AccountProvider, networkManager: NetworkManager, auth: FirebaseAuth): ProfilePresenter {
-        return ProfilePresenter(resources, accProvider, networkManager, auth)
-    }
+    fun providePresenter(
+        resources: Resources,
+        accProvider: AccountProvider,
+        networkManager: NetworkManager,
+        auth: FirebaseAuth
+    ): ProfilePresenter = ProfilePresenter(resources, accProvider, networkManager, auth)
 }

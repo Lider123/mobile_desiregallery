@@ -28,11 +28,14 @@ interface QueryService {
     fun getPosts(@Body query: PostsQueryRequest): Call<List<Post>>
 
     companion object {
-        private const val QUERY_URL = "https://firestore.googleapis.com/v1/projects/desiregallery-8072a/databases/(default)/documents:runQuery/"
+        private const val QUERY_URL =
+            "https://firestore.googleapis.com/v1/projects/desiregallery-8072a/databases/(default)/documents:runQuery/"
 
         private fun createQueryGson(): GsonConverterFactory {
-            val postListType = object : TypeToken<MutableList<Post>>() {}.type
-            val commentListType = object : TypeToken<MutableList<Comment>>() {}.type
+            val postListType = object : TypeToken<MutableList<Post>>() {
+            }.type
+            val commentListType = object : TypeToken<MutableList<Comment>>() {
+            }.type
             val gsonBuilder = GsonBuilder()
                 .registerTypeAdapter(Comment::class.java, CommentDeserializer())
                 .registerTypeAdapter(commentListType, CommentListDeserializer())

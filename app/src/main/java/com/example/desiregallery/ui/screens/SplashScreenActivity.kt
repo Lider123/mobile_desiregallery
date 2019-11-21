@@ -19,13 +19,8 @@ class SplashScreenActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash_screen)
         MainApplication.appComponent.inject(this)
 
-        if (prefs.hasAuthMethod())
-            goToMainActivity()
-        else {
-            val r = Runnable(this::goToLoginActivity)
-            Handler().postDelayed(r,
-                TIMEOUT
-            )
+        if (prefs.hasAuthMethod) goToMainActivity() else {
+            Handler().postDelayed(this::goToLoginActivity, TIMEOUT)
         }
     }
 

@@ -20,18 +20,16 @@ class AuthModule(private val context: Context) {
 
     @Singleton
     @Provides
-    fun provideAccountProvider(prefs: IDGSharedPreferencesHelper,
-                               auth: FirebaseAuth,
-                               networkManager: NetworkManager,
-                               googleClient: GoogleSignInClient): AccountProvider {
-        return AccountProvider(context, prefs, auth, networkManager, googleClient)
-    }
+    fun provideAccountProvider(
+        prefs: IDGSharedPreferencesHelper,
+        auth: FirebaseAuth,
+        networkManager: NetworkManager,
+        googleClient: GoogleSignInClient
+    ): AccountProvider = AccountProvider(context, prefs, auth, networkManager, googleClient)
 
     @Singleton
     @Provides
-    fun provideAuth(): FirebaseAuth {
-        return FirebaseAuth.getInstance()
-    }
+    fun provideAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 
     @Singleton
     @Provides

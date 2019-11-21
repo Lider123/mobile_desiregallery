@@ -16,19 +16,13 @@ class AppModule(private val app: MainApplication) {
 
     @Singleton
     @Provides
-    fun provideApp(): Application {
-        return app
-    }
+    fun provideApp(): Application = app
 
     @Singleton
     @Provides
-    fun provideResources(): Resources {
-        return app.resources
-    }
+    fun provideResources(): Resources = app.resources
 
     @Singleton
     @Provides
-    fun provideContentResolver(): ContentResolver {
-        return app.contentResolver
-    }
+    fun provideContentResolver(): ContentResolver = app.contentResolver
 }

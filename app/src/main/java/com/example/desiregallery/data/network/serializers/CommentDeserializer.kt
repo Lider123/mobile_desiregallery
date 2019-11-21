@@ -16,8 +16,11 @@ import java.lang.reflect.Type
  */
 class CommentDeserializer : JsonDeserializer<Comment> {
 
-    override fun deserialize(json: JsonElement, typeOfT: Type,
-                             context: JsonDeserializationContext): Comment {
+    override fun deserialize(
+        json: JsonElement,
+        typeOfT: Type,
+        context: JsonDeserializationContext
+    ): Comment {
         val rootObject = json.asJsonObject
         val fieldsObject = rootObject.getAsJsonObject(FIELDS)
 
