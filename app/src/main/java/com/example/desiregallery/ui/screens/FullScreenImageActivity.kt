@@ -21,6 +21,7 @@ import com.example.desiregallery.ui.widgets.SnackbarWrapper
 import com.example.desiregallery.utils.*
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import timber.log.Timber
 import javax.inject.Inject
 
 class FullScreenImageActivity : AppCompatActivity() {
@@ -56,7 +57,7 @@ class FullScreenImageActivity : AppCompatActivity() {
                 }
 
                 override fun onError() {
-                    logError(TAG, "There was an error while getting the bitmap")
+                    Timber.e("There was an error while getting the bitmap")
                 }
             })
 
@@ -90,24 +91,27 @@ class FullScreenImageActivity : AppCompatActivity() {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
-                                            grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         when (requestCode) {
             WRITE_REQUEST_CODE -> if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 downloadBitmap(image, object: DownloadCallback {
 
                     override fun onSuccess() {
-                        logInfo(TAG, "Image has been downloaded")
+                        Timber.i("Image has been downloaded")
                         snackbar.show(getString(R.string.download_success))
                     }
 
                     override fun onFailure(e: Exception) {
-                        logError(TAG, "Unable to download image")
+                        Timber.e("Unable to download image")
                         snackbar.show(getString(R.string.download_error))
                     }
                 })
             } else {
-                logWarning(TAG, "There is no permission to write to external storage")
+                Timber.w("There is no permission to write to external storage")
                 snackbar.show(getString(R.string.no_access_to_storage))
             }
         }
@@ -140,7 +144,6 @@ class FullScreenImageActivity : AppCompatActivity() {
     companion object {
         private const val WRITE_REQUEST_CODE = 101
         private const val SHARING_REQUEST_CODE = 201
-        private val TAG = FullScreenImageActivity::class.java.simpleName
 
         const val EXTRA_IMAGE_URL = "imageUrl"
         const val EXTRA_POST_ID = "postId"

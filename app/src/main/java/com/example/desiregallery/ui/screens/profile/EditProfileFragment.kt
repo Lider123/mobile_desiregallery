@@ -18,8 +18,6 @@ import com.example.desiregallery.data.models.User
 import com.example.desiregallery.data.Result
 import com.example.desiregallery.data.network.NetworkManager
 import com.example.desiregallery.data.storage.IStorageHelper
-import com.example.desiregallery.utils.logError
-import com.example.desiregallery.utils.logInfo
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.squareup.picasso.Picasso
@@ -29,6 +27,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -149,12 +148,12 @@ class EditProfileFragment : Fragment() {
         coroutineScope.launch(Dispatchers.Main) {
             when (val result = storageHelper.uploadProfileImage(selectedImage, user.login)) {
                 is Result.Success -> {
-                    logInfo(TAG, "Image for user ${user.login} successfully uploaded")
+                    Timber.i("Image for user ${user.login} successfully uploaded")
                     user.photo = result.data
                     onComplete()
                 }
                 is Result.Error -> {
-                    logError(TAG, "Failed to upload image for user ${user.login}: ${result.exception}")
+                    Timber.e(result.exception, "Failed to upload image for user ${user.login}")
                     onFailure()
                 }
             }
@@ -184,8 +183,8 @@ class EditProfileFragment : Fragment() {
     private fun updateProfile() {
         coroutineScope.launch(Dispatchers.Main) {
             when (val result = networkManager.updateUser(user)) {
-                is Result.Success -> logInfo(TAG, "User ${user.login} successfully updated")
-                is Result.Error -> logError(TAG, result.exception.message ?: "Failed to update user ${user.login}")
+                is Result.Success -> Timber.i("User ${user.login} successfully updated")
+                is Result.Error -> Timber.e(result.exception, "Failed to update user ${user.login}")
             }
         }
 
@@ -196,9 +195,9 @@ class EditProfileFragment : Fragment() {
             .build()
         firebaseUser?.updateProfile(profileUpdates)?.addOnCompleteListener(requireActivity()) { task ->
             if (task.isSuccessful)
-                logInfo(TAG, "Data of user ${user.login} have successfully been saved to firebase auth")
+                Timber.i("Data of user ${user.login} have successfully been saved to firebase auth")
             else
-                logError(TAG, "Unable to save user data to firebase auth: ${task.exception?.message}")
+                Timber.e(task.exception, "Unable to save user data to firebase auth")
         }
     }
 
@@ -227,7 +226,6 @@ class EditProfileFragment : Fragment() {
     }
 
     companion object {
-        private val TAG = EditProfileFragment::class.java.simpleName
         private const val EXTRA_USER = "user"
 
         fun createInstance(user: User, callback: Callback): EditProfileFragment {

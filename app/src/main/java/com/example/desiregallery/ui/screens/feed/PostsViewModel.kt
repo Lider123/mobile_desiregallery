@@ -8,11 +8,10 @@ import com.example.desiregallery.data.Result
 import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.data.network.NetworkManager
 import com.example.desiregallery.data.network.RequestState
-import com.example.desiregallery.utils.logError
-import com.example.desiregallery.utils.logInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.*
 
 class PostsViewModel(
@@ -48,12 +47,12 @@ class PostsViewModel(
         GlobalScope.launch(Dispatchers.Main) {
             when (val result = networkManager.createPost(post)) {
                 is Result.Success -> {
-                    logInfo(TAG, "Post ${post.id} has been successfully created")
+                    Timber.i("Post ${post.id} has been successfully created")
                     setState(RequestState.SUCCESS)
                     postDataSourceFactory.postDataSourceLiveData.value?.invalidate()
                 }
                 is Result.Error -> {
-                    logError(TAG, result.exception.message ?: "Failed to create post")
+                    Timber.e(result.exception, "Failed to create post")
                     setState(RequestState.ERROR_UPLOAD)
                 }
             }
@@ -63,7 +62,6 @@ class PostsViewModel(
     fun updatePosts() = postDataSourceFactory.postDataSourceLiveData.value?.invalidate()
 
     companion object {
-        private val TAG = PostsViewModel::class.java.simpleName
         private const val PAGE_SIZE = 10
     }
 

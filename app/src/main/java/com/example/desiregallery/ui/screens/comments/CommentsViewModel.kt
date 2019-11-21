@@ -7,11 +7,10 @@ import androidx.paging.PagedList
 import com.example.desiregallery.data.Result
 import com.example.desiregallery.data.models.Comment
 import com.example.desiregallery.data.network.*
-import com.example.desiregallery.utils.logError
-import com.example.desiregallery.utils.logInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 /**
  * @author babaetskv on 20.09.19
@@ -50,12 +49,12 @@ class CommentsViewModel(
         GlobalScope.launch(Dispatchers.Main) {
             when (val result = networkManager.createComment(comment)) {
                 is Result.Success -> {
-                    logInfo(TAG, "Comment ${comment.id} has been successfully created")
+                    Timber.i("Comment ${comment.id} has been successfully created")
                     setState(RequestState.SUCCESS)
                     commentDataSourceFactory.commentsDataSourceLiveData.value?.invalidate()
                 }
                 is Result.Error -> {
-                    logError(TAG, result.exception.message ?: "Failed to create comment")
+                    Timber.e(result.exception, "Failed to create comment")
                     setState(RequestState.ERROR_UPLOAD)
                 }
             }
@@ -63,7 +62,6 @@ class CommentsViewModel(
     }
 
     companion object {
-        private val TAG = CommentsViewModel::class.java.simpleName
         const val PAGE_SIZE = 10
     }
 

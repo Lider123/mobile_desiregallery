@@ -15,8 +15,6 @@ import com.example.desiregallery.analytics.IDGAnalyticsTracker
 import com.example.desiregallery.auth.AuthMethod
 import com.example.desiregallery.data.prefs.IDGSharedPreferencesHelper
 import com.example.desiregallery.ui.widgets.SnackbarWrapper
-import com.example.desiregallery.utils.logError
-import com.example.desiregallery.utils.logInfo
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -30,6 +28,7 @@ import com.vk.sdk.VKScope
 import com.vk.sdk.VKSdk
 import com.vk.sdk.api.VKError
 import kotlinx.android.synthetic.main.fragment_login.*
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -89,7 +88,7 @@ class LoginFragment : Fragment() {
         if (!VKSdk.onActivityResult(requestCode, resultCode, data, object: VKCallback<VKAccessToken> {
 
                 override fun onResult(res: VKAccessToken?) {
-                    logInfo(TAG, "Successfully logged in with vk")
+                    Timber.i("Successfully logged in with vk")
                     prefs.setAuthMethod(AuthMethod.VK)
                     analytics.trackLogin(AuthMethod.VK)
                     mLoginListener.onSuccessfulLogin()
@@ -98,10 +97,7 @@ class LoginFragment : Fragment() {
                 override fun onError(error: VKError?) {
                     if (error?.errorCode == VKError.VK_CANCELED)
                         return
-                    logError(
-                        TAG,
-                        "Failed to sign in with vk: ${error?.errorMessage}"
-                    )
+                    Timber.e("Failed to sign in with vk: ${error?.errorMessage}")
                     snackbar.show(getString(R.string.sign_in_vk_failure))
                 }
             })) {
@@ -116,7 +112,7 @@ class LoginFragment : Fragment() {
     private fun handleGoogleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
-            logInfo(TAG, "Successfully signed in google account ${account?.displayName}")
+            Timber.i("Successfully signed in google account ${account?.displayName}")
             prefs.setAuthMethod(AuthMethod.GOOGLE)
             analytics.trackLogin(AuthMethod.GOOGLE)
             mLoginListener.onSuccessfulLogin()
@@ -124,7 +120,7 @@ class LoginFragment : Fragment() {
         catch (e: ApiException) {
             if (e.statusCode == GoogleSignInStatusCodes.SIGN_IN_CANCELLED)
                 return
-            logError(TAG, "Failed to sign in with google: ${e.message}")
+            Timber.e(e, "Failed to sign in with google")
             snackbar.show(getString(R.string.sign_in_google_failure))
         }
     }
@@ -157,12 +153,12 @@ class LoginFragment : Fragment() {
             hideProgress()
             if (task.isSuccessful) {
                 val user = auth.currentUser
-                logInfo(TAG, "uUer with email ${user?.email} successfully logged in")
+                Timber.i("uUer with email ${user?.email} successfully logged in")
                 prefs.setAuthMethod(AuthMethod.EMAIL)
                 analytics.trackLogin(AuthMethod.EMAIL)
                 mLoginListener.onSuccessfulLogin()
             } else {
-                logError(TAG, "Failed to login with email: ${task.exception}")
+                Timber.e(task.exception, "Failed to login with email")
                 snackbar.show(getString(R.string.login_error, task.exception?.localizedMessage))
             }
         }
@@ -196,6 +192,5 @@ class LoginFragment : Fragment() {
 
     companion object {
         private const val GOOGLE_SIGN_IN_REQUEST_CODE = 1
-        private val TAG = LoginFragment::class.java.simpleName
     }
 }

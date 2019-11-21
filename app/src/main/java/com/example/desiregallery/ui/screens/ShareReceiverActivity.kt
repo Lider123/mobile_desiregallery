@@ -16,10 +16,9 @@ import com.example.desiregallery.ui.screens.postcreation.PostCreationFragment
 import com.example.desiregallery.ui.screens.auth.ILoginListener
 import com.example.desiregallery.ui.screens.auth.LoginFragment
 import com.example.desiregallery.utils.getBitmapFromUri
-import com.example.desiregallery.utils.logError
-import com.example.desiregallery.utils.logInfo
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.*
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -81,8 +80,8 @@ class ShareReceiverActivity : AppCompatActivity(), ILoginListener, IPostCreation
     override fun onPostCreationSubmit(post: Post) {
         coroutineScope.launch(Dispatchers.Main) {
             when (val result = networkManager.createPost(post)) {
-                is Result.Success -> logInfo(TAG, "Post ${post.id} has been successfully created")
-                is Result.Error -> logError(TAG, result.exception.message ?: "Failed to create post")
+                is Result.Success -> Timber.i("Post ${post.id} has been successfully created")
+                is Result.Error -> Timber.e(result.exception, "Failed to create post")
             }
             goToMainActivity()
             finish()
@@ -103,9 +102,5 @@ class ShareReceiverActivity : AppCompatActivity(), ILoginListener, IPostCreation
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
-    }
-
-    companion object {
-        private val TAG = ShareReceiverActivity::class.java.simpleName
     }
 }

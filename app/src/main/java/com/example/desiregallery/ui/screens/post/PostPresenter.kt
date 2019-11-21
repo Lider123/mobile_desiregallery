@@ -8,11 +8,10 @@ import com.example.desiregallery.data.network.NetworkManager
 import com.example.desiregallery.ui.screens.comments.CommentsActivity
 import com.example.desiregallery.ui.screens.ImageRateDialog
 import com.example.desiregallery.ui.screens.FullScreenImageActivity
-import com.example.desiregallery.utils.logError
-import com.example.desiregallery.utils.logInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class PostPresenter(private val networkManager: NetworkManager): IPostContract.Presenter {
     private lateinit var view: IPostContract.View
@@ -60,13 +59,9 @@ class PostPresenter(private val networkManager: NetworkManager): IPostContract.P
         view.updateRating(post.rating)
         GlobalScope.launch(Dispatchers.Main) {
             when (val result = networkManager.updatePost(post)) {
-                is Result.Success -> logInfo(TAG, "Post ${post.id} has been successfully updated")
-                is Result.Error -> logError(TAG, result.exception.message ?: "Failed to update post ${post.id}")
+                is Result.Success -> Timber.i("Post ${post.id} has been successfully updated")
+                is Result.Error -> Timber.e(result.exception, "Failed to update post ${post.id}")
             }
         }
-    }
-
-    companion object {
-        private val TAG = PostPresenter::class.java.simpleName
     }
 }

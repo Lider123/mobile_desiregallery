@@ -12,8 +12,6 @@ import com.example.desiregallery.R
 import com.example.desiregallery.analytics.IDGAnalyticsTracker
 import com.example.desiregallery.auth.AuthMethod
 import com.example.desiregallery.data.Result
-import com.example.desiregallery.utils.logError
-import com.example.desiregallery.utils.logInfo
 import com.example.desiregallery.data.models.User
 import com.example.desiregallery.data.network.NetworkManager
 import com.example.desiregallery.ui.widgets.SnackbarWrapper
@@ -24,6 +22,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
@@ -105,7 +104,7 @@ class SignUpActivity : AppCompatActivity() {
 
             auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    logInfo(TAG, "VKUser $login successfully signed up")
+                    Timber.i("VKUser $login successfully signed up")
                     saveUserInfo(User(email, password).also {
                         it.login = login
                         it.birthday = birthday
@@ -114,7 +113,7 @@ class SignUpActivity : AppCompatActivity() {
                     analytics.trackSignUp(AuthMethod.EMAIL)
                     onBackPressed()
                 } else {
-                    logError(TAG, "Failed to sign up: ${task.exception?.message}")
+                    Timber.e(task.exception, "Failed to sign up")
                     val message = task.exception?.localizedMessage
                         ?: getString(R.string.sign_up_error, getString(R.string.unknown_error))
                     snackbar.show(message)
@@ -128,8 +127,8 @@ class SignUpActivity : AppCompatActivity() {
     private fun saveUserInfo(user: User) {
         coroutineScope.launch(Dispatchers.Main) {
             when (val result = networkManager.createUser(user)) {
-                is Result.Success -> logInfo(TAG, "User ${user.login} has been successfully created")
-                is Result.Error -> logError(TAG, result.exception.message ?: "Failed to create user ${user.login}")
+                is Result.Success -> Timber.i("User ${user.login} has been successfully created")
+                is Result.Error -> Timber.e(result.exception, "Failed to create user ${user.login}")
             }
         }
 
@@ -137,9 +136,9 @@ class SignUpActivity : AppCompatActivity() {
         val profileUpdates = UserProfileChangeRequest.Builder().setDisplayName(user.login).build()
         firebaseUser?.updateProfile(profileUpdates)?.addOnCompleteListener(this) { task ->
             if (task.isSuccessful)
-                logInfo(TAG, "Data of user ${user.login} have successfully been saved to firebase auth")
+                Timber.i("Data of user ${user.login} have successfully been saved to firebase auth")
             else
-                logError(TAG, "Unable to save user data to firebase auth: ${task.exception?.message}")
+                Timber.e(task.exception, "Unable to save user data to firebase auth")
         }
     }
 
@@ -180,9 +179,5 @@ class SignUpActivity : AppCompatActivity() {
     private fun showError(message: String) {
         error_message.text = message
         error_message.visibility = View.VISIBLE
-    }
-
-    companion object {
-        private val TAG = SignUpActivity::class.java.simpleName
     }
 }

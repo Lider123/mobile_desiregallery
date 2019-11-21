@@ -9,11 +9,10 @@ import com.example.desiregallery.data.models.User
 import com.example.desiregallery.data.network.NetworkManager
 import com.example.desiregallery.data.network.RequestState
 import com.example.desiregallery.data.network.query.requests.PostsQueryRequest
-import com.example.desiregallery.utils.logError
-import com.example.desiregallery.utils.logInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 /**
  * @author babaetskv on 31.10.19
@@ -27,14 +26,14 @@ class PostsDataSource(private val networkManager: NetworkManager) : PageKeyedDat
             updateState(RequestState.DOWNLOADING)
             when (val result = networkManager.getPosts(query)) {
                 is Result.Success -> {
-                    logInfo(TAG, "Successfully got posts")
+                    Timber.i("Successfully got posts")
                     val posts = result.data
                     if (posts.isEmpty()) {
-                        logInfo(TAG, "There are no posts to download")
+                        Timber.i("There are no posts to download")
                         updateState(RequestState.NO_DATA)
                     }
                     else {
-                        logInfo(TAG, "Successfully loaded ${posts.size} posts for page 1")
+                        Timber.i("Successfully loaded ${posts.size} posts for page 1")
 
                         val authors: Set<String> = LinkedHashSet(posts.map { post -> post.author.login })
                         val users = networkManager.getUsersByNames(authors)
@@ -48,7 +47,7 @@ class PostsDataSource(private val networkManager: NetworkManager) : PageKeyedDat
                     callback.onResult(posts, null, 2L)
                 }
                 is Result.Error -> {
-                    logError(TAG, result.exception.message ?: "Failed to get posts")
+                    Timber.e(result.exception, "Failed to get posts")
                     updateState(RequestState.ERROR_DOWNLOAD)
                 }
             }
@@ -64,7 +63,7 @@ class PostsDataSource(private val networkManager: NetworkManager) : PageKeyedDat
             when (val result = networkManager.getPosts(query)) {
                 is Result.Success -> {
                     val posts = result.data
-                    logInfo(TAG, "Successfully loaded ${posts.size} posts for page $key")
+                    Timber.i("Successfully loaded ${posts.size} posts for page $key")
 
                     val authors: Set<String> = LinkedHashSet(posts.map { post -> post.author.login })
                     val users = networkManager.getUsersByNames(authors)
@@ -85,10 +84,6 @@ class PostsDataSource(private val networkManager: NetworkManager) : PageKeyedDat
 
     fun updateState(state: RequestState) {
         this.state.postValue(state)
-    }
-
-    companion object {
-        private val TAG = PostsDataSource::class.java.simpleName
     }
 
     class Factory(private val networkManager: NetworkManager) : DataSource.Factory<Long, Post>() {
