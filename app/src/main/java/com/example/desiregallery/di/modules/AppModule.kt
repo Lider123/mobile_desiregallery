@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.ContentResolver
 import android.content.res.Resources
 import com.example.desiregallery.MainApplication
+import com.example.desiregallery.MessagingHelper
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -25,4 +26,8 @@ class AppModule(private val app: MainApplication) {
     @Singleton
     @Provides
     fun provideContentResolver(): ContentResolver = app.contentResolver
+
+    @Singleton
+    @Provides
+    fun provideMessagingHelper(): MessagingHelper = MessagingHelper()
 }

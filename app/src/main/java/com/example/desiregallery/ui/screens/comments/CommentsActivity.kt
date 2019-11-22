@@ -45,7 +45,7 @@ class CommentsActivity : AppCompatActivity() {
         snackbar = SnackbarWrapper(comments_container)
 
         post = intent.getSerializableExtra(EXTRA_POST) as Post
-        MainApplication.instance.plusCommentComponent(post.id).inject(this)
+        MainApplication.instance.plusCommentComponent(post).inject(this)
 
         initModel()
     }

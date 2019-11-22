@@ -21,9 +21,11 @@ internal const val OFFSET = "offset"
 internal const val OP = "op"
 internal const val FILTERS = "filters"
 internal const val VALUE = "value"
+internal const val VALUES = "values"
 
 internal const val INTEGER_VALUE = "integerValue"
 internal const val STRING_VALUE = "stringValue"
+internal const val ARRAY_VALUE = "arrayValue"
 
 internal const val FIELDS = "fields"
 internal const val NAME = "name"

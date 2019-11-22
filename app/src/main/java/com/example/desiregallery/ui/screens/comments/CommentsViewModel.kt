@@ -6,6 +6,8 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.example.desiregallery.data.Result
 import com.example.desiregallery.data.models.Comment
+import com.example.desiregallery.data.models.Notification
+import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.data.network.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -17,10 +19,10 @@ import timber.log.Timber
  */
 class CommentsViewModel(
     application: Application,
-    postId: String,
+    private val post: Post,
     private val networkManager: NetworkManager
 ) : AndroidViewModel(application) {
-    private val commentDataSourceFactory = CommentsDataSource.Factory(postId, networkManager)
+    private val commentDataSourceFactory = CommentsDataSource.Factory(post.id, networkManager)
 
     var commentsLiveData: LiveData<PagedList<Comment>>
 
@@ -51,6 +53,7 @@ class CommentsViewModel(
                     Timber.i("Comment ${comment.id} has been successfully created")
                     setState(RequestState.SUCCESS)
                     commentDataSourceFactory.commentsDataSourceLiveData.value?.invalidate()
+                    sendNotification(post.author.login)
                 }
                 is Result.Error -> {
                     Timber.e(result.exception, "Failed to create comment")
@@ -60,17 +63,26 @@ class CommentsViewModel(
         }
     }
 
+    suspend fun sendNotification(loginTo: String) {
+        val result =
+            networkManager.updateNotification(Notification(loginTo, "You have new comment"))
+        when (result) {
+            is Result.Success -> Timber.i("Notification to user $loginTo has been successfully sent")
+            is Result.Error -> Timber.w(result.exception, "Failed to send notification")
+        }
+    }
+
     companion object {
         const val PAGE_SIZE = 10
     }
 
     class Factory(
-        private val postId: String,
+        private val post: Post,
         private val application: Application,
         private val networkManager: NetworkManager
     ) : ViewModelProvider.Factory {
 
         override fun <T : ViewModel?> create(modelClass: Class<T>) =
-            CommentsViewModel(application, postId, networkManager) as T
+            CommentsViewModel(application, post, networkManager) as T
     }
 }

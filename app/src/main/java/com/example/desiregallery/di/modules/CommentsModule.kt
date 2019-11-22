@@ -1,6 +1,7 @@
 package com.example.desiregallery.di.modules
 
 import android.app.Application
+import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.data.network.NetworkManager
 import com.example.desiregallery.di.scopes.CommentsScope
 import com.example.desiregallery.ui.screens.comments.CommentsViewModel
@@ -11,12 +12,12 @@ import dagger.Provides
  * @author babaetskv on 12.11.19
  */
 @Module
-class CommentsModule(private val postId: String) {
+class CommentsModule(private val post: Post) {
 
     @CommentsScope
     @Provides
     fun provideViewModelFactory(
         app: Application,
         networkManager: NetworkManager
-    ): CommentsViewModel.Factory = CommentsViewModel.Factory(postId, app, networkManager)
+    ): CommentsViewModel.Factory = CommentsViewModel.Factory(post, app, networkManager)
 }
