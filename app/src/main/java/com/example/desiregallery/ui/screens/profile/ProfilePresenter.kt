@@ -10,13 +10,12 @@ import com.example.desiregallery.data.models.User
 import com.example.desiregallery.data.network.NetworkManager
 import com.example.desiregallery.data.network.query.requests.PostsQueryRequest
 import com.example.desiregallery.utils.getAgeFromBirthday
-import com.example.desiregallery.utils.logError
-import com.example.desiregallery.utils.logInfo
 import com.google.firebase.auth.FirebaseAuth
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import kotlin.math.min
 
 /**
@@ -76,7 +75,7 @@ class ProfilePresenter(
         GlobalScope.launch(Dispatchers.Main) {
             when (val result = networkManager.getPosts(query)) {
                 is Result.Success -> {
-                    logInfo(TAG, "Successfully got posts")
+                    Timber.i("Successfully got posts")
                     var posts = result.data
 
                     if (posts.isEmpty()) {
@@ -94,7 +93,7 @@ class ProfilePresenter(
                     view.updatePosts(posts)
                 }
                 is Result.Error -> {
-                    logError(TAG, result.exception.message ?: "Failed to get posts")
+                    Timber.e(result.exception, "Failed to get posts")
                     view.updatePostsCount(null)
                     view.updateAverageRating(null)
                 }
@@ -115,9 +114,5 @@ class ProfilePresenter(
             if (it !is EmailAccount)
                 view.updateEditButtonVisibility(false)
         }
-    }
-
-    companion object {
-        private val TAG = ProfilePresenter::class.java.simpleName
     }
 }

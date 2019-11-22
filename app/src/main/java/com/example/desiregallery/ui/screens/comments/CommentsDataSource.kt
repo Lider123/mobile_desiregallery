@@ -4,8 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import androidx.paging.PageKeyedDataSource
 import com.example.desiregallery.data.Result
-import com.example.desiregallery.utils.logError
-import com.example.desiregallery.utils.logInfo
 import com.example.desiregallery.data.models.Comment
 import com.example.desiregallery.data.models.User
 import com.example.desiregallery.data.network.NetworkManager
@@ -14,6 +12,7 @@ import com.example.desiregallery.data.network.query.requests.CommentsQueryReques
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 /**
  * @author babaetskv on 30.10.19
@@ -37,11 +36,11 @@ class CommentsDataSource(
                 is Result.Success -> {
                     val comments = result.data
                     if (comments.isEmpty()) {
-                        logInfo(TAG, "There are no comments to download")
+                        Timber.i("There are no comments to download")
                         updateState(RequestState.NO_DATA)
                     }
                     else {
-                        logInfo(TAG, "Successfully loaded ${comments.size} comments for page 1")
+                        Timber.i("Successfully loaded ${comments.size} comments for page 1")
 
                         val authors: Set<String> = LinkedHashSet(comments.map { comment -> comment.author.login })
                         val users = networkManager.getUsersByNames(authors)
@@ -55,7 +54,7 @@ class CommentsDataSource(
                     callback.onResult(comments, null, 2L)
                 }
                 is Result.Error -> {
-                    logError(TAG, "Unable to load comments for page 1: ${result.exception.message}")
+                    Timber.e(result.exception, "Unable to load comments for page 1")
                     updateState(RequestState.ERROR_DOWNLOAD)
                 }
             }
@@ -75,7 +74,7 @@ class CommentsDataSource(
             when (val result = networkManager.getComments(query)) {
                 is Result.Success -> {
                     val comments = result.data
-                    logInfo(TAG, "Successfully loaded ${comments.size} comments for page $key")
+                    Timber.i("Successfully loaded ${comments.size} comments for page $key")
 
                     val authors: Set<String> = LinkedHashSet(comments.map { comment -> comment.author.login })
                     val users = networkManager.getUsersByNames(authors)
@@ -88,7 +87,7 @@ class CommentsDataSource(
                     updateState(RequestState.SUCCESS)
                 }
                 is Result.Error -> {
-                    logError(TAG, "Unable to load comments for page $key: ${result.exception.message}")
+                    Timber.e(result.exception, "Unable to load comments for page $key")
                     updateState(RequestState.ERROR_DOWNLOAD)
                 }
             }
@@ -98,10 +97,6 @@ class CommentsDataSource(
     override fun loadBefore(params: LoadParams<Long>, callback: LoadCallback<Long, Comment>) {}
 
     fun updateState(state: RequestState) = this.state.postValue(state)
-
-    companion object {
-        private val TAG = CommentsDataSource::class.java.simpleName
-    }
 
     class Factory(
         private val postId: String,

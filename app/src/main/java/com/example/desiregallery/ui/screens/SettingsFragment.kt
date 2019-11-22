@@ -8,9 +8,9 @@ import androidx.preference.PreferenceFragmentCompat
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.ui.widgets.SnackbarWrapper
-import com.example.desiregallery.utils.logInfo
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import timber.log.Timber
 import javax.inject.Inject
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -58,17 +58,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun sendResetPasswordEmail(user: FirebaseUser) {
         auth.sendPasswordResetEmail(user.email!!).addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                logInfo(TAG, "Message for password reset was sent to email ${user.email}")
+                Timber.i("Message for password reset was sent to email ${user.email}")
                 snackbar.show(getString(R.string.reset_password_sent))
             }
             else {
-                logInfo(TAG, "An error occurred while sending password reset email: ${task.exception?.message}")
+                Timber.e(task.exception, "An error occurred while sending password reset email")
                 snackbar.show(getString(R.string.reset_password_error))
             }
         }
-    }
-
-    companion object {
-        private val TAG = SettingsFragment::class.java.simpleName
     }
 }

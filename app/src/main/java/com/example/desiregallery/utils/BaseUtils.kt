@@ -9,9 +9,8 @@ import java.lang.NullPointerException
 import java.text.SimpleDateFormat
 import java.util.*
 import android.content.pm.PackageManager
+import timber.log.Timber
 import java.text.ParseException
-
-private const val TAG = "BaseUtils"
 
 fun hideSoftKeyboard(activity: Activity) {
     try {
@@ -19,7 +18,7 @@ fun hideSoftKeyboard(activity: Activity) {
         inputMethodManager.hideSoftInputFromWindow(activity.currentFocus!!.windowToken, 0)
     }
     catch (e: NullPointerException) {
-        logWarning(TAG, "There was no keyboard to hide")
+        Timber.w("There was no keyboard to hide")
     }
 }
 

@@ -7,10 +7,12 @@ import com.example.desiregallery.di.components.AppComponent
 import com.example.desiregallery.di.components.CommentsComponent
 import com.example.desiregallery.di.components.DaggerAppComponent
 import com.example.desiregallery.di.modules.*
+import com.example.desiregallery.utils.logging.ReleaseTree
 import com.vk.sdk.VKSdk
 import io.fabric.sdk.android.Fabric
 import io.sentry.Sentry
 import io.sentry.android.AndroidSentryClientFactory
+import timber.log.Timber
 
 class MainApplication : Application() {
     private var commentsComponent: CommentsComponent? = null
@@ -28,8 +30,10 @@ class MainApplication : Application() {
             .postsModule(PostsModule())
             .build()
 
-        if (!BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree()) else {
+            Timber.plant(ReleaseTree())
             initSentry()
+        }
         initCrashlytics()
         VKSdk.initialize(applicationContext)
     }
@@ -49,8 +53,9 @@ class MainApplication : Application() {
     }
 
     fun plusCommentComponent(postId: String): CommentsComponent {
-        if (commentsComponent == null)
+        if (commentsComponent == null) {
             commentsComponent = appComponent.plusCommentsComponent(CommentsModule(postId))
+        }
         return commentsComponent as CommentsComponent
     }
 

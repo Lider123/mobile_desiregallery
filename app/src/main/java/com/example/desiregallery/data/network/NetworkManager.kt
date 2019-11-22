@@ -4,10 +4,10 @@ package com.example.desiregallery.data.network
 import com.example.desiregallery.data.Result
 import com.example.desiregallery.data.models.Comment
 import com.example.desiregallery.data.models.Post
-import com.example.desiregallery.utils.logInfo
 import com.example.desiregallery.data.models.User
 import com.example.desiregallery.data.network.query.requests.CommentsQueryRequest
 import com.example.desiregallery.data.network.query.requests.PostsQueryRequest
+import timber.log.Timber
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
@@ -15,7 +15,7 @@ import kotlin.collections.ArrayList
 class NetworkManager(private val networkService: ApiService, private val queryService: QueryService): BaseNetworkManager() {
 
     fun getUsersByNames(userNames: Collection<String>): List<User> {
-        logInfo(TAG, "Preparing to load ${userNames.size} users")
+        Timber.i("Preparing to load ${userNames.size} users")
         val users = ArrayList<User>()
         val executor = Executors.newCachedThreadPool()
         for (name in userNames)
@@ -28,7 +28,7 @@ class NetworkManager(private val networkService: ApiService, private val querySe
             }
         executor.shutdown()
         executor.awaitTermination(15, TimeUnit.SECONDS)
-        logInfo(TAG, "Loaded ${users.size} users")
+        Timber.i("Loaded ${users.size} users")
         if (users.size != userNames.size)
             throw Exception("There was an error while fetching users")
         return users
@@ -73,8 +73,4 @@ class NetworkManager(private val networkService: ApiService, private val querySe
         networkService.updateUser(user.login, user),
         "Failed to update user ${user.login}"
     )
-
-    companion object {
-        private val TAG = NetworkManager::class.java.simpleName
-    }
 }

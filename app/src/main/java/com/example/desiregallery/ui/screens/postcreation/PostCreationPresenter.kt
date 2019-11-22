@@ -6,11 +6,10 @@ import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.data.models.User
 import com.example.desiregallery.data.Result
 import com.example.desiregallery.data.storage.IStorageHelper
-import com.example.desiregallery.utils.logError
-import com.example.desiregallery.utils.logInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 /**
  * @author babaetskv on 18.11.19
@@ -39,14 +38,14 @@ class PostCreationPresenter(
             view.showProgress()
             when (val result = storageHelper.uploadPostImage(image, post.id)) {
                 is Result.Success -> {
-                    logInfo(TAG, "Image for new post ${post.id} successfully uploaded")
+                    Timber.i("Image for new post ${post.id} successfully uploaded")
                     post.setImageUrl(result.data)
                     view.hideProgress()
                     callback.onPostCreationSubmit(post)
                     view.finish()
                 }
                 is Result.Error -> {
-                    logError(TAG, "Failed to upload image for new post ${post.id}: ${result.exception}")
+                    Timber.e(result.exception, "Failed to upload image for new post ${post.id}")
                     view.hideProgress()
                     view.updateErrorMessageVisibility(true)
                 }
@@ -57,9 +56,5 @@ class PostCreationPresenter(
     override fun handleCancel() {
         callback.onPostCreationCancel()
         view.finish()
-    }
-
-    companion object {
-        private val TAG = PostCreationPresenter::class.java.simpleName
     }
 }
