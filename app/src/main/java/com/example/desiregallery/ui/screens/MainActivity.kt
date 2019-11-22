@@ -26,13 +26,13 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var accProvider: AccountProvider
 
+    private val mDisposable = CompositeDisposable()
+
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navigationView: NavigationView
     private lateinit var headerTextView: TextView
     private lateinit var headerImageView: ImageView
     private lateinit var toolbar: Toolbar
-
-    private val mDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,18 +50,19 @@ class MainActivity : AppCompatActivity() {
             accProvider.mObservable.subscribe {
                 val account = it.value
                 headerTextView.text = account?.displayName ?: getString(R.string.login)
-                if (account == null || account.photoUrl.isEmpty())
+                if (account == null || account.photoUrl.isEmpty()) {
                     Picasso.with(this)
                         .load(R.drawable.material)
                         .resize(200, 200)
                         .into(headerImageView)
-                else
+                } else {
                     Picasso.with(this)
                         .load(account.photoUrl)
                         .resize(200, 200)
                         .placeholder(R.drawable.material)
                         .error(R.drawable.image_error)
                         .into(headerImageView)
+                }
             }
         )
 
@@ -110,7 +111,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun selectDrawerItem(menuItem: MenuItem) {
-        when(menuItem.itemId) {
+        when (menuItem.itemId) {
             R.id.nav_profile -> replaceFragment(ProfileFragment(), menuItem.title)
             R.id.nav_feed -> replaceFragment(FeedFragment(), R.string.app_name)
             R.id.nav_settings -> replaceFragment(SettingsFragment(), menuItem.title)

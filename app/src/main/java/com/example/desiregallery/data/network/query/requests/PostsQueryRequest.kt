@@ -12,13 +12,9 @@ class PostsQueryRequest(limit: Int, offset: Long, author: String? = null) : Base
 
     init {
         this.from("posts")
-        this.orderBy("timestamp",
-            OrderDirection.DESCENDING
-        )
-        if (limit > 0)
-            this.limit(limit)
-        if (offset > 0)
-            this.offset(offset)
+        this.orderBy("timestamp", OrderDirection.DESCENDING)
+        if (limit > 0) this.limit(limit)
+        if (offset > 0) this.offset(offset)
         author?.let {
             this.where(FieldFilter("author", ComparisonOperator.EQUAL, Value(author)))
         }

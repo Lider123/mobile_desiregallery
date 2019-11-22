@@ -1,3 +1,5 @@
+@file:JvmName("Fields")
+
 package com.example.desiregallery.data.network
 
 /**

@@ -49,10 +49,9 @@ class PostCreationFragment private constructor() : Fragment(), IPostCreationCont
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if (requireActivity() is IPostCreationListener)
+        if (requireActivity() is IPostCreationListener) {
             mPostCreationListener = requireActivity() as IPostCreationListener
-        else
-            throw Exception("Parent activity doesn't implement post creation interface")
+        } else throw Exception("Parent activity doesn't implement post creation interface")
     }
 
     override fun onStart() {
@@ -78,7 +77,8 @@ class PostCreationFragment private constructor() : Fragment(), IPostCreationCont
         error_message.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    override fun finish() {}
+    override fun finish() {
+    }
 
     companion object {
         const val ARG_IMAGE_BYTES = "imageBytes"

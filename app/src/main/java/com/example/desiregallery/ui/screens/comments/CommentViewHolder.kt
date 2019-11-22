@@ -13,23 +13,24 @@ import com.squareup.picasso.Picasso
 class CommentViewHolder(private val bind: ItemCommentBinding) : RecyclerView.ViewHolder(bind.root) {
 
     fun bind(item: Comment) {
-        with (bind) {
+        with(bind) {
             itemCommentText.text = item.text
             itemCommentTime.text = formatDate(itemCommentTime.context, item.timestamp)
             itemAuthorName.text = item.author.login
-            if (item.author.photo.isEmpty())
+            if (item.author.photo.isEmpty()) {
                 Picasso.with(itemAuthorPhoto.context)
                     .load(R.drawable.material)
                     .resize(100, 100)
                     .error(R.drawable.image_error)
                     .into(itemAuthorPhoto)
-            else
+            } else {
                 Picasso.with(itemAuthorPhoto.context)
                     .load(item.author.photo)
                     .resize(100, 100)
                     .error(R.drawable.image_error)
                     .placeholder(R.drawable.material)
                     .into(itemAuthorPhoto)
+            }
         }
     }
 }

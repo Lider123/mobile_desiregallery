@@ -34,7 +34,8 @@ class SignUpInstrumentedTest {
 
     @Before
     fun getInputFieldsIds() {
-        val inputContainer = mActivityRule.activity.findViewById(R.id.sign_up_input_container) as LinearLayout
+        val inputContainer =
+            mActivityRule.activity.findViewById(R.id.sign_up_input_container) as LinearLayout
         for (i in 0 until inputContainer.childCount)
             inputFieldIds.add(inputContainer.getChildAt(i).id)
     }
@@ -44,10 +45,14 @@ class SignUpInstrumentedTest {
         for (i in 0 until inputFieldIds.size) { // select i-th field to be invalid
             for (input in inputsWrong) {
                 for (field in inputFieldIds) { // fill all fields
-                    if (field == inputFieldIds[i])
-                        Espresso.onView(withId(field)).perform(typeText(input)).perform(closeSoftKeyboard())
-                    else
-                        Espresso.onView(withId(field)).perform(typeText(inputCorrect)).perform(closeSoftKeyboard())
+                    if (field == inputFieldIds[i]) Espresso.onView(withId(field)).perform(
+                        typeText(input)
+                    ).perform(
+                        closeSoftKeyboard()
+                    )
+                    else Espresso.onView(withId(field)).perform(typeText(inputCorrect)).perform(
+                        closeSoftKeyboard()
+                    )
                 }
                 Espresso.onView(withId(R.id.sign_up_button)).check(matches(not(isEnabled())))
                 clearInputs()
@@ -59,14 +64,17 @@ class SignUpInstrumentedTest {
     fun passwordsAreNotEqual() {
         val inputConfirm = inputCorrect.reversed()
         for (field in inputFieldIds) { // fill all fields
-            if (field != R.id.sign_up_input_confirm)
-                Espresso.onView(withId(field)).perform(typeText(inputCorrect)).perform(closeSoftKeyboard())
-            else
-                Espresso.onView(withId(field)).perform(typeText(inputConfirm)).perform(closeSoftKeyboard())
+            if (field != R.id.sign_up_input_confirm) Espresso.onView(withId(field)).perform(
+                typeText(inputCorrect)
+            ).perform(closeSoftKeyboard())
+            else Espresso.onView(withId(field)).perform(typeText(inputConfirm)).perform(
+                closeSoftKeyboard()
+            )
         }
         Espresso.onView(withId(R.id.sign_up_button)).check(matches(isEnabled())).perform(click())
 
-        Espresso.onView(withText(R.string.non_equal_passwords)).inRoot(withDecorView(not(`is`(mActivityRule.activity.window.decorView))))
+        Espresso.onView(withText(R.string.non_equal_passwords))
+            .inRoot(withDecorView(not(`is`(mActivityRule.activity.window.decorView))))
             .check(matches(isDisplayed()))
         clearInputs()
     }

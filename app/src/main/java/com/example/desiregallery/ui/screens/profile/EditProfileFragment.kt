@@ -46,16 +46,20 @@ class EditProfileFragment : Fragment() {
     private val parentJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + parentJob)
 
-    private lateinit var user: User
     private var callback: Callback? = null
     private var newImageUri: Uri? = null
+    private lateinit var user: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         MainApplication.appComponent.inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         val view = inflater.inflate(R.layout.fragment_edit_profile, container, false)
         arguments?.let {
             user = it.getSerializable(EXTRA_USER) as User
@@ -65,20 +69,20 @@ class EditProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (user.photo.isEmpty())
+        if (user.photo.isEmpty()) {
             Picasso.with(requireContext())
                 .load(R.drawable.material)
                 .resize(200, 200)
                 .into(edit_photo)
-        else
+        } else {
             Picasso.with(requireContext())
                 .load(user.photo)
                 .resize(200, 200)
                 .error(R.drawable.image_error)
                 .placeholder(R.drawable.material)
                 .into(edit_photo)
+        }
         edit_birthday.setText(user.birthday)
-
         initListeners()
     }
 
@@ -100,15 +104,17 @@ class EditProfileFragment : Fragment() {
     }
 
     private fun initListeners() {
-        edit_birthday.addTextChangedListener(object: TextWatcher {
+        edit_birthday.addTextChangedListener(object : TextWatcher {
 
             override fun afterTextChanged(p0: Editable?) {
                 user.birthday = p0.toString()
             }
 
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
 
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
         })
         edit_birthday.setOnClickListener {
             setErrorMessageVisibility(false)
@@ -127,13 +133,15 @@ class EditProfileFragment : Fragment() {
                 hideProgress()
             }
             newImageUri?.let {
-                uploadPhoto(it,
+                uploadPhoto(
+                    it,
                     {
                         setErrorMessageVisibility(true)
                         hideProgress()
                     },
-                    finishEditing)
-            }?: finishEditing()
+                    finishEditing
+                )
+            } ?: finishEditing()
         }
         edit_cancel.setOnClickListener {
             setErrorMessageVisibility(false)
@@ -168,16 +176,24 @@ class EditProfileFragment : Fragment() {
             cal.time = sdf.parse(currBirthday)
         }
 
-        val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-            val birthday = requireContext().getString(R.string.date_format, dayOfMonth, monthOfYear+1, year)
-            if (birthday != user.birthday)
-                edit_birthday.setText(birthday)
-        }
-        DatePickerDialog(requireContext(),
+        val dateSetListener =
+            DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+                val birthday = requireContext().getString(
+                    R.string.date_format,
+                    dayOfMonth,
+                    monthOfYear + 1,
+                    year
+                )
+                if (birthday != user.birthday)
+                    edit_birthday.setText(birthday)
+            }
+        DatePickerDialog(
+            requireContext(),
             dateSetListener,
             cal.get(Calendar.YEAR),
             cal.get(Calendar.MONTH),
-            cal.get(Calendar.DAY_OF_MONTH)).show()
+            cal.get(Calendar.DAY_OF_MONTH)
+        ).show()
     }
 
     private fun updateProfile() {
@@ -193,12 +209,12 @@ class EditProfileFragment : Fragment() {
             .setDisplayName(user.login)
             .setPhotoUri(Uri.parse(user.photo))
             .build()
-        firebaseUser?.updateProfile(profileUpdates)?.addOnCompleteListener(requireActivity()) { task ->
-            if (task.isSuccessful)
-                Timber.i("Data of user ${user.login} have successfully been saved to firebase auth")
-            else
-                Timber.e(task.exception, "Unable to save user data to firebase auth")
-        }
+        firebaseUser?.updateProfile(profileUpdates)
+            ?.addOnCompleteListener(requireActivity()) { task ->
+                if (task.isSuccessful) {
+                    Timber.i("Data of user ${user.login} have successfully been saved to firebase auth")
+                } else Timber.e(task.exception, "Unable to save user data to firebase auth")
+            }
     }
 
     private fun showProgress() {
@@ -221,10 +237,6 @@ class EditProfileFragment : Fragment() {
         edit_error.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    private fun setCallback(callback: Callback) {
-        this.callback = callback
-    }
-
     companion object {
         private const val EXTRA_USER = "user"
 
@@ -233,7 +245,7 @@ class EditProfileFragment : Fragment() {
             bundle.putSerializable(EXTRA_USER, user)
             val instance = EditProfileFragment()
             instance.arguments = bundle
-            instance.setCallback(callback)
+            instance.callback = callback
             return instance
         }
     }

@@ -52,12 +52,12 @@ class ShareReceiverActivity : AppCompatActivity(), ILoginListener, IPostCreation
                 }
             )
 
-            if (!accProvider.isAuthorized()) {
+            if (!accProvider.isAuthorized) {
                 loginFragment = LoginFragment()
-                supportFragmentManager.beginTransaction().add(R.id.fragment_container, loginFragment).commit()
-            }
-            else
-                accProvider.setCurrentUser()
+                supportFragmentManager.beginTransaction()
+                    .add(R.id.fragment_container, loginFragment)
+                    .commit()
+            } else accProvider.setCurrentUser()
 
         }
     }
@@ -77,7 +77,7 @@ class ShareReceiverActivity : AppCompatActivity(), ILoginListener, IPostCreation
         accProvider.setCurrentUser()
     }
 
-    override fun onPostCreationSubmit(post: Post) {
+    override fun onSubmit(post: Post) {
         coroutineScope.launch(Dispatchers.Main) {
             when (val result = networkManager.createPost(post)) {
                 is Result.Success -> Timber.i("Post ${post.id} has been successfully created")
@@ -88,13 +88,15 @@ class ShareReceiverActivity : AppCompatActivity(), ILoginListener, IPostCreation
         }
     }
 
-    override fun onPostCreationCancel() = finish()
+    override fun onCancel() = finish()
 
     private fun handlePublishImage(intent: Intent) {
         (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let { uri ->
             val bitmap = getBitmapFromUri(uri, contentResolver)
             postCreationFragment = PostCreationFragment.createInstance(bitmap)
-            supportFragmentManager.beginTransaction().add(R.id.fragment_container, postCreationFragment).commit()
+            supportFragmentManager.beginTransaction()
+                .add(R.id.fragment_container, postCreationFragment)
+                .commit()
         }
     }
 

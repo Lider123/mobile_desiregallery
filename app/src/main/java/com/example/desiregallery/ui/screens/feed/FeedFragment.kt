@@ -29,7 +29,6 @@ class FeedFragment : Fragment() {
     lateinit var vmFactory: PostsViewModel.Factory
 
     private lateinit var model: PostsViewModel
-
     private lateinit var snackbar: SnackbarWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,8 +36,11 @@ class FeedFragment : Fragment() {
         MainApplication.appComponent.inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.fragment_feed, container, false)
         initModel()
         return view
@@ -55,12 +57,13 @@ class FeedFragment : Fragment() {
         }
         snackbar = SnackbarWrapper(feed_container)
         feed_fab.setOnClickListener { CropImage.activity().start(context!!, this) }
-        swipe_container.setOnRefreshListener { model.updatePosts() }
+        swipe_container.setOnRefreshListener {
+            model.updatePosts()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE &&
-            resultCode == Activity.RESULT_OK) {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val imageUri = CropImage.getActivityResult(data).uri
             val istream = activity!!.contentResolver.openInputStream(imageUri)
             val selectedImage = BitmapFactory.decodeStream(istream)
@@ -69,12 +72,13 @@ class FeedFragment : Fragment() {
                 selectedImage,
                 object : IPostCreationListener {
 
-                    override fun onPostCreationSubmit(post: Post) {
+                    override fun onSubmit(post: Post) {
                         model.addPost(post)
                         snackbar.show(getString(R.string.post_publish_success))
                     }
 
-                    override fun onPostCreationCancel() {}
+                    override fun onCancel() {
+                    }
                 }).show()
         }
     }
@@ -87,9 +91,9 @@ class FeedFragment : Fragment() {
             post_list.adapter = adapter
         })
         model.getState().observe(this, Observer { status ->
-            status?: return@Observer
+            status ?: return@Observer
 
-            when(status) {
+            when (status) {
                 RequestState.DOWNLOADING -> {
                     showLoading()
                     updateHintVisibility(false)
@@ -116,9 +120,13 @@ class FeedFragment : Fragment() {
         })
     }
 
-    private fun showLoading() { swipe_container.isRefreshing = true }
+    private fun showLoading() {
+        swipe_container.isRefreshing = true
+    }
 
-    private fun hideLoading() { swipe_container.isRefreshing = false }
+    private fun hideLoading() {
+        swipe_container.isRefreshing = false
+    }
 
     private fun updateHintVisibility(visible: Boolean) {
         feed_hint.visibility = if (visible) View.VISIBLE else View.GONE

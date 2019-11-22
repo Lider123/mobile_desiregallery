@@ -15,8 +15,11 @@ import java.lang.reflect.Type
  */
 class CommentSerializer : JsonSerializer<Comment> {
 
-    override fun serialize(src: Comment, typeOfSrc: Type,
-                           context: JsonSerializationContext): JsonElement {
+    override fun serialize(
+        src: Comment,
+        typeOfSrc: Type,
+        context: JsonSerializationContext
+    ): JsonElement {
         val result = JsonObject()
         val fields = JsonObject()
         val text = JsonObject()

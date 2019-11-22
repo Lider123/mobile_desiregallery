@@ -18,17 +18,19 @@ import javax.inject.Singleton
  * @author babaetskv on 12.11.19
  */
 @Singleton
-@Component(modules = [
-    AppModule::class,
-    NetworkModule::class,
-    AuthModule::class,
-    AnalyticsModule::class,
-    DataModule::class,
-    ProfileModule::class,
-    PostsModule::class,
-    PostCreationModule::class,
-    FeedModule::class
-])
+@Component(
+    modules = [
+        AppModule::class,
+        NetworkModule::class,
+        AuthModule::class,
+        AnalyticsModule::class,
+        DataModule::class,
+        ProfileModule::class,
+        PostsModule::class,
+        PostCreationModule::class,
+        FeedModule::class
+    ]
+)
 interface AppComponent {
     fun inject(activity: SignUpActivity)
     fun inject(activity: MainActivity)

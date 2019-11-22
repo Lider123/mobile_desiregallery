@@ -13,7 +13,8 @@ import dagger.Provides
 class PostCreationModule {
 
     @Provides
-    fun providePresenter(accProvider: AccountProvider, storageHelper: IStorageHelper): PostCreationPresenter {
-        return PostCreationPresenter(accProvider, storageHelper)
-    }
+    fun providePresenter(
+        accProvider: AccountProvider,
+        storageHelper: IStorageHelper
+    ): PostCreationPresenter = PostCreationPresenter(accProvider, storageHelper)
 }

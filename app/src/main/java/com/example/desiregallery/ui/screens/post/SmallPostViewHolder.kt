@@ -32,14 +32,17 @@ class SmallPostViewHolder(
             .into(bind.itemPostImage)
     }
 
-    override fun updateAuthorName(name: String) {}
+    override fun updateAuthorName(name: String) {
+    }
 
-    override fun updateAuthorPhoto(imageUrl: String) {}
+    override fun updateAuthorPhoto(imageUrl: String) {
+    }
 
-    override fun updateTimestamp(time: Long) {}
+    override fun updateTimestamp(time: Long) {
+    }
 
     private fun initListeners() {
-        with (bind) {
+        with(bind) {
             itemPostImage.setOnClickListener {
                 presenter.onImageClick(bind.itemPostImage.context)
             }

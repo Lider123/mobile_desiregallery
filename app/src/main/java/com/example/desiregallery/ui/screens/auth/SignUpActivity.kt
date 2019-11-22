@@ -26,7 +26,6 @@ import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
-
 class SignUpActivity : AppCompatActivity() {
     @Inject
     lateinit var auth: FirebaseAuth
@@ -35,23 +34,26 @@ class SignUpActivity : AppCompatActivity() {
     @Inject
     lateinit var networkManager: NetworkManager
 
-    private lateinit var snackbar: SnackbarWrapper
-
     private val parentJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + parentJob)
     private lateinit var inputTextWatcher: TextWatcher
+    private lateinit var snackbar: SnackbarWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
         MainApplication.appComponent.inject(this)
         snackbar = SnackbarWrapper(sign_up_container)
-        sign_up_button_back.setOnClickListener { onBackPressed() }
+        sign_up_button_back.setOnClickListener {
+            onBackPressed()
+        }
 
         inputTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {}
+            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {
+            }
 
-            override fun onTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {}
+            override fun onTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {
+            }
 
             override fun afterTextChanged(editable: Editable) {
                 checkForEmptyFields()
@@ -77,15 +79,17 @@ class SignUpActivity : AppCompatActivity() {
         sign_up_input_birthday.setOnClickListener {
             hideError()
             val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-                val date = getString(R.string.date_format, dayOfMonth, month+1, year)
+                val date = getString(R.string.date_format, dayOfMonth, month + 1, year)
                 sign_up_input_birthday.setText(date)
             }
             val calendar = Calendar.getInstance()
-            DatePickerDialog(this, dateSetListener,
+            DatePickerDialog(
+                this,
+                dateSetListener,
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH))
-                .show()
+                calendar.get(Calendar.DAY_OF_MONTH)
+            ).show()
         }
         sign_up_button.setOnClickListener {
             disableAll()
@@ -102,25 +106,25 @@ class SignUpActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    Timber.i("VKUser $login successfully signed up")
-                    saveUserInfo(User(email, password).also {
-                        it.login = login
-                        it.birthday = birthday
-                    })
-                    enableAll()
-                    analytics.trackSignUp(AuthMethod.EMAIL)
-                    onBackPressed()
-                } else {
-                    Timber.e(task.exception, "Failed to sign up")
-                    val message = task.exception?.localizedMessage
-                        ?: getString(R.string.sign_up_error, getString(R.string.unknown_error))
-                    snackbar.show(message)
-                    enableAll()
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        Timber.i("VKUser $login successfully signed up")
+                        saveUserInfo(User(email, password).also {
+                            it.login = login
+                            it.birthday = birthday
+                        })
+                        enableAll()
+                        analytics.trackSignUp(AuthMethod.EMAIL)
+                        onBackPressed()
+                    } else {
+                        Timber.e(task.exception, "Failed to sign up")
+                        val message = task.exception?.localizedMessage
+                            ?: getString(R.string.sign_up_error, getString(R.string.unknown_error))
+                        snackbar.show(message)
+                        enableAll()
+                    }
                 }
-
-            }
         }
     }
 
@@ -135,10 +139,9 @@ class SignUpActivity : AppCompatActivity() {
         val firebaseUser = auth.currentUser
         val profileUpdates = UserProfileChangeRequest.Builder().setDisplayName(user.login).build()
         firebaseUser?.updateProfile(profileUpdates)?.addOnCompleteListener(this) { task ->
-            if (task.isSuccessful)
+            if (task.isSuccessful) {
                 Timber.i("Data of user ${user.login} have successfully been saved to firebase auth")
-            else
-                Timber.e(task.exception, "Unable to save user data to firebase auth")
+            } else Timber.e(task.exception, "Unable to save user data to firebase auth")
         }
     }
 

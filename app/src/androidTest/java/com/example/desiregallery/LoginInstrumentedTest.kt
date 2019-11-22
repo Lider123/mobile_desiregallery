@@ -44,8 +44,10 @@ class LoginInstrumentedTest {
     }
 
     private fun checkInput(login: String, password: String, correct: Boolean) {
-        Espresso.onView(withId(R.id.input_email)).perform(typeText(login)).perform(closeSoftKeyboard())
-        Espresso.onView(withId(R.id.input_password)).perform(typeText(password)).perform(closeSoftKeyboard())
+        Espresso.onView(withId(R.id.input_email)).perform(typeText(login))
+            .perform(closeSoftKeyboard())
+        Espresso.onView(withId(R.id.input_password)).perform(typeText(password))
+            .perform(closeSoftKeyboard())
         if (correct)
             Espresso.onView(withId(R.id.button_sign_in)).check(matches(isEnabled()))
         else

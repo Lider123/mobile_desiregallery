@@ -12,7 +12,11 @@ import com.example.desiregallery.R
  */
 class ModalPlaceholderFragment : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         return inflater.inflate(R.layout.fragment_modal_placeholder, container, false)
     }
 }

@@ -38,9 +38,8 @@ class MainApplication : Application() {
         VKSdk.initialize(applicationContext)
     }
 
-    private fun initSentry() {
+    private fun initSentry() =
         Sentry.init(BuildConfig.SENTRY_DSN, AndroidSentryClientFactory(applicationContext))
-    }
 
     private fun initCrashlytics() {
         val core = CrashlyticsCore.Builder()

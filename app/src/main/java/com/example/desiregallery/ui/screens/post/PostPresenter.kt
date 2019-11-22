@@ -20,11 +20,13 @@ class PostPresenter(private val networkManager: NetworkManager): IPostContract.P
     override fun attach(view: IPostContract.View, post: Post) {
         this.view = view
         this.post = post
-        view.updateImage(post.imageUrl.toString())
-        view.updateRating(post.rating)
-        view.updateAuthorName(post.author.login)
-        view.updateAuthorPhoto(post.author.photo)
-        view.updateTimestamp(post.timestamp)
+        with(view) {
+            updateImage(post.imageUrl.toString())
+            updateRating(post.rating)
+            updateAuthorName(post.author.login)
+            updateAuthorPhoto(post.author.photo)
+            updateTimestamp(post.timestamp)
+        }
     }
 
     override fun onImageClick(context: Context) {

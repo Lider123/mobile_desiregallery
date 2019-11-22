@@ -11,8 +11,11 @@ import java.lang.reflect.Type
 class PostListDeserializer : JsonDeserializer<List<Post>> {
 
     @Throws(JsonParseException::class)
-    override fun deserialize(json: JsonElement, typeOfT: Type,
-                             context: JsonDeserializationContext): List<Post>  {
+    override fun deserialize(
+        json: JsonElement,
+        typeOfT: Type,
+        context: JsonDeserializationContext
+    ): List<Post> {
         val documents = json.asJsonArray.filter { it.asJsonObject.has(DOCUMENT) }
         return documents.map {
             context.deserialize(it.asJsonObject.get(DOCUMENT), Post::class.java) as Post

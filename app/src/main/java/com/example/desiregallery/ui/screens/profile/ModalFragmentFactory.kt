@@ -17,7 +17,7 @@ class ModalFragmentFactory(private val fragmentManager: FragmentManager) {
         val modalFragment = ModalPlaceholderFragment()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             modalFragment.enterTransition = Fade(Fade.IN).apply {
-                addListener(object: Transition.TransitionListener {
+                addListener(object : Transition.TransitionListener {
 
                     override fun onTransitionEnd(transition: Transition?) {
                         fragmentManager
@@ -27,19 +27,23 @@ class ModalFragmentFactory(private val fragmentManager: FragmentManager) {
                         removeListener(this)
                     }
 
-                    override fun onTransitionResume(transition: Transition?) {}
+                    override fun onTransitionResume(transition: Transition?) {
+                    }
 
-                    override fun onTransitionPause(transition: Transition?) {}
+                    override fun onTransitionPause(transition: Transition?) {
+                    }
 
-                    override fun onTransitionCancel(transition: Transition?) {}
+                    override fun onTransitionCancel(transition: Transition?) {
+                    }
 
-                    override fun onTransitionStart(transition: Transition?) {}
+                    override fun onTransitionStart(transition: Transition?) {
+                    }
                 })
             }
             modalFragment.exitTransition = Fade(Fade.OUT)
             child.enterTransition = Slide(Gravity.TOP)
             child.exitTransition = Slide(Gravity.TOP).apply {
-                addListener(object: Transition.TransitionListener {
+                addListener(object : Transition.TransitionListener {
 
                     override fun onTransitionEnd(transition: Transition?) {
                         fragmentManager
@@ -49,13 +53,17 @@ class ModalFragmentFactory(private val fragmentManager: FragmentManager) {
                         removeListener(this)
                     }
 
-                    override fun onTransitionResume(transition: Transition?) {}
+                    override fun onTransitionResume(transition: Transition?) {
+                    }
 
-                    override fun onTransitionPause(transition: Transition?) {}
+                    override fun onTransitionPause(transition: Transition?) {
+                    }
 
-                    override fun onTransitionCancel(transition: Transition?) {}
+                    override fun onTransitionCancel(transition: Transition?) {
+                    }
 
-                    override fun onTransitionStart(transition: Transition?) {}
+                    override fun onTransitionStart(transition: Transition?) {
+                    }
                 })
             }
         } // TODO: add support for old versions

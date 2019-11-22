@@ -35,18 +35,19 @@ class PostViewHolder(
     }
 
     override fun updateAuthorPhoto(imageUrl: String) {
-        if (imageUrl.isEmpty())
+        if (imageUrl.isEmpty()) {
             Picasso.with(bind.itemAuthorImage.context)
                 .load(R.drawable.material)
                 .resize(100, 100)
                 .into(bind.itemAuthorImage)
-        else
+        } else {
             Picasso.with(bind.itemAuthorImage.context)
                 .load(imageUrl)
                 .resize(100, 100)
                 .error(R.drawable.image_error)
                 .placeholder(R.drawable.material)
                 .into(bind.itemAuthorImage)
+        }
     }
 
     override fun updateTimestamp(time: Long) {
@@ -54,7 +55,7 @@ class PostViewHolder(
     }
 
     private fun initListeners() {
-        with (bind) {
+        with(bind) {
             itemPostImage.setOnClickListener {
                 presenter.onImageClick(bind.itemPostImage.context)
             }

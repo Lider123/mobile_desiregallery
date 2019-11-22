@@ -36,11 +36,11 @@ class PostsViewModel(
         postDataSourceFactory.postDataSourceLiveData.value?.updateState(state)
     }
 
-    fun getState(): LiveData<RequestState> {
-        return Transformations.switchMap<PostsDataSource, RequestState>(
+    fun getState(): LiveData<RequestState> =
+        Transformations.switchMap<PostsDataSource, RequestState>(
             postDataSourceFactory.postDataSourceLiveData,
-            PostsDataSource::state)
-    }
+            PostsDataSource::state
+        )
 
     fun addPost(post: Post) {
         post.timestamp = Date().time
@@ -70,9 +70,8 @@ class PostsViewModel(
         private val networkManager: NetworkManager
     ) : ViewModelProvider.Factory {
 
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return PostsViewModel(application, networkManager) as T
-        }
+        override fun <T : ViewModel?> create(modelClass: Class<T>) =
+            PostsViewModel(application, networkManager) as T
 
     }
 }

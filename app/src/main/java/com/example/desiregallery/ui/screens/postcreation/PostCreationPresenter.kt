@@ -22,7 +22,11 @@ class PostCreationPresenter(
     private lateinit var image: Bitmap
     private lateinit var callback: IPostCreationListener
 
-    override fun attach(view: IPostCreationContract.View, image: Bitmap, listener: IPostCreationListener) {
+    override fun attach(
+        view: IPostCreationContract.View,
+        image: Bitmap,
+        listener: IPostCreationListener
+    ) {
         this.view = view
         this.image = image
         this.callback = listener
@@ -31,8 +35,8 @@ class PostCreationPresenter(
     override fun handlePublish() {
         val post = Post()
         post.author = User("", "").apply {
-            login = accProvider.currAccount?.displayName?: ""
-            photo = accProvider.currAccount?.photoUrl?: ""
+            login = accProvider.currAccount?.displayName ?: ""
+            photo = accProvider.currAccount?.photoUrl ?: ""
         }
         GlobalScope.launch(Dispatchers.Main) {
             view.showProgress()
@@ -41,7 +45,7 @@ class PostCreationPresenter(
                     Timber.i("Image for new post ${post.id} successfully uploaded")
                     post.setImageUrl(result.data)
                     view.hideProgress()
-                    callback.onPostCreationSubmit(post)
+                    callback.onSubmit(post)
                     view.finish()
                 }
                 is Result.Error -> {
@@ -54,7 +58,7 @@ class PostCreationPresenter(
     }
 
     override fun handleCancel() {
-        callback.onPostCreationCancel()
+        callback.onCancel()
         view.finish()
     }
 }

@@ -34,14 +34,14 @@ class AccountProvider(
         }
     val mObservable = PublishSubject.create<Wrapper<IAccount>>()
 
-    fun isAuthorized(): Boolean {
-        val authMethod = prefs.getAuthMethod()
-        authMethod?: return false
-        return true
-    }
+    val isAuthorized: Boolean
+        get() {
+            prefs.authMethod ?: return false
+            return true
+        }
 
     fun setCurrentUser() {
-        when (prefs.getAuthMethod()) {
+        when (prefs.authMethod) {
             AuthMethod.EMAIL -> setCurrentEmailUser()
             AuthMethod.VK -> setCurrentVKUser()
             AuthMethod.GOOGLE -> setCurrentGoogleUser()
@@ -70,7 +70,7 @@ class AccountProvider(
 
     private fun setCurrentVKUser() {
         VKApi.users().get(VKParameters.from(VKApiConst.FIELDS, "photo_max,sex,bdate"))
-            .executeWithListener(object: VKRequest.VKRequestListener() {
+            .executeWithListener(object : VKRequest.VKRequestListener() {
 
                 override fun onComplete(response: VKResponse?) {
                     super.onComplete(response)
@@ -90,7 +90,10 @@ class AccountProvider(
                             }
                             when (val result = networkManager.updateUser(vkUser)) {
                                 is Result.Success -> Timber.i("User ${vkUser.login} has been successfully updated")
-                                is Result.Error -> Timber.e(result.exception, "Failed to update user ${vkUser.login}")
+                                is Result.Error -> Timber.e(
+                                    result.exception,
+                                    "Failed to update user ${vkUser.login}"
+                                )
                             }
                         }
                     }
@@ -105,7 +108,7 @@ class AccountProvider(
 
     private fun setCurrentGoogleUser() {
         val account = GoogleSignIn.getLastSignedInAccount(context)
-        account?: run {
+        account ?: run {
             Timber.e("Failed to get google account")
             return
         }
@@ -120,7 +123,10 @@ class AccountProvider(
                 }
                 when (val result = networkManager.updateUser(googleUser)) {
                     is Result.Success -> Timber.i("User ${googleUser.login} has been successfully updated")
-                    is Result.Error -> Timber.e(result.exception, "Failed to update user ${googleUser.login}")
+                    is Result.Error -> Timber.e(
+                        result.exception,
+                        "Failed to update user ${googleUser.login}"
+                    )
                 }
             }
         }

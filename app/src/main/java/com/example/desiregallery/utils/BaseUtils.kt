@@ -1,4 +1,5 @@
 @file:JvmName("BaseUtils")
+
 package com.example.desiregallery.utils
 
 import android.app.Activity
@@ -14,10 +15,10 @@ import java.text.ParseException
 
 fun hideSoftKeyboard(activity: Activity) {
     try {
-        val inputMethodManager = activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputMethodManager =
+            activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(activity.currentFocus!!.windowToken, 0)
-    }
-    catch (e: NullPointerException) {
+    } catch (e: NullPointerException) {
         Timber.w("There was no keyboard to hide")
     }
 }
@@ -37,7 +38,7 @@ fun getAgeFromBirthday(birthday: String): Int? {
         e.printStackTrace()
     }
 
-    date?: return null
+    date ?: return null
 
     val dob = Calendar.getInstance().apply { time = date }
     val today = Calendar.getInstance()
@@ -50,8 +51,7 @@ fun getAgeFromBirthday(birthday: String): Int? {
 
     var age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR)
 
-    if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR))
-        age--
+    if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) age--
 
     return age
 }

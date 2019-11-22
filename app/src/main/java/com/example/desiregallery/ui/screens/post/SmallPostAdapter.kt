@@ -11,12 +11,17 @@ import com.example.desiregallery.databinding.ItemPostSmallBinding
 /**
  * @author babaetskv on 06.11.19
  */
-class SmallPostAdapter(private val posts: List<Post>) : RecyclerView.Adapter<SmallPostViewHolder>() {
+class SmallPostAdapter(private val posts: List<Post>) :
+    RecyclerView.Adapter<SmallPostViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SmallPostViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val bind = DataBindingUtil
-            .inflate<ItemPostSmallBinding>(inflater, R.layout.item_post_small, parent, false)
+        val bind = DataBindingUtil.inflate<ItemPostSmallBinding>(
+            inflater,
+            R.layout.item_post_small,
+            parent,
+            false
+        )
         return SmallPostViewHolder(bind)
     }
 

@@ -15,7 +15,5 @@ class AnalyticsModule(private val context: Context) {
 
     @Singleton
     @Provides
-    fun provideAnalytics(): IDGAnalyticsTracker {
-        return AnalyticsTracker(context)
-    }
+    fun provideAnalytics(): IDGAnalyticsTracker = AnalyticsTracker(context)
 }

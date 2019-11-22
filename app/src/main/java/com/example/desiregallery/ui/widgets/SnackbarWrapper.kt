@@ -11,11 +11,11 @@ class SnackbarWrapper(container: View) {
 
     private var currentText = ""
 
+    val isShown: Boolean get() = snackbar.isShown
+
     fun show(text: String) {
         currentText = text
         snackbar.setText(currentText)
         snackbar.show()
     }
-
-    fun isShown() = snackbar.isShown
 }

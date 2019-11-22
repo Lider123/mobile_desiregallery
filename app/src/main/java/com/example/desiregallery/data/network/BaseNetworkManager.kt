@@ -11,14 +11,15 @@ import java.io.IOException
  */
 abstract class BaseNetworkManager {
 
-    protected suspend fun <T : Any> makeSafeCall(call: Call<T>, errorMessage: String): Result<T> = withContext(Dispatchers.IO) {
-        return@withContext try {
-            val response = call.execute()
-            if (response.isSuccessful) Result.Success(response.body()!!)
-            else Result.Error(IOException(errorMessage + "\nResponse received with code ${response.code()}"))
+    protected suspend fun <T : Any> makeSafeCall(call: Call<T>, errorMessage: String): Result<T> =
+        withContext(Dispatchers.IO) {
+            return@withContext try {
+                val response = call.execute()
+                if (response.isSuccessful) Result.Success(response.body()!!) else {
+                    Result.Error(IOException(errorMessage + "\nResponse received with code ${response.code()}"))
+                }
+            } catch (e: Exception) {
+                Result.Error(IOException(errorMessage + "\n${e.message}"))
+            }
         }
-        catch (e: Exception) {
-            Result.Error(IOException(errorMessage + "\n${e.message}"))
-        }
-    }
 }

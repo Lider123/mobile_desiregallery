@@ -15,7 +15,8 @@ class CommentsModule(private val postId: String) {
 
     @CommentsScope
     @Provides
-    fun provideViewModelFactory(app: Application, networkManager: NetworkManager): CommentsViewModel.Factory {
-        return CommentsViewModel.Factory(postId, app, networkManager)
-    }
+    fun provideViewModelFactory(
+        app: Application,
+        networkManager: NetworkManager
+    ): CommentsViewModel.Factory = CommentsViewModel.Factory(postId, app, networkManager)
 }
