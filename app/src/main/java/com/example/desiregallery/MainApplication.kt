@@ -3,6 +3,7 @@ package com.example.desiregallery
 import android.app.Application
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.core.CrashlyticsCore
+import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.di.components.AppComponent
 import com.example.desiregallery.di.components.CommentsComponent
 import com.example.desiregallery.di.components.DaggerAppComponent
@@ -51,9 +52,9 @@ class MainApplication : Application() {
         Fabric.with(this, crashlytics)
     }
 
-    fun plusCommentComponent(postId: String): CommentsComponent {
+    fun plusCommentComponent(post: Post): CommentsComponent {
         if (commentsComponent == null) {
-            commentsComponent = appComponent.plusCommentsComponent(CommentsModule(postId))
+            commentsComponent = appComponent.plusCommentsComponent(CommentsModule(post))
         }
         return commentsComponent as CommentsComponent
     }

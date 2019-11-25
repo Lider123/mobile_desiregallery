@@ -2,6 +2,7 @@ package com.example.desiregallery.data.network
 
 import com.example.desiregallery.data.Result
 import com.example.desiregallery.data.models.Comment
+import com.example.desiregallery.data.models.Notification
 import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.data.models.User
 import com.example.desiregallery.data.network.query.requests.CommentsQueryRequest
@@ -74,5 +75,10 @@ class NetworkManager(
     suspend fun updateUser(user: User): Result<User> = makeSafeCall(
         networkService.updateUser(user.login, user),
         "Failed to update user ${user.login}"
+    )
+
+    suspend fun updateNotification(notification: Notification): Result<Notification> = makeSafeCall(
+        networkService.updateNotification(notification.loginTo, notification),
+        "Failed to update notification for user ${notification.loginTo}"
     )
 }

@@ -1,6 +1,7 @@
 package com.example.desiregallery.di.modules
 
 import android.content.Context
+import com.example.desiregallery.MessagingHelper
 import com.example.desiregallery.auth.AccountProvider
 import com.example.desiregallery.data.network.NetworkManager
 import com.example.desiregallery.data.prefs.IDGSharedPreferencesHelper
@@ -23,9 +24,10 @@ class AuthModule(private val context: Context) {
     fun provideAccountProvider(
         prefs: IDGSharedPreferencesHelper,
         auth: FirebaseAuth,
+        messagingHelper: MessagingHelper,
         networkManager: NetworkManager,
         googleClient: GoogleSignInClient
-    ): AccountProvider = AccountProvider(context, prefs, auth, networkManager, googleClient)
+    ): AccountProvider = AccountProvider(context, prefs, auth, messagingHelper, networkManager, googleClient)
 
     @Singleton
     @Provides

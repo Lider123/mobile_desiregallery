@@ -15,12 +15,19 @@ import androidx.fragment.app.Fragment
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.auth.AccountProvider
+import com.example.desiregallery.data.Result
+import com.example.desiregallery.data.network.ApiService
+import com.example.desiregallery.data.network.NetworkManager
+import com.example.desiregallery.data.network.QueryService
 import com.example.desiregallery.ui.screens.auth.LoginActivity
 import com.example.desiregallery.ui.screens.profile.ProfileFragment
 import com.example.desiregallery.ui.screens.feed.FeedFragment
 import com.squareup.picasso.Picasso
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.*
+import timber.log.Timber
 import javax.inject.Inject
+import kotlin.coroutines.coroutineContext
 
 class MainActivity : AppCompatActivity() {
     @Inject

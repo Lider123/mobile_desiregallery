@@ -1,6 +1,7 @@
 package com.example.desiregallery.data.network
 
 import com.example.desiregallery.data.models.Comment
+import com.example.desiregallery.data.models.Notification
 import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.data.models.User
 import com.example.desiregallery.data.network.serializers.*
@@ -30,6 +31,9 @@ interface ApiService {
     @PATCH("posts/{id}")
     fun updatePost(@Path("id") id: String, @Body post: Post): Call<Post>
 
+    @PATCH("notifications/{loginTo}")
+    fun updateNotification(@Path("loginTo") loginTo: String, @Body notification: Notification): Call<Notification>
+
     companion object {
         private const val BASE_URL =
             "https://firestore.googleapis.com/v1/projects/desiregallery-8072a/databases/(default)/documents/"
@@ -42,6 +46,7 @@ interface ApiService {
                 .registerTypeAdapter(User::class.java, UserSerializer())
                 .registerTypeAdapter(Comment::class.java, CommentSerializer())
                 .registerTypeAdapter(Comment::class.java, CommentDeserializer())
+                .registerTypeAdapter(Notification::class.java, NotificationSerializer())
             return GsonConverterFactory.create(gsonBuilder.create())
         }
 
