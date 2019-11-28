@@ -10,20 +10,18 @@ import kotlin.random.Random
  * @author babaetskv
  * @since 08.08.19
  */
-class Comment : Serializable {
-    @SerializedName("id")
-    var id: String = Random.nextLong(1e10.toLong()).toString()
+data class Comment(
     @SerializedName("text")
-    var text: String = ""
+    var text: String = "",
     @SerializedName("postId")
-    var postId: String = ""
+    var postId: String = "",
     @SerializedName("author")
-    var author = User("", "")
+    var author: User = User("", ""),
     @SerializedName("timestamp")
     var timestamp: Long = Date().time
-
-    override fun toString() =
-        "Comment(text='$text', postId='$postId', author='$author', timestamp=$timestamp)"
+) : Serializable {
+    @SerializedName("id")
+    var id: String = Random.nextLong(1e10.toLong()).toString()
 
     companion object {
         val CALLBACK: DiffUtil.ItemCallback<Comment> = object : DiffUtil.ItemCallback<Comment>() {

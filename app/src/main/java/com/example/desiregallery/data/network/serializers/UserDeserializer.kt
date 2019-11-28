@@ -29,11 +29,13 @@ class UserDeserializer : JsonDeserializer<User> {
                 }
                 ?: listOf()
 
-        return User(email, password).also {
-            it.login = login
-            it.birthday = birthday
-            it.photo = photo
-            it.messageTokens = messageTokens
-        }
+        return User(
+            email = email,
+            password = password,
+            login = login,
+            birthday = birthday,
+            photo = photo,
+            messageTokens = messageTokens
+        )
     }
 }

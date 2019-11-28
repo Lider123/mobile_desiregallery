@@ -90,12 +90,11 @@ class AccountProvider(
                         Timber.i("Got data for user ${account.displayName}")
                         GlobalScope.launch(Dispatchers.Main) {
                             val result = networkManager.getUser(account.displayName)
-                            val vkUser = if (result is Result.Success) result.data else User("", "")
-                            with(vkUser) {
-                                photo = account.photoUrl
-                                login = account.displayName
-                                addMessageToken(this)
-                                updateUserInfo(this)
+                            val vkUser = if (result is Result.Success) result.data
+                            else User(photo = account.photoUrl, login = account.displayName)
+                            vkUser.let {
+                                addMessageToken(it)
+                                updateUserInfo(it)
                             }
                         }
                     }
@@ -120,12 +119,11 @@ class AccountProvider(
             Timber.i("Got data for user ${it.displayName}")
             GlobalScope.launch(Dispatchers.Main) {
                 val result = networkManager.getUser(it.displayName)
-                val googleUser = if (result is Result.Success) result.data else User("", "")
-                with(googleUser) {
-                    photo = it.photoUrl
-                    login = it.displayName
-                    addMessageToken(this)
-                    updateUserInfo(this)
+                val googleUser = if (result is Result.Success) result.data
+                else User(photo = it.photoUrl, login = it.displayName)
+                googleUser.let {
+                    addMessageToken(it)
+                    updateUserInfo(it)
                 }
             }
         }

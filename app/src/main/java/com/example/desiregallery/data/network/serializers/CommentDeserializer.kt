@@ -32,12 +32,13 @@ class CommentDeserializer : JsonDeserializer<Comment> {
             .asLong
         val postId = fieldsObject.getAsJsonObject("postId").get(STRING_VALUE).asString
 
-        return Comment().also {
+        return Comment(
+            text = text,
+            author = User("", "").apply { login = authorName },
+            timestamp = datetime,
+            postId = postId
+        ).also {
             it.id = id
-            it.text = text
-            it.author = User("", "").apply { login = authorName }
-            it.timestamp = datetime
-            it.postId = postId
         }
     }
 }
