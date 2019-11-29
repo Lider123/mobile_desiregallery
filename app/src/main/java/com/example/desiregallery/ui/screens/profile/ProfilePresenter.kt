@@ -11,7 +11,8 @@ import com.example.desiregallery.data.network.NetworkManager
 import com.example.desiregallery.data.network.query.requests.PostsQueryRequest
 import com.example.desiregallery.utils.getAgeFromBirthday
 import com.google.firebase.auth.FirebaseAuth
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -30,17 +31,19 @@ class ProfilePresenter(
     private lateinit var view: IProfileContract.View
     private var editFragment: EditProfileFragment? = null
 
-    private val mDisposable = CompositeDisposable()
+    private lateinit var mDisposable: Disposable
 
     override fun attach(view: IProfileContract.View) {
         this.view = view
-        mDisposable.add(
-            accProvider.mObservable.subscribe { updateAll() }
-        )
+        mDisposable = accProvider.mObservable
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { updateAll() }
         updateAll()
     }
 
-    override fun detach() = mDisposable.dispose()
+    override fun detach() {
+        if (!mDisposable.isDisposed) mDisposable.dispose()
+    }
 
     override fun onEditClick(fragmentManager: FragmentManager) {
         val account = accProvider.currAccount

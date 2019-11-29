@@ -15,31 +15,24 @@ import androidx.fragment.app.Fragment
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.auth.AccountProvider
-import com.example.desiregallery.data.Result
-import com.example.desiregallery.data.network.ApiService
-import com.example.desiregallery.data.network.NetworkManager
-import com.example.desiregallery.data.network.QueryService
 import com.example.desiregallery.ui.screens.auth.LoginActivity
 import com.example.desiregallery.ui.screens.profile.ProfileFragment
 import com.example.desiregallery.ui.screens.feed.FeedFragment
 import com.squareup.picasso.Picasso
-import io.reactivex.disposables.CompositeDisposable
-import kotlinx.coroutines.*
-import timber.log.Timber
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import javax.inject.Inject
-import kotlin.coroutines.coroutineContext
 
 class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var accProvider: AccountProvider
-
-    private val mDisposable = CompositeDisposable()
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navigationView: NavigationView
     private lateinit var headerTextView: TextView
     private lateinit var headerImageView: ImageView
     private lateinit var toolbar: Toolbar
+    private lateinit var mDisposable: Disposable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,9 +46,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        mDisposable.add(
-            accProvider.mObservable.subscribe {
-                val account = it.value
+        mDisposable = accProvider.mObservable
+            .observeOn(AndroidSchedulers.mainThread())
+            .map { it.value }
+            .subscribe { account ->
                 headerTextView.text = account?.displayName ?: getString(R.string.login)
                 if (account == null || account.photoUrl.isEmpty()) {
                     Picasso.with(this)
@@ -71,14 +65,13 @@ class MainActivity : AppCompatActivity() {
                         .into(headerImageView)
                 }
             }
-        )
 
         accProvider.setCurrentUser()
     }
 
     override fun onStop() {
         super.onStop()
-        mDisposable.dispose()
+        if (!mDisposable.isDisposed) mDisposable.dispose()
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {

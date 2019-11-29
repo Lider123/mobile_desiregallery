@@ -27,8 +27,13 @@ import com.vk.sdk.VKCallback
 import com.vk.sdk.VKScope
 import com.vk.sdk.VKSdk
 import com.vk.sdk.api.VKError
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_login.*
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
@@ -45,7 +50,7 @@ class LoginFragment : Fragment() {
     lateinit var prefsHelper: IDGSharedPreferencesHelper
 
     private lateinit var snackbar: SnackbarWrapper
-    private lateinit var inputTextWatcher: TextWatcher
+    private lateinit var mDisposable: Disposable
 
     lateinit var mLoginListener: ILoginListener
 
@@ -56,18 +61,6 @@ class LoginFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_login, container, false)
         MainApplication.appComponent.inject(this)
-        inputTextWatcher = object : TextWatcher {
-
-            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {
-            }
-
-            override fun onTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {
-            }
-
-            override fun afterTextChanged(editable: Editable) {
-                checkForEmptyFields()
-            }
-        }
         return view
     }
 
@@ -75,6 +68,9 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         snackbar = SnackbarWrapper(login_container)
         button_sign_in.isEnabled = false
+        mDisposable = createTextChangedObservable().toFlowable(BackpressureStrategy.LATEST)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { checkForEmptyFields() }
         initListeners()
     }
 
@@ -114,6 +110,39 @@ class LoginFragment : Fragment() {
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        if (!mDisposable.isDisposed) mDisposable.dispose()
+    }
+
+    private fun createTextChangedObservable(): Observable<String> {
+        val observable = Observable.create<String> { emitter ->
+            val inputTextWatcher = object : TextWatcher {
+
+                override fun beforeTextChanged(
+                    charSequence: CharSequence,
+                    i: Int,
+                    i2: Int,
+                    i3: Int
+                ) = Unit
+
+                override fun onTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) =
+                    Unit
+
+                override fun afterTextChanged(editable: Editable) {
+                    emitter.onNext(editable.toString())
+                }
+            }
+            input_email.addTextChangedListener(inputTextWatcher)
+            input_password.addTextChangedListener(inputTextWatcher)
+            emitter.setCancellable {
+                input_email.removeTextChangedListener(inputTextWatcher)
+                input_password.removeTextChangedListener(inputTextWatcher)
+            }
+        }
+        return observable.debounce(1, TimeUnit.SECONDS)
+    }
+
     private fun handleGoogleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
@@ -129,8 +158,6 @@ class LoginFragment : Fragment() {
     }
 
     private fun initListeners() {
-        input_email.addTextChangedListener(inputTextWatcher)
-        input_password.addTextChangedListener(inputTextWatcher)
         button_sign_in.setOnClickListener {
             val email = input_email.text.toString()
             val password = input_password.text.toString()

@@ -16,7 +16,9 @@ import com.example.desiregallery.ui.screens.postcreation.PostCreationFragment
 import com.example.desiregallery.ui.screens.auth.ILoginListener
 import com.example.desiregallery.ui.screens.auth.LoginFragment
 import com.example.desiregallery.utils.getBitmapFromUri
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.*
 import timber.log.Timber
 import javax.inject.Inject
@@ -30,12 +32,12 @@ class ShareReceiverActivity : AppCompatActivity(), ILoginListener, IPostCreation
     @Inject
     lateinit var accProvider: AccountProvider
 
-    private val mDisposable = CompositeDisposable()
     private val parentJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + parentJob)
 
     private lateinit var loginFragment: LoginFragment
     private lateinit var postCreationFragment: PostCreationFragment
+    private lateinit var mDisposable: Disposable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,12 +47,13 @@ class ShareReceiverActivity : AppCompatActivity(), ILoginListener, IPostCreation
         intent ?: return
 
         if (Intent.ACTION_SEND == intent.action && true == intent.type?.startsWith("image/")) {
-            mDisposable.add(
-                accProvider.mObservable.subscribe {
+            mDisposable = accProvider.mObservable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
                     handlePublishImage(intent)
                     mDisposable.dispose()
                 }
-            )
+
 
             if (!accProvider.isAuthorized) {
                 loginFragment = LoginFragment()

@@ -45,10 +45,16 @@ class CommentsDataSource(
 
                         val authors: Set<String> =
                             LinkedHashSet(comments.map { comment -> comment.author.login })
-                        val users = networkManager.getUsersByNames(authors)
-                        comments.map { comment ->
-                            val authorName = comment.author.login
-                            comment.author = users.find { user -> user.login == authorName } as User
+                        when (val authorsResult = networkManager.getUsersByNames(authors)) {
+                            is Result.Success -> {
+                                val users = authorsResult.data
+                                comments.map { comment ->
+                                    val authorName = comment.author.login
+                                    comment.author =
+                                        users.find { user -> user.login == authorName } as User
+                                }
+                            }
+                            is Result.Error -> Timber.e(authorsResult.exception)
                         }
 
                         updateState(RequestState.SUCCESS)
@@ -80,13 +86,19 @@ class CommentsDataSource(
 
                     val authors: Set<String> =
                         LinkedHashSet(comments.map { comment -> comment.author.login })
-                    val users = networkManager.getUsersByNames(authors)
-                    comments.map { comment ->
-                        val authorName = comment.author.login
-                        comment.author = users.find { user -> user.login == authorName } as User
+                    when (val usersResult = networkManager.getUsersByNames(authors)) {
+                        is Result.Success -> {
+                            comments.map { comment ->
+                                val users = usersResult.data
+                                val authorName = comment.author.login
+                                comment.author =
+                                    users.find { user -> user.login == authorName } as User
+                            }
+                        }
+                        is Result.Error -> Timber.e(usersResult.exception)
                     }
 
-                    callback.onResult(comments, key+1)
+                    callback.onResult(comments, key + 1)
                     updateState(RequestState.SUCCESS)
                 }
                 is Result.Error -> {
