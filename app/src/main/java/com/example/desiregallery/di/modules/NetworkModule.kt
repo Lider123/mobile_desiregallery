@@ -11,10 +11,10 @@ import javax.inject.Singleton
  * @author babaetskv on 12.11.19
  */
 @Module
-class NetworkModule {
+open class NetworkModule {
 
     @Singleton
     @Provides
-    fun provideNetworkManager(): NetworkManager =
+    open fun provideNetworkManager(): NetworkManager =
         NetworkManager(ApiService.createService(), QueryService.createService())
 }

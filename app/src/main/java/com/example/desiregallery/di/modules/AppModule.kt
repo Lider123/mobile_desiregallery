@@ -13,7 +13,7 @@ import javax.inject.Singleton
  * @author babaetskv on 12.11.19
  */
 @Module
-class AppModule(private val app: MainApplication) {
+open class AppModule(private val app: MainApplication) {
 
     @Singleton
     @Provides

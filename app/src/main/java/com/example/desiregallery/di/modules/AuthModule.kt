@@ -17,17 +17,18 @@ import javax.inject.Singleton
  * @author babaetskv on 12.11.19
  */
 @Module
-class AuthModule(private val context: Context) {
+open class AuthModule(private val context: Context) {
 
     @Singleton
     @Provides
-    fun provideAccountProvider(
+    open fun provideAccountProvider(
         prefs: IDGSharedPreferencesHelper,
         auth: FirebaseAuth,
         messagingHelper: MessagingHelper,
         networkManager: NetworkManager,
         googleClient: GoogleSignInClient
-    ): AccountProvider = AccountProvider(context, prefs, auth, messagingHelper, networkManager, googleClient)
+    ): AccountProvider =
+        AccountProvider(context, prefs, auth, messagingHelper, networkManager, googleClient)
 
     @Singleton
     @Provides

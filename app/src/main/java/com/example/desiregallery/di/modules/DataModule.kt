@@ -14,13 +14,13 @@ import javax.inject.Singleton
  * @author babaetskv on 12.11.19
  */
 @Module
-class DataModule(private val context: Context) {
+open class DataModule(private val context: Context) {
 
     @Singleton
     @Provides
-    fun providePrefsHelper(): IDGSharedPreferencesHelper = PreferencesHelper(context)
+    open fun providePrefsHelper(): IDGSharedPreferencesHelper = PreferencesHelper(context)
 
     @Singleton
     @Provides
-    fun provideStorageHelper(): IStorageHelper = StorageHelper(FirebaseStorage.getInstance())
+    open fun provideStorageHelper(): IStorageHelper = StorageHelper(FirebaseStorage.getInstance())
 }
