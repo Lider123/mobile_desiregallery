@@ -13,11 +13,11 @@ class LoginActivity : FragmentActivity(), ILoginListener {
         setContentView(R.layout.activity_login)
     }
 
+    override fun onSuccessfulLogin() = goToMainActivity()
+
     private fun goToMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
     }
-
-    override fun onSuccessfulLogin() = goToMainActivity()
 }

@@ -40,10 +40,16 @@ class PostsDataSource(private val networkManager: NetworkManager) :
 
                         val authors: Set<String> =
                             LinkedHashSet(posts.map { post -> post.author.login })
-                        val users = networkManager.getUsersByNames(authors)
-                        posts.map { post ->
-                            val authorName = post.author.login
-                            post.author = users.find { user -> user.login == authorName } as User
+                        when (val usersResult = networkManager.getUsersByNames(authors)) {
+                            is Result.Success -> {
+                                posts.map { post ->
+                                    val users = usersResult.data
+                                    val authorName = post.author.login
+                                    post.author =
+                                        users.find { user -> user.login == authorName } as User
+                                }
+                            }
+                            is Result.Error -> Timber.e(usersResult.exception)
                         }
 
                         updateState(RequestState.SUCCESS)
@@ -71,10 +77,16 @@ class PostsDataSource(private val networkManager: NetworkManager) :
 
                     val authors: Set<String> =
                         LinkedHashSet(posts.map { post -> post.author.login })
-                    val users = networkManager.getUsersByNames(authors)
-                    posts.map { post ->
-                        val authorName = post.author.login
-                        post.author = users.find { user -> user.login == authorName } as User
+                    when (val usersResult = networkManager.getUsersByNames(authors)) {
+                        is Result.Success -> {
+                            posts.map { post ->
+                                val users = usersResult.data
+                                val authorName = post.author.login
+                                post.author =
+                                    users.find { user -> user.login == authorName } as User
+                            }
+                        }
+                        is Result.Error -> Timber.e(usersResult.exception)
                     }
 
                     callback.onResult(posts, key + 1)

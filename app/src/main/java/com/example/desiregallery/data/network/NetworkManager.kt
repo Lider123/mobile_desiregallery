@@ -7,7 +7,10 @@ import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.data.models.User
 import com.example.desiregallery.data.network.query.requests.CommentsQueryRequest
 import com.example.desiregallery.data.network.query.requests.PostsQueryRequest
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.io.IOException
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
@@ -17,25 +20,30 @@ class NetworkManager(
     private val queryService: QueryService
 ) : BaseNetworkManager() {
 
-    fun getUsersByNames(userNames: Collection<String>): List<User> {
-        Timber.i("Preparing to load ${userNames.size} users")
-        val users = ArrayList<User>()
-        val executor = Executors.newCachedThreadPool()
-        for (name in userNames)
-            executor.execute {
-                val userResponse = networkService.getUser(name).execute()
-                if (!userResponse.isSuccessful || userResponse.body() == null)
-                    throw Exception("There was an error while fetching users")
+    suspend fun getUsersByNames(userNames: Collection<String>): Result<List<User>> =
+        withContext(Dispatchers.IO) {
+            Timber.i("Preparing to load ${userNames.size} users")
+            val users = ArrayList<User>()
+            try {
+                val executor = Executors.newCachedThreadPool()
+                for (name in userNames)
+                    executor.execute {
+                        val userResponse = networkService.getUser(name).execute()
+                        val user = userResponse.body()
+                        if (!userResponse.isSuccessful || user == null) throw IOException("There was an error while fetching users")
 
-                users.add(userResponse.body()!!)
+                        users.add(user)
+                    }
+                executor.shutdown()
+                executor.awaitTermination(15, TimeUnit.SECONDS)
+                Timber.i("Loaded ${users.size} users")
+                if (users.size != userNames.size)
+                    throw IOException("There was an error while fetching users")
+            } catch (e: IOException) {
+                return@withContext Result.Error(e)
             }
-        executor.shutdown()
-        executor.awaitTermination(15, TimeUnit.SECONDS)
-        Timber.i("Loaded ${users.size} users")
-        if (users.size != userNames.size)
-            throw Exception("There was an error while fetching users")
-        return users
-    }
+            return@withContext Result.Success(users)
+        }
 
     suspend fun getUser(login: String): Result<User> = makeSafeCall(
         networkService.getUser(login),

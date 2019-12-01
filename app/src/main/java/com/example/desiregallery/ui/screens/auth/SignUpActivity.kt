@@ -17,6 +17,10 @@ import com.example.desiregallery.data.network.NetworkManager
 import com.example.desiregallery.ui.widgets.SnackbarWrapper
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.toolbar_sign_up.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +28,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class SignUpActivity : AppCompatActivity() {
@@ -36,8 +41,8 @@ class SignUpActivity : AppCompatActivity() {
 
     private val parentJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + parentJob)
-    private lateinit var inputTextWatcher: TextWatcher
     private lateinit var snackbar: SnackbarWrapper
+    private lateinit var mDisposable: Disposable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,20 +53,23 @@ class SignUpActivity : AppCompatActivity() {
             onBackPressed()
         }
 
-        inputTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {
-            }
+        sign_up_button.isEnabled = false
+        initListeners()
+    }
 
-            override fun onTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {
-            }
-
-            override fun afterTextChanged(editable: Editable) {
+    override fun onStart() {
+        super.onStart()
+        mDisposable = createTextChangeObservable().toFlowable(BackpressureStrategy.LATEST)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
                 checkForEmptyFields()
                 hideError()
             }
-        }
-        sign_up_button.isEnabled = false
-        initListeners()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (!mDisposable.isDisposed) mDisposable.dispose()
     }
 
     override fun onDestroy() {
@@ -69,13 +77,40 @@ class SignUpActivity : AppCompatActivity() {
         parentJob.cancel()
     }
 
-    private fun initListeners() {
-        sign_up_input_login.addTextChangedListener(inputTextWatcher)
-        sign_up_input_email.addTextChangedListener(inputTextWatcher)
-        sign_up_input_birthday.addTextChangedListener(inputTextWatcher)
-        sign_up_input_password.addTextChangedListener(inputTextWatcher)
-        sign_up_input_confirm.addTextChangedListener(inputTextWatcher)
+    private fun createTextChangeObservable(): Observable<String> {
+        val observable = Observable.create<String> { emitter ->
+            val inputTextWatcher = object : TextWatcher {
 
+                override fun beforeTextChanged(
+                    charSequence: CharSequence,
+                    i: Int,
+                    i2: Int,
+                    i3: Int
+                ) = Unit
+
+                override fun onTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) =
+                    Unit
+
+                override fun afterTextChanged(editable: Editable) {
+                    emitter.onNext(editable.toString())
+                }
+            }
+            val inputFields = listOf(
+                sign_up_input_login,
+                sign_up_input_email,
+                sign_up_input_birthday,
+                sign_up_input_password,
+                sign_up_input_confirm
+            )
+            inputFields.forEach { it.addTextChangedListener(inputTextWatcher) }
+            emitter.setCancellable {
+                inputFields.forEach { it.removeTextChangedListener(inputTextWatcher) }
+            }
+        }
+        return observable.debounce(1, TimeUnit.SECONDS)
+    }
+
+    private fun initListeners() {
         sign_up_input_birthday.setOnClickListener {
             hideError()
             val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
@@ -147,30 +182,34 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun checkForEmptyFields() {
         sign_up_button.isEnabled = arrayOf(
-            sign_up_input_confirm.text.toString(),
-            sign_up_input_password.text.toString(),
-            sign_up_input_birthday.text.toString(),
-            sign_up_input_email.text.toString(),
-            sign_up_input_login.text.toString()
-        ).all { fieldIsValid(it) }
+            sign_up_input_confirm,
+            sign_up_input_password,
+            sign_up_input_birthday,
+            sign_up_input_email,
+            sign_up_input_login
+        ).map { it.text.toString() }.all { fieldIsValid(it) }
     }
 
     private fun enableAll() {
-        sign_up_input_confirm.isEnabled = true
-        sign_up_input_password.isEnabled = true
-        sign_up_input_birthday.isEnabled = true
-        sign_up_input_email.isEnabled = true
-        sign_up_input_login.isEnabled = true
-        sign_up_button.isEnabled = true
+        listOf(
+            sign_up_input_confirm,
+            sign_up_input_password,
+            sign_up_input_birthday,
+            sign_up_input_email,
+            sign_up_input_login,
+            sign_up_button
+        ).forEach { it.isEnabled = true }
     }
 
     private fun disableAll() {
-        sign_up_input_confirm.isEnabled = false
-        sign_up_input_password.isEnabled = false
-        sign_up_input_birthday.isEnabled = false
-        sign_up_input_email.isEnabled = false
-        sign_up_input_login.isEnabled = false
-        sign_up_button.isEnabled = false
+        listOf(
+            sign_up_input_confirm,
+            sign_up_input_password,
+            sign_up_input_birthday,
+            sign_up_input_email,
+            sign_up_input_login,
+            sign_up_button
+        ).forEach { it.isEnabled = false }
     }
 
     private fun fieldIsValid(field: String) = Regex("\\S+").matches(field)
