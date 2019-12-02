@@ -24,25 +24,28 @@ class NetworkManager(
         withContext(Dispatchers.IO) {
             Timber.i("Preparing to load ${userNames.size} users")
             val users = ArrayList<User>()
+            val executor = Executors.newCachedThreadPool()
             try {
-                val executor = Executors.newCachedThreadPool()
+                val potentialError = IOException("There was an error while fetching users")
                 for (name in userNames)
                     executor.execute {
                         val userResponse = networkService.getUser(name).execute()
                         val user = userResponse.body()
-                        if (!userResponse.isSuccessful || user == null) throw IOException("There was an error while fetching users")
+                        if (!userResponse.isSuccessful || user == null) throw potentialError
 
                         users.add(user)
                     }
                 executor.shutdown()
                 executor.awaitTermination(15, TimeUnit.SECONDS)
                 Timber.i("Loaded ${users.size} users")
-                if (users.size != userNames.size)
-                    throw IOException("There was an error while fetching users")
+                if (users.size != userNames.size) throw potentialError
+
+                return@withContext Result.Success(users)
             } catch (e: IOException) {
                 return@withContext Result.Error(e)
+            } finally {
+                if (!executor.isShutdown) executor.shutdown()
             }
-            return@withContext Result.Success(users)
         }
 
     suspend fun getUser(login: String): Result<User> = makeSafeCall(
