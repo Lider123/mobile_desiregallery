@@ -1,54 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
-                name="post"
-                type="com.example.desiregallery.data.models.Post" />
+            name="post"
+            type="com.example.desiregallery.data.models.Post" />
     </data>
 
     <LinearLayout
-            android:id="@+id/root"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            style="@style/Post">
+        android:id="@+id/root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        style="@style/Post">
 
         <com.example.desiregallery.ui.widgets.SquareImageView
-                android:id="@+id/item_post_image"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleType="centerCrop"
-                android:adjustViewBounds="true"
-                tools:src="@tools:sample/backgrounds/scenic"/>
+            android:id="@+id/item_post_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            tools:src="@tools:sample/backgrounds/scenic"/>
 
         <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/item_status_padding">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/item_status_padding">
 
             <TextView
-                    android:id="@+id/item_post_rating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:layout_centerHorizontal="true"
-                    android:drawableLeft="@drawable/ic_grade_gold_32dp"
-                    android:drawableStart="@drawable/ic_grade_gold_32dp"
-                    android:textColor="@color/colorOnBackground"
-                    android:textSize="@dimen/item_rating_font_size"
-                    android:text="@string/item_post_rating_placeholder"
-                    tools:text="@sample/posts.json/data/rating"/>
+                android:id="@+id/item_post_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_centerHorizontal="true"
+                android:drawableLeft="@drawable/ic_grade_gold_32dp"
+                android:drawableStart="@drawable/ic_grade_gold_32dp"
+                android:textColor="@color/colorOnBackground"
+                android:textSize="@dimen/item_rating_font_size"
+                android:text="@string/item_post_rating_placeholder"
+                tools:text="@sample/posts.json/data/rating"/>
 
             <ImageView
-                    android:id="@+id/item_post_comment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    app:srcCompat="@drawable/ic_comment_colorsecondary_32dp" />
+                android:id="@+id/item_post_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                app:srcCompat="@drawable/ic_comment_colorsecondary_32dp" />
         </RelativeLayout>
     </LinearLayout>
 </layout>

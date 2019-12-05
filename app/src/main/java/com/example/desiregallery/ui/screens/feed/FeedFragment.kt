@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -22,6 +24,8 @@ import com.example.desiregallery.ui.widgets.SnackbarWrapper
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.fragment_feed.*
 import kotlinx.android.synthetic.main.fragment_feed.view.*
+import timber.log.Timber
+import java.lang.Exception
 import javax.inject.Inject
 
 class FeedFragment : Fragment() {
@@ -59,6 +63,16 @@ class FeedFragment : Fragment() {
         feed_fab.setOnClickListener { CropImage.activity().start(context!!, this) }
         swipe_container.setOnRefreshListener {
             model.updatePosts()
+        }
+        try {
+            val field = swipe_container.javaClass.getDeclaredField("mCircleView")
+            field.isAccessible = true
+            val img = field.get(swipe_container) as ImageView
+            val customSpinner =
+                ContextCompat.getDrawable(requireContext(), R.drawable.custom_spinner)
+            img.setImageDrawable(customSpinner)
+        } catch (e: Exception) {
+            Timber.w(e)
         }
     }
 

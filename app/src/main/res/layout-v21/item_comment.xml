@@ -14,8 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-            android:elevation="1dp"
-            style="@style/Comment">
+        android:elevation="1dp"
+        style="@style/Comment">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/item_author_photo"
@@ -48,7 +48,7 @@
                 android:textColor="@color/colorOnSurface"
                 android:textSize="14sp"
                 android:gravity="start"
-                    tools:text="@tools:sample/lorem/random"/>
+                tools:text="@tools:sample/lorem/random"/>
 
             <TextView
                 android:id="@+id/item_comment_time"
