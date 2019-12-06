@@ -86,9 +86,9 @@ class CommentsActivity : AppCompatActivity() {
             }
         })
         model.commentsLiveData.observe(this, Observer<PagedList<Comment>> { comments ->
-            val adapter = CommentsAdapter()
-            adapter.submitList(comments)
-            comments_list.adapter = adapter
+            comments_list.adapter = CommentsAdapter().apply {
+                submitList(comments)
+            }
             updateHintVisibility(comments.isEmpty())
         })
     }

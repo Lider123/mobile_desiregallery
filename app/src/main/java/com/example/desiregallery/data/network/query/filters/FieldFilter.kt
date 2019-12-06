@@ -12,7 +12,6 @@ import com.google.gson.JsonObject
  * @author babaetskv on 19.09.19
  */
 class FieldFilter(field: String, op: ComparisonOperator, value: Value) : IFilter {
-
     override val json: JsonObject = JsonObject().apply {
         addProperty(OP, op.name)
         add(VALUE, value.jsonValue)

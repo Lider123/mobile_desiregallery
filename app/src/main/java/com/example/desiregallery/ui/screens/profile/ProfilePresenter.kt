@@ -110,14 +110,11 @@ class ProfilePresenter(
     }
 
     private fun updateAll() {
-        val account = accProvider.currAccount
-        account?.let {
+        accProvider.currAccount?.let {
             view.updateName(it.displayName)
-
             view.updateAge(getAgeFromBirthday(it.birthday))
             updateStats(it.displayName)
             if (it.photoUrl.isNotEmpty()) view.updatePhoto(it.photoUrl)
-
             if (it !is EmailAccount) view.updateEditButtonVisibility(false)
         }
     }

@@ -2,13 +2,13 @@ package com.example.desiregallery.ui.screens.comments
 
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
-import androidx.paging.PageKeyedDataSource
 import com.example.desiregallery.data.Result
 import com.example.desiregallery.data.models.Comment
 import com.example.desiregallery.data.models.User
 import com.example.desiregallery.data.network.NetworkManager
 import com.example.desiregallery.data.network.RequestState
 import com.example.desiregallery.data.network.query.requests.CommentsQueryRequest
+import com.example.desiregallery.ui.screens.base.BaseDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -20,8 +20,7 @@ import timber.log.Timber
 class CommentsDataSource(
     private val postId: String,
     private val networkManager: NetworkManager
-) : PageKeyedDataSource<Long, Comment>() {
-    var state: MutableLiveData<RequestState> = MutableLiveData()
+) : BaseDataSource<Comment>() {
 
     override fun loadInitial(
         params: LoadInitialParams<Long>,
@@ -42,21 +41,7 @@ class CommentsDataSource(
                         updateState(RequestState.NO_DATA)
                     } else {
                         Timber.i("Successfully loaded ${comments.size} comments for page 1")
-
-                        val authors: Set<String> =
-                            LinkedHashSet(comments.map { comment -> comment.author.login })
-                        when (val authorsResult = networkManager.getUsersByNames(authors)) {
-                            is Result.Success -> {
-                                val users = authorsResult.data
-                                comments.map { comment ->
-                                    val authorName = comment.author.login
-                                    comment.author =
-                                        users.find { user -> user.login == authorName } as User
-                                }
-                            }
-                            is Result.Error -> Timber.e(authorsResult.exception)
-                        }
-
+                        comments.fetchAuthors()
                         updateState(RequestState.SUCCESS)
                     }
                     callback.onResult(comments, null, 2L)
@@ -83,21 +68,7 @@ class CommentsDataSource(
                 is Result.Success -> {
                     val comments = result.data
                     Timber.i("Successfully loaded ${comments.size} comments for page $key")
-
-                    val authors: Set<String> =
-                        LinkedHashSet(comments.map { comment -> comment.author.login })
-                    when (val usersResult = networkManager.getUsersByNames(authors)) {
-                        is Result.Success -> {
-                            comments.map { comment ->
-                                val users = usersResult.data
-                                val authorName = comment.author.login
-                                comment.author =
-                                    users.find { user -> user.login == authorName } as User
-                            }
-                        }
-                        is Result.Error -> Timber.e(usersResult.exception)
-                    }
-
+                    comments.fetchAuthors()
                     callback.onResult(comments, key + 1)
                     updateState(RequestState.SUCCESS)
                 }
@@ -109,10 +80,20 @@ class CommentsDataSource(
         }
     }
 
-    override fun loadBefore(params: LoadParams<Long>, callback: LoadCallback<Long, Comment>) {
-    }
+    override fun loadBefore(params: LoadParams<Long>, callback: LoadCallback<Long, Comment>) = Unit
 
-    fun updateState(state: RequestState) = this.state.postValue(state)
+    private suspend fun List<Comment>.fetchAuthors() {
+        val authors: Set<String> = LinkedHashSet(this.map { comment -> comment.author.login })
+        when (val authorsResult = networkManager.getUsersByNames(authors)) {
+            is Result.Success -> {
+                this.map { comment ->
+                    comment.author =
+                        authorsResult.data.find { user -> user.login == comment.author.login } as User
+                }
+            }
+            is Result.Error -> Timber.e(authorsResult.exception)
+        }
+    }
 
     class Factory(
         private val postId: String,

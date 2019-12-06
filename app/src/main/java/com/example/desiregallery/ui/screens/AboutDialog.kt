@@ -16,12 +16,15 @@ import com.example.desiregallery.utils.getAppVersion
 class AboutDialog(context: Context) : AlertDialog(context) {
 
     init {
-        val message = TextView(context)
-        message.setPadding(60, 40, 40, 40)
-        val s = SpannableString(context.getString(R.string.about_message, getAppVersion(context)))
-        Linkify.addLinks(s, Linkify.WEB_URLS)
-        message.text = s
-        message.movementMethod = LinkMovementMethod.getInstance()
+        val message = TextView(context).apply {
+            setPadding(60, 40, 40, 40)
+            text = SpannableString(
+                context.getString(R.string.about_message, getAppVersion(context))
+            ).also {
+                Linkify.addLinks(it, Linkify.WEB_URLS)
+            }
+            movementMethod = LinkMovementMethod.getInstance()
+        }
 
         setTitle(R.string.app_name)
         setCancelable(true)

@@ -84,11 +84,11 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun setToolbar() {
-        toolbar = findViewById(R.id.main_toolbar)
-        toolbar.title = resources.getString(R.string.app_name)
+        toolbar = findViewById<Toolbar>(R.id.main_toolbar).apply {
+            title = resources.getString(R.string.app_name)
+        }
         setSupportActionBar(toolbar)
-        val actionbar: ActionBar? = supportActionBar
-        actionbar?.apply {
+        supportActionBar?.run {
             setDisplayHomeAsUpEnabled(true)
             setHomeAsUpIndicator(R.drawable.ic_menu_coloronprimary_32dp)
         }
@@ -96,18 +96,20 @@ class MainActivity : AppCompatActivity() {
 
     private fun setNavigationMenu() {
         drawerLayout = findViewById(R.id.drawer_layout)
-        navigationView = findViewById(R.id.nav_view)
-        navigationView.itemIconTintList = null
-        navigationView.setNavigationItemSelectedListener { menuItem ->
-            selectDrawerItem(menuItem)
-            menuItem.isChecked = true
-            drawerLayout.closeDrawers()
-            return@setNavigationItemSelectedListener true
+        navigationView = findViewById<NavigationView>(R.id.nav_view).apply {
+            itemIconTintList = null
+            setNavigationItemSelectedListener { menuItem ->
+                selectDrawerItem(menuItem)
+                menuItem.isChecked = true
+                drawerLayout.closeDrawers()
+                return@setNavigationItemSelectedListener true
+            }
         }
 
-        val headerView = navigationView.getHeaderView(0)
-        headerTextView = headerView.findViewById(R.id.nav_header_login)
-        headerImageView = headerView.findViewById(R.id.nav_header_image)
+        navigationView.getHeaderView(0).also {
+            headerTextView = it.findViewById(R.id.nav_header_login)
+            headerImageView = it.findViewById(R.id.nav_header_image)
+        }
     }
 
     private fun selectDrawerItem(menuItem: MenuItem) {

@@ -17,7 +17,6 @@ import com.example.desiregallery.ui.screens.auth.ILoginListener
 import com.example.desiregallery.ui.screens.auth.LoginFragment
 import com.example.desiregallery.utils.getBitmapFromUri
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.*
 import timber.log.Timber

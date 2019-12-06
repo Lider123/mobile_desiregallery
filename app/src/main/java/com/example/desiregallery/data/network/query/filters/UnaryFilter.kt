@@ -10,7 +10,6 @@ import com.google.gson.JsonObject
  * @author babaetskv on 19.09.19
  */
 class UnaryFilter(field: String, op: UnaryOperator) : IFilter {
-
     override val json = JsonObject().apply {
         addProperty(OP, op.name)
         add(FIELD, JsonObject().apply { addProperty(FIELD_PATH, field) })

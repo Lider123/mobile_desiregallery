@@ -27,17 +27,13 @@ class ModalFragmentFactory(private val fragmentManager: FragmentManager) {
                         removeListener(this)
                     }
 
-                    override fun onTransitionResume(transition: Transition?) {
-                    }
+                    override fun onTransitionResume(transition: Transition?) = Unit
 
-                    override fun onTransitionPause(transition: Transition?) {
-                    }
+                    override fun onTransitionPause(transition: Transition?) = Unit
 
-                    override fun onTransitionCancel(transition: Transition?) {
-                    }
+                    override fun onTransitionCancel(transition: Transition?) = Unit
 
-                    override fun onTransitionStart(transition: Transition?) {
-                    }
+                    override fun onTransitionStart(transition: Transition?) = Unit
                 })
             }
             modalFragment.exitTransition = Fade(Fade.OUT)
@@ -53,17 +49,13 @@ class ModalFragmentFactory(private val fragmentManager: FragmentManager) {
                         removeListener(this)
                     }
 
-                    override fun onTransitionResume(transition: Transition?) {
-                    }
+                    override fun onTransitionResume(transition: Transition?) = Unit
 
-                    override fun onTransitionPause(transition: Transition?) {
-                    }
+                    override fun onTransitionPause(transition: Transition?) = Unit
 
-                    override fun onTransitionCancel(transition: Transition?) {
-                    }
+                    override fun onTransitionCancel(transition: Transition?) = Unit
 
-                    override fun onTransitionStart(transition: Transition?) {
-                    }
+                    override fun onTransitionStart(transition: Transition?) = Unit
                 })
             }
         } // TODO: add support for old versions

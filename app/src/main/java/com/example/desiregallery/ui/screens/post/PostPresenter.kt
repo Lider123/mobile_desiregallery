@@ -13,7 +13,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class PostPresenter(private val networkManager: NetworkManager): IPostContract.Presenter {
+class PostPresenter(private val networkManager: NetworkManager) : IPostContract.Presenter {
     private lateinit var view: IPostContract.View
     private lateinit var post: Post
 

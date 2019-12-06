@@ -31,9 +31,7 @@ class ProfileFragment : Fragment(), IProfileContract.View {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_profile, container, false)
-    }
+    ): View? = inflater.inflate(R.layout.fragment_profile, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -76,10 +74,8 @@ class ProfileFragment : Fragment(), IProfileContract.View {
     }
 
     override fun updatePosts(posts: List<Post>) {
-        val lm = GridLayoutManager(context, 2)
-        val adapter = SmallPostAdapter(posts)
-        profile_posts.layoutManager = lm
-        profile_posts.adapter = adapter
+        profile_posts.layoutManager = GridLayoutManager(context, 2)
+        profile_posts.adapter = SmallPostAdapter(posts)
     }
 
     override fun showMessage(message: String) = snackbar.show(message)

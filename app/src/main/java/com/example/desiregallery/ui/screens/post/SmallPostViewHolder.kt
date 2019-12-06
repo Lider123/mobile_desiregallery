@@ -1,10 +1,10 @@
 package com.example.desiregallery.ui.screens.post
 
-import androidx.recyclerview.widget.RecyclerView
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.databinding.ItemPostSmallBinding
+import com.example.desiregallery.ui.screens.base.BaseViewHolder
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
 
@@ -13,9 +13,15 @@ import javax.inject.Inject
  */
 class SmallPostViewHolder(
     private val bind: ItemPostSmallBinding
-) : RecyclerView.ViewHolder(bind.root), IPostContract.View {
+) : BaseViewHolder<Post>(bind.root), IPostContract.View {
     @Inject
     lateinit var presenter: PostPresenter
+
+    override fun bind(item: Post) {
+        MainApplication.appComponent.inject(this)
+        presenter.attach(this, item)
+        initListeners()
+    }
 
     override fun updateRating(rating: Float) {
         bind.itemPostRating.text = bind.itemPostRating
@@ -32,14 +38,11 @@ class SmallPostViewHolder(
             .into(bind.itemPostImage)
     }
 
-    override fun updateAuthorName(name: String) {
-    }
+    override fun updateAuthorName(name: String) = Unit
 
-    override fun updateAuthorPhoto(imageUrl: String) {
-    }
+    override fun updateAuthorPhoto(imageUrl: String) = Unit
 
-    override fun updateTimestamp(time: Long) {
-    }
+    override fun updateTimestamp(time: Long) = Unit
 
     private fun initListeners() {
         with(bind) {
@@ -53,11 +56,5 @@ class SmallPostViewHolder(
                 presenter.onCommentsClick(bind.itemPostComment.context)
             }
         }
-    }
-
-    fun bind(post: Post) {
-        MainApplication.appComponent.inject(this)
-        presenter.attach(this, post)
-        initListeners()
     }
 }
