@@ -34,31 +34,22 @@
             app:layout_anchorGravity="bottom|right|end"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <LinearLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="8dp">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/birthday"
-            android:textColor="@color/colorPrimary"
-            android:paddingLeft="12dp"
-            android:paddingStart="12dp"
-            android:paddingRight="12dp"/>
-        <EditText
+        android:hint="@string/birthday"
+        android:layout_margin="8dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_birthday"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/birthday"
             android:inputType="text"
-            android:maxLines="1"
             android:clickable="true"
             android:focusable="true"
             android:focusableInTouchMode="false"
-            style="@style/CustomEditText"/>
-    </LinearLayout>
+            android:maxLines="1" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
