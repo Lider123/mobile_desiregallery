@@ -23,7 +23,7 @@
             android:scaleType="centerCrop"
             android:src="@drawable/material"
             android:layout_gravity="center"
-                tools:src="@tools:sample/avatars"/>
+            tools:src="@tools:sample/avatars"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/edit_new_image"
@@ -54,7 +54,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-            android:padding="8dp">
+        android:padding="8dp">
 
         <Button
             android:id="@+id/edit_cancel"
@@ -75,18 +75,18 @@
             style="@style/CustomFlatButton"/>
 
         <TextView
-                android:id="@+id/edit_error"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:text="@string/profile_image_upload_failure"
-                android:visibility="gone"
-                android:maxLines="2"
-                tools:visibility="visible"
-                style="@style/ErrorText"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/edit_cancel"/>
+            android:id="@+id/edit_error"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="@string/profile_image_upload_failure"
+            android:visibility="gone"
+            android:maxLines="2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/edit_cancel"
+            tools:visibility="visible"
+            style="@style/ErrorText"/>
 
         <ProgressBar
             android:id="@+id/edit_progress"
@@ -95,6 +95,7 @@
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:visibility="visible"/>
+            tools:visibility="visible"
+            style="@style/CustomProgressBar"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

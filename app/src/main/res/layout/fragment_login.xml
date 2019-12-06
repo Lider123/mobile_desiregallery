@@ -1,94 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/login_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        tools:context=".ui.screens.auth.LoginFragment">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingStart="32dp"
-            android:paddingEnd="32dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            tools:context=".ui.screens.auth.LoginFragment">
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+            android:orientation="vertical">
+
             <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:src="@drawable/logo"
-                    android:paddingBottom="32dp"
-                    android:scaleType="fitEnd"
-                    android:layout_weight="1"/>
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:src="@drawable/logo"
+                android:paddingBottom="32dp"
+                android:scaleType="fitEnd"
+                android:layout_weight="1"/>
 
             <EditText
-                    android:id="@+id/input_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    android:hint="@string/email"
-                    style="@style/CustomEditText.Solid"
-                    android:layout_marginBottom="8dp"/>
+                android:id="@+id/input_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:hint="@string/email"
+                style="@style/CustomEditText.Solid"
+                android:layout_marginBottom="8dp"/>
 
             <EditText
-                    android:id="@+id/input_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPassword"
-                    android:hint="@string/password"
-                    style="@style/CustomEditText.Solid"
-                    android:layout_marginBottom="8dp"/>
+                android:id="@+id/input_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:hint="@string/password"
+                android:layout_marginBottom="8dp"
+                style="@style/CustomEditText.Solid"/>
 
             <Button
-                    android:id="@+id/button_sign_in"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/sign_in"
-                    style="@style/CustomButton"/>
+                android:id="@+id/button_sign_in"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/sign_in"
+                style="@style/CustomButton"/>
 
             <TextView
-                    android:text="@string/sign_up_offer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:foregroundGravity="center"
-                    android:id="@+id/link_sign_up"
-                    android:gravity="center_horizontal"
-                    android:textColor="@color/colorSecondary"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="32dp"/>
+                android:text="@string/sign_up_offer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:foregroundGravity="center"
+                android:id="@+id/link_sign_up"
+                android:gravity="center_horizontal"
+                android:textColor="@color/colorSecondary"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="32dp"/>
 
             <Button
-                    android:id="@+id/button_sign_in_vk"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/sign_in_with_vk"
-                    android:drawableStart="@drawable/vk"
-                    android:drawableLeft="@drawable/vk"
-                    android:layout_marginBottom="8dp"
-                    style="@style/VKButton"/>
+                android:id="@+id/button_sign_in_vk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/sign_in_with_vk"
+                android:drawableStart="@drawable/vk"
+                android:drawableLeft="@drawable/vk"
+                android:layout_marginBottom="8dp"
+                style="@style/VKButton"/>
 
             <com.shobhitpuri.custombuttons.GoogleSignInButton
-                    android:id="@+id/button_sign_in_google"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/sign_in_with_google"
-                    app:isDarkTheme="false"/>
-        </LinearLayout>
-        <ProgressBar
-                android:id="@+id/login_progress"
-                android:layout_width="wrap_content"
+                android:id="@+id/button_sign_in_google"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:visibility="gone"
-                style="?android:attr/progressBarStyleLarge"/>
+                android:text="@string/sign_in_with_google"
+                app:isDarkTheme="false"/>
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/login_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            tools:visibility="visible"
+            style="@style/CustomProgressBar"/>
     </RelativeLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -26,6 +26,9 @@
         <item name="android:background">@drawable/button_vk_background</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
+    <style name="CustomProgressBar" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminateDrawable">@drawable/custom_spinner</item>
+    </style>
     <style name="CustomEditText" parent="Widget.AppCompat.EditText">
         <item name="android:textColor">@color/colorOnBackground</item>
         <item name="android:textColorHint">@color/colorHint</item>

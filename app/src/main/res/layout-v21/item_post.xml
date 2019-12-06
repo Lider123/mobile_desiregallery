@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -62,7 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
-                tools:src="@tools:sample/backgrounds/scenic"/>
+            tools:src="@tools:sample/backgrounds/scenic"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -79,7 +80,7 @@
                 android:textColor="@color/colorOnBackground"
                 android:textSize="@dimen/item_rating_font_size"
                 android:text="@string/item_post_rating_placeholder"
-                    tools:text="@sample/posts.json/data/rating"/>
+                tools:text="@sample/posts.json/data/rating"/>
 
             <ImageView
                 android:id="@+id/item_post_comment"
