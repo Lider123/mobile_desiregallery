@@ -59,9 +59,8 @@ class LoginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_login, container, false)
         MainApplication.appComponent.inject(this)
-        return view
+        return inflater.inflate(R.layout.fragment_login, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -201,22 +200,30 @@ class LoginFragment : Fragment() {
 
     private fun showProgress() {
         login_progress.visibility = View.VISIBLE
-        input_email.isEnabled = false
-        input_password.isEnabled = false
-        link_sign_up.isEnabled = false
-        button_sign_in.isEnabled = false
-        button_sign_in_vk.isEnabled = false
-        button_sign_in_google.isEnabled = false
+        arrayOf(
+            input_email,
+            input_password,
+            link_sign_up,
+            button_sign_in,
+            button_sign_in_vk,
+            button_sign_in_google
+        ).forEach {
+            it.isEnabled = false
+        }
     }
 
     private fun hideProgress() {
         login_progress.visibility = View.GONE
-        input_email.isEnabled = true
-        input_password.isEnabled = true
-        link_sign_up.isEnabled = true
-        button_sign_in.isEnabled = true
-        button_sign_in_vk.isEnabled = true
-        button_sign_in_google.isEnabled = true
+        arrayOf(
+            input_email,
+            input_password,
+            link_sign_up,
+            button_sign_in,
+            button_sign_in_vk,
+            button_sign_in_google
+        ).forEach {
+            it.isEnabled = true
+        }
     }
 
     companion object {

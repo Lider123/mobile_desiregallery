@@ -40,10 +40,7 @@ class FullScreenImageActivity : AppCompatActivity() {
         MainApplication.appComponent.inject(this)
         snackbar = SnackbarWrapper(full_screen_container)
 
-        toolbar = findViewById(R.id.image_screen_toolbar)
-        toolbar.title = ""
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        setToolbar()
 
         val imageUrl = intent.getStringExtra(EXTRA_IMAGE_URL)
         Picasso.with(this)
@@ -124,9 +121,16 @@ class FullScreenImageActivity : AppCompatActivity() {
         }
     }
 
+    private fun setToolbar() {
+        toolbar = findViewById<Toolbar>(R.id.image_screen_toolbar).apply {
+            title = ""
+        }
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
     private fun shareImage() {
-        val bmpUri = getLocalBitmapUri(image, this)
-        bmpUri?.let {
+        getLocalBitmapUri(image, this)?.let {
             val shareIntent = Intent()
             shareIntent.action = Intent.ACTION_SEND
             shareIntent.putExtra(Intent.EXTRA_STREAM, it)

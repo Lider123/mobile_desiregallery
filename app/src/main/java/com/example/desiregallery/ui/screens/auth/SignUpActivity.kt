@@ -171,9 +171,8 @@ class SignUpActivity : AppCompatActivity() {
             }
         }
 
-        val firebaseUser = auth.currentUser
         val profileUpdates = UserProfileChangeRequest.Builder().setDisplayName(user.login).build()
-        firebaseUser?.updateProfile(profileUpdates)?.addOnCompleteListener(this) { task ->
+        auth.currentUser?.updateProfile(profileUpdates)?.addOnCompleteListener(this) { task ->
             if (task.isSuccessful) {
                 Timber.i("Data of user ${user.login} have successfully been saved to firebase auth")
             } else Timber.e(task.exception, "Unable to save user data to firebase auth")

@@ -25,8 +25,7 @@ fun hideSoftKeyboard(activity: Activity) {
 
 fun formatDate(context: Context, datetime: Long): String {
     val format = context.getString(R.string.datetime_format)
-    val formatter = SimpleDateFormat(format, Locale.getDefault())
-    return formatter.format(datetime)
+    return SimpleDateFormat(format, Locale.getDefault()).format(datetime)
 }
 
 fun getAgeFromBirthday(birthday: String): Int? {

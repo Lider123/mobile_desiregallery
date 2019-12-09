@@ -1,18 +1,18 @@
 package com.example.desiregallery.ui.screens.comments
 
-import androidx.recyclerview.widget.RecyclerView
 import com.example.desiregallery.R
 import com.example.desiregallery.databinding.ItemCommentBinding
 import com.example.desiregallery.data.models.Comment
+import com.example.desiregallery.ui.screens.base.BaseViewHolder
 import com.example.desiregallery.utils.formatDate
 import com.squareup.picasso.Picasso
 
 /**
  * @author babaetskv on 24.10.19
  */
-class CommentViewHolder(private val bind: ItemCommentBinding) : RecyclerView.ViewHolder(bind.root) {
+class CommentViewHolder(private val bind: ItemCommentBinding) : BaseViewHolder<Comment>(bind.root) {
 
-    fun bind(item: Comment) {
+    override fun bind(item: Comment) {
         with(bind) {
             itemCommentText.text = item.text
             itemCommentTime.text = formatDate(itemCommentTime.context, item.timestamp)

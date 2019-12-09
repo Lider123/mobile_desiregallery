@@ -11,7 +11,6 @@ import com.google.gson.JsonObject
  * @author babaetskv on 19.09.19
  */
 class CompositeFilter(filters: List<FieldFilter>, op: LogicalOperator) : IFilter {
-
     override val json = JsonObject().apply {
         addProperty(OP, op.name)
         add(FILTERS, JsonArray().apply {

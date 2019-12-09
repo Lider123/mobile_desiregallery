@@ -110,11 +110,9 @@ class EditProfileFragment : Fragment() {
                 user.birthday = p0.toString()
             }
 
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = Unit
 
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = Unit
         })
         edit_birthday.setOnClickListener {
             setErrorMessageVisibility(false)
@@ -204,12 +202,11 @@ class EditProfileFragment : Fragment() {
             }
         }
 
-        val firebaseUser = auth.currentUser
         val profileUpdates = UserProfileChangeRequest.Builder()
             .setDisplayName(user.login)
             .setPhotoUri(Uri.parse(user.photo))
             .build()
-        firebaseUser?.updateProfile(profileUpdates)
+        auth.currentUser?.updateProfile(profileUpdates)
             ?.addOnCompleteListener(requireActivity()) { task ->
                 if (task.isSuccessful) {
                     Timber.i("Data of user ${user.login} have successfully been saved to firebase auth")
@@ -219,18 +216,26 @@ class EditProfileFragment : Fragment() {
 
     private fun showProgress() {
         edit_progress.visibility = View.VISIBLE
-        edit_done.isEnabled = false
-        edit_cancel.isEnabled = false
-        edit_birthday.isEnabled = false
-        edit_new_image.isEnabled = false
+        arrayOf(
+            edit_done,
+            edit_cancel,
+            edit_birthday,
+            edit_new_image
+        ).forEach {
+            it.isEnabled = false
+        }
     }
 
     private fun hideProgress() {
         edit_progress.visibility = View.GONE
-        edit_done.isEnabled = true
-        edit_cancel.isEnabled = true
-        edit_birthday.isEnabled = true
-        edit_new_image.isEnabled = true
+        arrayOf(
+            edit_done,
+            edit_cancel,
+            edit_birthday,
+            edit_new_image
+        ).forEach {
+            it.isEnabled = true
+        }
     }
 
     private fun setErrorMessageVisibility(visible: Boolean) {
@@ -241,12 +246,13 @@ class EditProfileFragment : Fragment() {
         private const val EXTRA_USER = "user"
 
         fun createInstance(user: User, callback: Callback): EditProfileFragment {
-            val bundle = Bundle()
-            bundle.putSerializable(EXTRA_USER, user)
-            val instance = EditProfileFragment()
-            instance.arguments = bundle
-            instance.callback = callback
-            return instance
+            val bundle = Bundle().apply {
+                putSerializable(EXTRA_USER, user)
+            }
+            return EditProfileFragment().apply {
+                arguments = bundle
+                this@apply.callback = callback
+            }
         }
     }
 
