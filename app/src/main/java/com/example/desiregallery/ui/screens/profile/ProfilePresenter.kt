@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentManager
 import com.example.desiregallery.R
 import com.example.desiregallery.auth.AccountProvider
 import com.example.desiregallery.auth.EmailAccount
+import com.example.desiregallery.auth.IAccount
 import com.example.desiregallery.data.Result
 import com.example.desiregallery.data.models.User
 import com.example.desiregallery.data.network.NetworkManager
@@ -23,6 +24,7 @@ import kotlin.math.min
  * @author babaetskv on 29.10.19
  */
 class ProfilePresenter(
+    private val account: IAccount?,
     private val resources: Resources,
     private val accProvider: AccountProvider,
     private val networkManager: NetworkManager,
@@ -35,19 +37,20 @@ class ProfilePresenter(
 
     override fun attach(view: IProfileContract.View) {
         this.view = view
-        mDisposable = accProvider.mObservable
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { updateAll() }
+        if (account?.isCurrent() == true) {
+            mDisposable = accProvider.mObservable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { updateAll() }
+        }
         updateAll()
     }
 
     override fun detach() {
-        if (!mDisposable.isDisposed) mDisposable.dispose()
+        if (account?.isCurrent() == true && !mDisposable.isDisposed) mDisposable.dispose()
     }
 
     override fun onEditClick(fragmentManager: FragmentManager) {
-        val account = accProvider.currAccount
-        if (account is EmailAccount) {
+        if (account?.isCurrent() == true && account is EmailAccount) {
             editFragment = EditProfileFragment.createInstance(
                 account.user,
                 object : EditProfileFragment.Callback {
@@ -110,12 +113,14 @@ class ProfilePresenter(
     }
 
     private fun updateAll() {
-        accProvider.currAccount?.let {
+        account?.let {
             view.updateName(it.displayName)
             view.updateAge(getAgeFromBirthday(it.birthday))
             updateStats(it.displayName)
             if (it.photoUrl.isNotEmpty()) view.updatePhoto(it.photoUrl)
-            if (it !is EmailAccount) view.updateEditButtonVisibility(false)
+            if (!it.isCurrent() || it !is EmailAccount) view.updateEditButtonVisibility(false)
         }
     }
+
+    private fun IAccount.isCurrent() = this == accProvider.currAccount
 }

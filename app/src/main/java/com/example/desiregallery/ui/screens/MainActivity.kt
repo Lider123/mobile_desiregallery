@@ -1,23 +1,22 @@
 package com.example.desiregallery.ui.screens
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.google.android.material.navigation.NavigationView
-import androidx.core.view.GravityCompat
-import androidx.appcompat.app.ActionBar
-import androidx.appcompat.widget.Toolbar
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.auth.AccountProvider
 import com.example.desiregallery.ui.screens.auth.LoginActivity
-import com.example.desiregallery.ui.screens.profile.ProfileFragment
 import com.example.desiregallery.ui.screens.feed.FeedFragment
+import com.example.desiregallery.ui.screens.profile.ProfileFragment
+import com.google.android.material.navigation.NavigationView
 import com.squareup.picasso.Picasso
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -114,7 +113,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun selectDrawerItem(menuItem: MenuItem) {
         when (menuItem.itemId) {
-            R.id.nav_profile -> replaceFragment(ProfileFragment(), menuItem.title)
+            R.id.nav_profile -> replaceFragment(
+                ProfileFragment.createInstance(accProvider.currAccount!!),
+                menuItem.title
+            )
             R.id.nav_feed -> replaceFragment(FeedFragment(), R.string.app_name)
             R.id.nav_settings -> replaceFragment(SettingsFragment(), menuItem.title)
             R.id.nav_logout -> handleLogout()

@@ -3,10 +3,12 @@ package com.example.desiregallery
 import android.app.Application
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.core.CrashlyticsCore
+import com.example.desiregallery.auth.IAccount
 import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.di.components.AppComponent
 import com.example.desiregallery.di.components.CommentsComponent
 import com.example.desiregallery.di.components.DaggerAppComponent
+import com.example.desiregallery.di.components.ProfileComponent
 import com.example.desiregallery.di.modules.*
 import com.example.desiregallery.utils.logging.ReleaseTree
 import com.vk.sdk.VKSdk
@@ -17,6 +19,7 @@ import timber.log.Timber
 
 class MainApplication : Application() {
     private var commentsComponent: CommentsComponent? = null
+    private var profileComponent: ProfileComponent? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -27,7 +30,6 @@ class MainApplication : Application() {
             .networkModule(NetworkModule())
             .analyticsModule(AnalyticsModule(applicationContext))
             .dataModule(DataModule(applicationContext))
-            .profileModule(ProfileModule())
             .postsModule(PostsModule())
             .build()
 
@@ -61,6 +63,17 @@ class MainApplication : Application() {
 
     fun clearCommentComponent() {
         commentsComponent = null
+    }
+
+    fun plusProfileComponent(account: IAccount?): ProfileComponent {
+        if (profileComponent == null) {
+            profileComponent = appComponent.plusProfileComponent(ProfileModule(account))
+        }
+        return profileComponent as ProfileComponent
+    }
+
+    fun clearProfileComponent() {
+        profileComponent = null
     }
 
     companion object {

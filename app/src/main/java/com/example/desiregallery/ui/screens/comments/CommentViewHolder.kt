@@ -1,9 +1,13 @@
 package com.example.desiregallery.ui.screens.comments
 
+import android.content.Context
+import android.content.Intent
 import com.example.desiregallery.R
 import com.example.desiregallery.databinding.ItemCommentBinding
 import com.example.desiregallery.data.models.Comment
+import com.example.desiregallery.data.models.User
 import com.example.desiregallery.ui.screens.base.BaseViewHolder
+import com.example.desiregallery.ui.screens.profile.ProfileActivity
 import com.example.desiregallery.utils.formatDate
 import com.squareup.picasso.Picasso
 
@@ -31,6 +35,16 @@ class CommentViewHolder(private val bind: ItemCommentBinding) : BaseViewHolder<C
                     .placeholder(R.drawable.material)
                     .into(itemAuthorPhoto)
             }
+            itemAuthorPhoto.setOnClickListener {
+                goToProfileActivity(root.context, item.author)
+            }
         }
+    }
+
+    private fun goToProfileActivity(context: Context, author: User) {
+        val intent = Intent(context, ProfileActivity::class.java).apply {
+            putExtra(ProfileActivity.EXTRA_USER, author)
+        }
+        context.startActivity(intent)
     }
 }

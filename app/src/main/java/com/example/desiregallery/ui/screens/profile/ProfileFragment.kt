@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
+import com.example.desiregallery.auth.IAccount
 import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.ui.screens.post.SmallPostAdapter
 import com.example.desiregallery.ui.widgets.SnackbarWrapper
@@ -16,7 +17,8 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_profile.*
 import javax.inject.Inject
 
-class ProfileFragment : Fragment(), IProfileContract.View {
+class ProfileFragment private constructor(private val account: IAccount?) : Fragment(),
+    IProfileContract.View {
     @Inject
     lateinit var presenter: ProfilePresenter
 
@@ -24,7 +26,7 @@ class ProfileFragment : Fragment(), IProfileContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        MainApplication.appComponent.inject(this)
+        MainApplication.instance.plusProfileComponent(account).inject(this)
     }
 
     override fun onCreateView(
@@ -43,6 +45,11 @@ class ProfileFragment : Fragment(), IProfileContract.View {
     override fun onStop() {
         super.onStop()
         presenter.detach()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        MainApplication.instance.clearProfileComponent()
     }
 
     override fun updateName(title: String) {
@@ -86,5 +93,12 @@ class ProfileFragment : Fragment(), IProfileContract.View {
 
     private fun initListeners() {
         profile_edit.setOnClickListener { presenter.onEditClick(requireFragmentManager()) }
+    }
+
+    companion object {
+
+        fun createInstance(account: IAccount): ProfileFragment {
+            return ProfileFragment(account)
+        }
     }
 }

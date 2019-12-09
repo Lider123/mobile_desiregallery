@@ -1,7 +1,6 @@
 package com.example.desiregallery.data.prefs
 
 import android.content.Context
-import android.content.SharedPreferences
 import com.example.desiregallery.auth.AuthMethod
 import java.util.concurrent.locks.ReentrantLock
 
