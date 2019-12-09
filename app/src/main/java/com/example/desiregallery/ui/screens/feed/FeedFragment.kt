@@ -30,9 +30,9 @@ import javax.inject.Inject
 
 class FeedFragment : Fragment() {
     @Inject
-    lateinit var vmFactory: PostsViewModel.Factory
+    lateinit var vmFactory: FeedViewModel.Factory
 
-    private lateinit var model: PostsViewModel
+    private lateinit var model: FeedViewModel
     private lateinit var snackbar: SnackbarWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,26 +53,14 @@ class FeedFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         with(view.post_list) {
             setItemViewCacheSize(20)
-            val lm = LinearLayoutManager(context)
-            layoutManager = lm
+            layoutManager = LinearLayoutManager(context)
             isDrawingCacheEnabled = true
             drawingCacheQuality = View.DRAWING_CACHE_QUALITY_HIGH
         }
+        user_list.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         snackbar = SnackbarWrapper(feed_container)
         feed_fab.setOnClickListener { CropImage.activity().start(context!!, this) }
-        swipe_container.setOnRefreshListener {
-            model.updatePosts()
-        }
-        try {
-            val field = swipe_container.javaClass.getDeclaredField("mCircleView")
-            field.isAccessible = true
-            val img = field.get(swipe_container) as ImageView
-            val customSpinner =
-                ContextCompat.getDrawable(requireContext(), R.drawable.custom_spinner)
-            img.setImageDrawable(customSpinner)
-        } catch (e: Exception) {
-            Timber.w(e)
-        }
+        setSwipeRefreshLayout()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -96,12 +84,31 @@ class FeedFragment : Fragment() {
         }
     }
 
+    private fun setSwipeRefreshLayout() {
+        swipe_container.setOnRefreshListener {
+            model.updatePosts()
+        }
+        try {
+            val field = swipe_container.javaClass.getDeclaredField("mCircleView")
+            field.isAccessible = true
+            val img = field.get(swipe_container) as ImageView
+            val customSpinner =
+                ContextCompat.getDrawable(requireContext(), R.drawable.custom_spinner)
+            img.setImageDrawable(customSpinner)
+        } catch (e: Exception) {
+            Timber.w(e)
+        }
+    }
+
     private fun initModel() {
-        model = ViewModelProviders.of(this, vmFactory).get(PostsViewModel::class.java)
+        model = ViewModelProviders.of(this, vmFactory).get(FeedViewModel::class.java)
         model.postsLiveData.observe(this, Observer { posts ->
             val adapter = PostAdapter()
             adapter.submitList(posts)
             post_list.adapter = adapter
+        })
+        model.usersLiveData.observe(this, Observer { users ->
+            user_list.adapter = UserAdapter(users)
         })
         model.getState().observe(this, Observer { status ->
             status ?: return@Observer

@@ -23,17 +23,17 @@ class NetworkManager(
     suspend fun getUsersByNames(userNames: Collection<String>): Result<List<User>> =
         withContext(Dispatchers.IO) {
             Timber.i("Preparing to load ${userNames.size} users")
-            val users = ArrayList<User>()
+            val users = userNames.map { User().apply { login = it } } as ArrayList
             val executor = Executors.newCachedThreadPool()
             try {
                 val potentialError = IOException("There was an error while fetching users")
-                for (name in userNames)
+                for ((i, name) in userNames.withIndex())
                     executor.execute {
                         val userResponse = networkService.getUser(name).execute()
                         val user = userResponse.body()
                         if (!userResponse.isSuccessful || user == null) throw potentialError
 
-                        users.add(user)
+                        users[i] = user
                     }
                 executor.shutdown()
                 executor.awaitTermination(15, TimeUnit.SECONDS)
