@@ -27,7 +27,8 @@ class AuthModule(private val context: Context) {
         messagingHelper: MessagingHelper,
         networkManager: NetworkManager,
         googleClient: GoogleSignInClient
-    ): AccountProvider = AccountProvider(context, prefs, auth, messagingHelper, networkManager, googleClient)
+    ): AccountProvider =
+        AccountProvider(context, prefs, auth, messagingHelper, networkManager, googleClient)
 
     @Singleton
     @Provides

@@ -5,9 +5,10 @@ import android.content.Intent
 import com.example.desiregallery.data.Result
 import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.data.network.NetworkManager
-import com.example.desiregallery.ui.screens.comments.CommentsActivity
-import com.example.desiregallery.ui.screens.ImageRateDialog
 import com.example.desiregallery.ui.screens.FullScreenImageActivity
+import com.example.desiregallery.ui.screens.ImageRateDialog
+import com.example.desiregallery.ui.screens.comments.CommentsActivity
+import com.example.desiregallery.ui.screens.profile.ProfileActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -41,6 +42,10 @@ class PostPresenter(private val networkManager: NetworkManager) : IPostContract.
 
     override fun onCommentsClick(context: Context) = goToCommentActivity(context)
 
+    override fun onAuthorClick(context: Context) {
+        goToProfileActivity(context)
+    }
+
     private fun goToCommentActivity(context: Context) {
         val intent = Intent(context, CommentsActivity::class.java).apply {
             putExtra(CommentsActivity.EXTRA_POST, post)
@@ -52,6 +57,13 @@ class PostPresenter(private val networkManager: NetworkManager) : IPostContract.
         val intent = Intent(context, FullScreenImageActivity::class.java).apply {
             putExtra(FullScreenImageActivity.EXTRA_IMAGE_URL, post.imageUrl.toString())
             putExtra(FullScreenImageActivity.EXTRA_POST_ID, post.id)
+        }
+        context.startActivity(intent)
+    }
+
+    private fun goToProfileActivity(context: Context) {
+        val intent = Intent(context, ProfileActivity::class.java).apply {
+            putExtra(ProfileActivity.EXTRA_USER, post.author)
         }
         context.startActivity(intent)
     }

@@ -20,5 +20,6 @@ interface IPostContract {
         fun onImageClick(context: Context)
         fun onRatingClick(context: Context)
         fun onCommentsClick(context: Context)
+        fun onAuthorClick(context: Context)
     }
 }

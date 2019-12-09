@@ -71,6 +71,9 @@ class PostViewHolder(
             itemPostComment.setOnClickListener {
                 presenter.onCommentsClick(bind.itemPostComment.context)
             }
+            itemAuthorImage.setOnClickListener {
+                presenter.onAuthorClick(bind.itemAuthorImage.context)
+            }
         }
     }
 }

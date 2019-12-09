@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.desiregallery">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".MainApplication"
@@ -30,44 +29,48 @@
             android:resource="@color/colorSecondary" />
 
         <activity
-            android:name="com.example.desiregallery.ui.screens.SplashScreenActivity"
+            android:name=".ui.screens.SplashScreenActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.SplashScreen">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.desiregallery.ui.screens.auth.SignUpActivity"
+            android:name=".ui.screens.auth.SignUpActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.screens.MainActivity"
             android:configChanges="orientation"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.screens.comments.CommentsActivity"
+            android:label="@string/comments" />
+        <activity
+            android:name=".ui.screens.profile.ProfileActivity"
             android:screenOrientation="portrait"/>
         <activity
-                android:name="com.example.desiregallery.ui.screens.comments.CommentsActivity"
-                android:label="@string/comments"/>
+            android:name=".ui.screens.FullScreenImageActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-            android:name="com.example.desiregallery.ui.screens.FullScreenImageActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
-        <activity
-            android:name="com.example.desiregallery.ui.screens.auth.LoginActivity"
+            android:name=".ui.screens.auth.LoginActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.SplashScreen"/>
+            android:theme="@style/AppTheme.SplashScreen" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat"/>
+            android:theme="@style/Base.Theme.AppCompat" />
         <activity
             android:name=".ui.screens.ShareReceiverActivity"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.SEND"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="image/*"/>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
 
@@ -80,4 +83,5 @@
             </intent-filter>
         </service>
     </application>
+
 </manifest>
