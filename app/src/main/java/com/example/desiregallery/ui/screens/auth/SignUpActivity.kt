@@ -1,7 +1,6 @@
 package com.example.desiregallery.ui.screens.auth
 
 import android.app.DatePickerDialog
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_sign_up.*
 import android.text.Editable
@@ -14,6 +13,7 @@ import com.example.desiregallery.auth.AuthMethod
 import com.example.desiregallery.data.Result
 import com.example.desiregallery.data.models.User
 import com.example.desiregallery.data.network.NetworkManager
+import com.example.desiregallery.ui.screens.base.BaseActivity
 import com.example.desiregallery.ui.widgets.SnackbarWrapper
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -31,7 +31,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class SignUpActivity : AppCompatActivity() {
+class SignUpActivity : BaseActivity() {
     @Inject
     lateinit var auth: FirebaseAuth
     @Inject

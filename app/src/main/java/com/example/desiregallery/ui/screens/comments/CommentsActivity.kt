@@ -1,6 +1,5 @@
 package com.example.desiregallery.ui.screens.comments
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
@@ -14,13 +13,14 @@ import com.example.desiregallery.data.models.Comment
 import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.data.models.User
 import com.example.desiregallery.data.network.RequestState
+import com.example.desiregallery.ui.screens.base.BaseActivity
 import com.example.desiregallery.ui.widgets.SnackbarWrapper
 import com.example.desiregallery.utils.hideSoftKeyboard
 import kotlinx.android.synthetic.main.activity_comments.*
 import kotlinx.android.synthetic.main.toolbar_comments.*
 import javax.inject.Inject
 
-class CommentsActivity : AppCompatActivity() {
+class CommentsActivity : BaseActivity() {
     @Inject
     lateinit var accProvider: AccountProvider
     @Inject

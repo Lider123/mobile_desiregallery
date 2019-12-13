@@ -2,13 +2,12 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-            android:state_pressed="true"
-            android:color="@color/colorOnDisabled"/>
+        android:state_pressed="true"
+        android:color="?attr/colorOnDisabled"/>
 
     <item
-            android:state_focused="true"
-            android:color="@color/colorOnSecondary" />
+        android:state_focused="true"
+        android:color="?attr/colorOnSecondary" />
 
-    <item android:color="@color/colorOnSecondary" />
-
+    <item android:color="?attr/colorOnSecondary" />
 </selector>

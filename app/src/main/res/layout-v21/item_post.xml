@@ -44,7 +44,6 @@
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/item_author_font_size"
                         android:gravity="center_vertical"
-                        android:textColor="@color/colorPrimary"
                         android:textStyle="bold"
                         tools:text="@tools:sample/full_names" />
 
@@ -53,7 +52,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/item_time_font_size"
-                        android:textColor="@color/colorDatetime"
+                        android:textColor="?attr/colorHint"
                         tools:text="@sample/posts.json/data/timestamp"/>
             </LinearLayout>
         </LinearLayout>
@@ -77,7 +76,6 @@
                 android:gravity="center_vertical"
                 android:layout_centerHorizontal="true"
                 android:drawableStart="@drawable/ic_grade_gold_32dp"
-                android:textColor="@color/colorOnBackground"
                 android:textSize="@dimen/item_rating_font_size"
                 android:text="@string/item_post_rating_placeholder"
                 tools:text="@sample/posts.json/data/rating"/>

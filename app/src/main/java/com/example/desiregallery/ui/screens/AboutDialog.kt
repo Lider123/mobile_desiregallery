@@ -13,7 +13,7 @@ import com.example.desiregallery.utils.getAppVersion
 /**
  * @author babaetskv on 28.10.19
  */
-class AboutDialog(context: Context) : AlertDialog(context) {
+class AboutDialog(context: Context) : AlertDialog(context, R.style.CustomAlertDialog) {
 
     init {
         val message = TextView(context).apply {

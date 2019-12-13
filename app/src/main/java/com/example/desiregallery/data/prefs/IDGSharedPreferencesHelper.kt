@@ -8,5 +8,7 @@ import com.example.desiregallery.auth.AuthMethod
 interface IDGSharedPreferencesHelper {
     val hasAuthMethod: Boolean
     var authMethod: AuthMethod?
+    var darkModeOn: Boolean
+    var startWithSettings: Boolean
     fun clearAuthMethod()
 }

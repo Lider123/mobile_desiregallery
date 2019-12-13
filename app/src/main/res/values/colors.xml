@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <color name="colorPrimary">#6200EA</color>
     <color name="colorPrimaryLight">#9D46FF</color>
     <color name="colorPrimaryDark">#0A00B6</color>
@@ -13,12 +13,35 @@
     <color name="colorOnBackground">#000</color>
     <color name="colorSurface">#FFF</color>
     <color name="colorOnSurface">#000</color>
-    <color name="colorError">#C62828</color>
+    <color name="colorError">#FFC62828</color>
     <color name="colorOnError">#FFF</color>
     <color name="colorDisabled">#999</color>
     <color name="colorOnDisabled">#555</color>
 
     <color name="colorHint">#4000</color>
-    <color name="colorDatetime">#AAA</color>
+
+
+    <color name="darkColorPrimary">#212121</color>
+    <color name="darkColorPrimaryLight">#484848</color>
+    <color name="darkColorPrimaryDark">#000</color>
+    <color name="darkColorOnPrimary">#FFF</color>
+    <color name="darkColorSecondary">#7e57c2</color>
+    <color name="darkColorSecondaryLight">#b085f5</color>
+    <color name="darkColorSecondaryDark">#4d2c91</color>
+    <color name="darkColorOnSecondary">#000</color>
+
+    <color name="darkColorBackground">#000</color>
+    <color name="darkColorOnBackground">#FFF</color>
+    <color name="darkColorSurface">#212121</color>
+    <color name="darkColorOnSurface">#FFF</color>
+    <color name="darkColorError">#FFe57373</color>
+    <color name="darkColorOnError">#000</color>
+    <color name="darkColorDisabled">#999</color>
+    <color name="darkColorOnDisabled">#555</color>
+
+    <color name="darkColorHint">#4FFF</color>
+
+
     <color name="colorModal">#8000</color>
+    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">#888</color>
 </resources>

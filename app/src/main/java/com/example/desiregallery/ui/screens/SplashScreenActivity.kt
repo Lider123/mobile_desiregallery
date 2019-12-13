@@ -3,14 +3,14 @@ package com.example.desiregallery.ui.screens
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import androidx.appcompat.app.AppCompatActivity
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.data.prefs.IDGSharedPreferencesHelper
 import com.example.desiregallery.ui.screens.auth.LoginActivity
+import com.example.desiregallery.ui.screens.base.BaseActivity
 import javax.inject.Inject
 
-class SplashScreenActivity : AppCompatActivity() {
+class SplashScreenActivity : BaseActivity(true) {
     @Inject
     lateinit var prefs: IDGSharedPreferencesHelper
 

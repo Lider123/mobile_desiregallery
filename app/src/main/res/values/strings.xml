@@ -3,6 +3,7 @@
 
     <!-- Preferences -->
     <string name="pref_reset_password_key" translatable="false">pref_reset_password_key</string>
+    <string name="pref_theme_key" translatable="false">pref_theme_key</string>
     <string name="pref_about_key" translatable="false">pref_about_key</string>
 
     <!-- General -->
@@ -77,6 +78,7 @@
     <string name="about">About</string>
     <string name="reset_password">Reset password</string>
     <string name="reset_password_message">We will send a message to your email address for receiving your password. Continue?</string>
+    <string name="dark_mode">Dark mode</string>
 
     <!-- Create post dialog -->
     <string name="post_creation">Post creation</string>
