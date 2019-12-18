@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.*
 
 /**
  * @author babaetskv on 18.11.19
@@ -45,7 +46,7 @@ class PostCreationPresenter(
                     Timber.i("Image for new post ${post.id} successfully uploaded")
                     post.setImageUrl(result.data)
                     view.hideProgress()
-                    callback.onSubmit(post)
+                    callback.onSubmit(post.apply { timestamp = Date().time })
                     view.finish()
                 }
                 is Result.Error -> {
