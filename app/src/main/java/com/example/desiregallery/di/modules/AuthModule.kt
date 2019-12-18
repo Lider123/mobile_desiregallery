@@ -17,11 +17,11 @@ import javax.inject.Singleton
  * @author babaetskv on 12.11.19
  */
 @Module
-class AuthModule(private val context: Context) {
+open class AuthModule(private val context: Context) {
 
     @Singleton
     @Provides
-    fun provideAccountProvider(
+    open fun provideAccountProvider(
         prefs: IDGSharedPreferencesHelper,
         auth: FirebaseAuth,
         messagingHelper: MessagingHelper,
