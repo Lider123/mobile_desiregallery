@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:text="@string/Cancel"
             app:layout_constraintEnd_toStartOf="@id/post_creation_publish"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             style="@style/CustomFlatButton"/>
 
         <Button
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:text="@string/Publish"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             style="@style/CustomFlatButton"/>
 
         <TextView

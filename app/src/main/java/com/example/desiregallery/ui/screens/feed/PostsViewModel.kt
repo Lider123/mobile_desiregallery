@@ -43,7 +43,6 @@ class PostsViewModel(
         )
 
     fun addPost(post: Post) {
-        post.timestamp = Date().time
         GlobalScope.launch(Dispatchers.Main) {
             when (val result = networkManager.createPost(post)) {
                 is Result.Success -> {
