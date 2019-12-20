@@ -35,13 +35,14 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/login"
                     android:layout_marginBottom="16dp"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+                    style="@style/CustomTextInputLayout">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/sign_up_input_login"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
-                        android:maxLines="1"/>
+                        android:maxLines="1"
+                        style="@style/CustomTextInputEditText"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -49,13 +50,14 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/email"
                     android:layout_marginBottom="16dp"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+                    style="@style/CustomTextInputLayout">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/sign_up_input_email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textEmailAddress"
-                        android:maxLines="1"/>
+                        android:maxLines="1"
+                        style="@style/CustomTextInputEditText"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -63,16 +65,16 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/birthday"
                     android:layout_marginBottom="16dp"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+                    style="@style/CustomTextInputLayout">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/sign_up_input_birthday"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
                         android:clickable="true"
-                        android:focusable="true"
-                        android:focusableInTouchMode="false"
-                        android:maxLines="1" />
+                        android:focusable="false"
+                        android:maxLines="1"
+                        style="@style/CustomTextInputEditText"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -80,26 +82,28 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/password"
                     android:layout_marginBottom="16dp"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+                    style="@style/CustomTextInputLayout">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/sign_up_input_password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPassword"
-                        android:maxLines="1"/>
+                        android:maxLines="1"
+                        style="@style/CustomTextInputEditText"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/confirm_password"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+                    style="@style/CustomTextInputLayout">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/sign_up_input_confirm"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPassword"
-                        android:maxLines="1"/>
+                        android:maxLines="1"
+                        style="@style/CustomTextInputEditText"/>
                     </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
         </ScrollView>
@@ -119,7 +123,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/sign_up_confirm"
-            android:layout_marginTop="16dp"
-            style="@style/CustomButton"/>
+            android:layout_marginTop="16dp" />
     </LinearLayout>
 </LinearLayout>

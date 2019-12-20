@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreference
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
+import com.example.desiregallery.data.prefs.IDGSharedPreferencesHelper
 import com.example.desiregallery.ui.widgets.SnackbarWrapper
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -16,6 +18,8 @@ import javax.inject.Inject
 class SettingsFragment : PreferenceFragmentCompat() {
     @Inject
     lateinit var auth: FirebaseAuth
+    @Inject
+    lateinit var prefsHelper: IDGSharedPreferencesHelper
 
     private lateinit var snackbar: SnackbarWrapper
 
@@ -32,13 +36,24 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         snackbar = SnackbarWrapper(view)
+
+        findPreference<SwitchPreference>(getString(R.string.pref_theme_key))?.apply {
+            isChecked = prefsHelper.darkModeOn
+            setOnPreferenceChangeListener { preference, newValue ->
+                newValue as Boolean
+                prefsHelper.darkModeOn = newValue
+                prefsHelper.startWithSettings = true
+                requireActivity().recreate()
+                return@setOnPreferenceChangeListener true
+            }
+        }
     }
 
     override fun onPreferenceTreeClick(preference: Preference) = when (preference.key) {
         getString(R.string.pref_reset_password_key) -> {
             val user = auth.currentUser
             user?.let {
-                AlertDialog.Builder(requireActivity())
+                AlertDialog.Builder(requireActivity(), R.style.CustomAlertDialog)
                     .setTitle(R.string.reset_password)
                     .setMessage(R.string.reset_password_message)
                     .setPositiveButton(R.string.yes) { _, _ -> sendResetPasswordEmail(it) }

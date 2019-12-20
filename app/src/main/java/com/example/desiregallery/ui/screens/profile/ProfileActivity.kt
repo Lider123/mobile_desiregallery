@@ -1,16 +1,16 @@
 package com.example.desiregallery.ui.screens.profile
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.auth.EmailAccount
 import com.example.desiregallery.data.models.User
+import com.example.desiregallery.ui.screens.base.BaseActivity
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.toolbar_profile.*
 import javax.inject.Inject
 
-class ProfileActivity : AppCompatActivity() {
+class ProfileActivity : BaseActivity() {
     @Inject
     lateinit var auth: FirebaseAuth
 

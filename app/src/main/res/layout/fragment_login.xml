@@ -34,8 +34,8 @@
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
                 android:hint="@string/email"
-                style="@style/CustomEditText.Solid"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="8dp"
+                style="@style/CustomEditText.Solid"/>
 
             <EditText
                 android:id="@+id/input_password"
@@ -51,8 +51,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/sign_in"
-                style="@style/CustomButton"/>
+                android:text="@string/sign_in" />
 
             <TextView
                 android:text="@string/sign_up_offer"
@@ -61,7 +60,7 @@
                 android:foregroundGravity="center"
                 android:id="@+id/link_sign_up"
                 android:gravity="center_horizontal"
-                android:textColor="@color/colorSecondary"
+                android:textColor="?attr/colorAccent"
                 android:clickable="true"
                 android:focusable="true"
                 android:layout_marginTop="8dp"
@@ -92,7 +91,6 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:visibility="gone"
-            tools:visibility="visible"
-            style="@style/CustomProgressBar"/>
+            tools:visibility="visible"/>
     </RelativeLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

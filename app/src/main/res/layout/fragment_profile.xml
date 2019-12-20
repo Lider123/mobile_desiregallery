@@ -31,7 +31,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                        tools:src="@tools:sample/avatars"/>
+                    tools:src="@tools:sample/avatars"/>
 
                 <TextView
                     android:id="@+id/profile_name"
@@ -40,7 +40,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:textColor="@color/colorOnPrimary"
+                    android:textColor="?attr/colorOnPrimary"
                     android:textSize="24sp"
                     android:padding="16dp"
                     tools:text="@tools:sample/full_names"/>
@@ -82,19 +82,13 @@
                 android:layout_margin="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/Edit"
-                style="@style/CustomButton"/>
-
-            <FrameLayout
-                android:id="@+id/edit_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:text="@string/Edit" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_margin="4dp"
-                android:background="@color/colorSecondary"/>
+                android:background="?attr/colorAccent"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -109,7 +103,7 @@
                 android:id="@+id/hint_no_posts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorHint"
+                android:textColor="?attr/colorHint"
                 android:textAlignment="center"
                 android:text="@string/small_posts_empty"
                 android:visibility="gone"

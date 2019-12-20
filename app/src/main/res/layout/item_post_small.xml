@@ -38,7 +38,6 @@
                 android:layout_centerHorizontal="true"
                 android:drawableLeft="@drawable/ic_grade_gold_32dp"
                 android:drawableStart="@drawable/ic_grade_gold_32dp"
-                android:textColor="@color/colorOnBackground"
                 android:textSize="@dimen/item_rating_font_size"
                 android:text="@string/item_post_rating_placeholder"
                 tools:text="@sample/posts.json/data/rating"/>

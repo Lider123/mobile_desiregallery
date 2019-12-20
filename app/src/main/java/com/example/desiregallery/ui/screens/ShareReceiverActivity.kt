@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
-import androidx.appcompat.app.AppCompatActivity
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.auth.AccountProvider
@@ -15,6 +14,7 @@ import com.example.desiregallery.ui.screens.postcreation.IPostCreationListener
 import com.example.desiregallery.ui.screens.postcreation.PostCreationFragment
 import com.example.desiregallery.ui.screens.auth.ILoginListener
 import com.example.desiregallery.ui.screens.auth.LoginFragment
+import com.example.desiregallery.ui.screens.base.BaseActivity
 import com.example.desiregallery.utils.getBitmapFromUri
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -25,7 +25,7 @@ import javax.inject.Inject
 /**
  * @author babaetskv on 15.11.19
  */
-class ShareReceiverActivity : AppCompatActivity(), ILoginListener, IPostCreationListener {
+class ShareReceiverActivity : BaseActivity(), ILoginListener, IPostCreationListener {
     @Inject
     lateinit var networkManager: NetworkManager
     @Inject

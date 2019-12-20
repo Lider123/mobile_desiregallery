@@ -1,20 +1,65 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorSecondary</item>
+        <item name="colorSecondaryLight">@color/colorSecondaryLight</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        <item name="colorOnSecondary">@color/colorOnSecondary</item>
+        <item name="colorHint">@color/colorHint</item>
+        <item name="colorDisabled">@color/colorDisabled</item>
+        <item name="colorOnDisabled">@color/colorOnDisabled</item>
+        <item name="colorError">@color/colorError</item>
+        <item name="colorOnBackground">@color/colorOnBackground</item>
+        <item name="colorBackground">@color/colorBackground</item>
+        <item name="colorSurface">@color/colorSurface</item>
+        <item name="colorOnError">@color/colorOnError</item>
+        <item name="colorOnSurface">@color/colorOnSurface</item>
+
         <item name="android:windowBackground">@color/colorBackground</item>
-        <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">true</item>
+
+        <item name="buttonStyle">@style/CustomButton</item>
+        <item name="android:progressBarStyle">@style/CustomProgressBar</item>
+        <item name="editTextStyle">@style/CustomEditText</item>
+
+        <item name="android:textColor">?attr/colorOnBackground</item>
+    </style>
+    <style name="AppTheme.Dark" parent="@style/AppTheme">
+        <item name="colorPrimary">@color/darkColorPrimary</item>
+        <item name="colorPrimaryDark">@color/darkColorPrimaryDark</item>
+        <item name="colorAccent">@color/darkColorSecondary</item>
+        <item name="colorSecondaryLight">@color/darkColorSecondaryLight</item>
+        <item name="colorOnPrimary">@color/darkColorOnPrimary</item>
+        <item name="colorOnSecondary">@color/darkColorOnSecondary</item>
+        <item name="colorHint">@color/darkColorHint</item>
+        <item name="colorDisabled">@color/darkColorDisabled</item>
+        <item name="colorOnDisabled">@color/darkColorOnDisabled</item>
+        <item name="colorError">@color/darkColorError</item>
+        <item name="colorOnBackground">@color/darkColorOnBackground</item>
+        <item name="colorBackground">@color/darkColorBackground</item>
+        <item name="colorSurface">@color/darkColorSurface</item>
+        <item name="colorOnError">@color/darkColorOnError</item>
+        <item name="colorOnSurface">@color/darkColorOnSurface</item>
+
+        <item name="android:windowBackground">@color/darkColorBackground</item>
     </style>
     <style name="AppTheme.SplashScreen" parent="@style/AppTheme">
-        <item name="android:windowBackground">@color/colorPrimary</item>
+        <item name="android:windowBackground">?attr/colorPrimary</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+    <style name="AppTheme.SplashScreen.Dark" parent="@style/AppTheme.Dark">
+        <item name="android:windowBackground">?attr/colorPrimary</item>
         <item name="android:windowFullscreen">true</item>
     </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+    <style name="CustomAlertDialog" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:background">?attr/colorSurface</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
     <style name="CustomButton" parent="Widget.AppCompat.Button.Colored">
         <item name="android:background">@drawable/button_background</item>
         <item name="android:textColor">@drawable/button_text_color</item>
@@ -28,12 +73,14 @@
         <item name="android:background">@drawable/button_vk_background</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
+
     <style name="CustomProgressBar" parent="Widget.AppCompat.ProgressBar">
         <item name="android:indeterminateDrawable">@drawable/custom_spinner</item>
     </style>
+
     <style name="CustomEditText" parent="Widget.AppCompat.EditText">
-        <item name="android:textColor">@color/colorOnBackground</item>
-        <item name="android:textColorHint">@color/colorHint</item>
+        <item name="android:textColor">?attr/colorOnBackground</item>
+        <item name="android:textColorHint">?attr/colorHint</item>
         <item name="android:background">@drawable/input_text_transparent</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:padding">@dimen/comments_input_view_padding</item>
@@ -41,15 +88,24 @@
     <style name="CustomEditText.Solid" parent="CustomEditText">
         <item name="android:background">@drawable/input_text_background</item>
     </style>
+    <style name="CustomTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="android:textColorHint">?attr/colorHint</item>
+    </style>
+    <style name="CustomTextInputEditText">
+        <item name="android:textColor">?attr/colorOnBackground</item>
+    </style>
+
     <style name="SurfaceView">
         <item name="android:background">@drawable/surface_background</item>
         <item name="android:layout_margin">8dp</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
     <style name="ModalView">
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
         <item name="android:background">@color/colorModal</item>
     </style>
+
     <style name="Post">
         <item name="android:background">@drawable/surface_background</item>
         <item name="android:layout_marginTop">0dp</item>
@@ -58,6 +114,7 @@
         <item name="android:layout_marginLeft">@dimen/item_post_margin</item>
         <item name="android:layout_marginEnd">@dimen/item_post_margin</item>
         <item name="android:layout_marginRight">@dimen/item_post_margin</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
     <style name="Comment">
         <item name="android:background">@drawable/surface_background</item>
@@ -67,10 +124,12 @@
         <item name="android:layout_marginLeft">@dimen/item_comment_margin</item>
         <item name="android:layout_marginEnd">@dimen/item_comment_margin</item>
         <item name="android:layout_marginRight">@dimen/item_comment_margin</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
+
     <style name="ErrorText">
         <item name="android:background">@drawable/error_background</item>
-        <item name="android:textColor">@color/colorOnError</item>
+        <item name="android:textColor">?attr/colorOnError</item>
         <item name="android:padding">8dp</item>
     </style>
 </resources>

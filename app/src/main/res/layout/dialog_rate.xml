@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="@string/dialog_rate_text"
-        android:textColor="@color/colorOnSurface"
         android:textSize="@dimen/dialog_rate_font_size"
         android:layout_marginBottom="@dimen/dialog_rate_padding"/>
 

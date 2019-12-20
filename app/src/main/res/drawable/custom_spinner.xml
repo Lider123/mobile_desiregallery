@@ -14,9 +14,9 @@
             android:width="18dp"
             android:height="18dp"/>
         <gradient
-            android:startColor="@color/colorPrimary"
-            android:centerColor="@color/colorSecondary"
-            android:endColor="@color/colorPrimary"
+            android:startColor="?attr/colorPrimary"
+            android:centerColor="?attr/colorAccent"
+            android:endColor="?attr/colorPrimary"
             android:type="sweep"/>
     </shape>
 </rotate>

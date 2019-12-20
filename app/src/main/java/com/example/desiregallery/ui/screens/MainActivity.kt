@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -14,6 +13,7 @@ import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.auth.AccountProvider
 import com.example.desiregallery.ui.screens.auth.LoginActivity
+import com.example.desiregallery.ui.screens.base.BaseActivity
 import com.example.desiregallery.ui.screens.feed.FeedFragment
 import com.example.desiregallery.ui.screens.profile.ProfileFragment
 import com.google.android.material.navigation.NavigationView
@@ -22,7 +22,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
     @Inject
     lateinit var accProvider: AccountProvider
 
@@ -141,7 +141,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setDefaultFragment() {
-        replaceFragment(FeedFragment(), R.string.app_name)
-        navigationView.setCheckedItem(R.id.nav_feed)
+        if (prefsHelper.startWithSettings) {
+            replaceFragment(SettingsFragment(), R.string.Settings)
+            navigationView.setCheckedItem(R.id.nav_settings)
+            prefsHelper.startWithSettings = false
+        } else {
+            replaceFragment(FeedFragment(), R.string.app_name)
+            navigationView.setCheckedItem(R.id.nav_feed)
+        }
     }
 }

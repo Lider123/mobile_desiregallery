@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="colorSecondaryLight" format="reference"/>
+    <attr name="colorSurface" format="reference"/>
+    <attr name="colorBackground" format="reference"/>
+    <attr name="colorDisabled" format="reference"/>
+    <attr name="colorOnPrimary" format="reference"/>
+    <attr name="colorOnSecondary" format="reference"/>
+    <attr name="colorOnBackground" format="reference"/>
+    <attr name="colorOnDisabled" format="reference"/>
+    <attr name="colorOnError" format="reference"/>
+    <attr name="colorHint" format="reference"/>
+    <attr name="colorOnSurface" format="reference"/>
+</resources>
