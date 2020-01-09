@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.screens.FullScreenImageActivity">
 
-    <com.github.chrisbanes.photoview.PhotoView
+    <com.example.desiregallery.ui.widgets.InteractiveImageView
         android:id="@+id/image_view_full_screen"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
