@@ -6,15 +6,13 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
 import com.example.desiregallery.R
 import kotlinx.android.synthetic.main.activity_full_screen_image.*
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
+import android.view.*
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.analytics.IDGAnalyticsTracker
 import com.example.desiregallery.ui.widgets.SnackbarWrapper
@@ -30,6 +28,7 @@ class FullScreenImageActivity : AppCompatActivity() {
 
     private lateinit var toolbar: Toolbar
     private lateinit var snackbar: SnackbarWrapper
+
     private lateinit var image: Bitmap
     private lateinit var postId: String
 
