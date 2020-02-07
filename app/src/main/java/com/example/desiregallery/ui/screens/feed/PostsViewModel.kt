@@ -16,61 +16,22 @@ import java.util.*
 
 class PostsViewModel(
     application: Application,
-    private val networkManager: NetworkManager
+    private val repository: PostsRepository
 ) : AndroidViewModel(application) {
-    private val postDataSourceFactory = PostsDataSource.Factory(networkManager)
+    var postsLiveData: LiveData<PagedList<Post>> = repository.initData()
 
-    var postsLiveData: LiveData<PagedList<Post>>
+    fun getState(): LiveData<RequestState> = repository.state
 
-    init {
-        val config = PagedList.Config.Builder()
-            .setEnablePlaceholders(false)
-            .setInitialLoadSizeHint(PAGE_SIZE)
-            .setPageSize(PAGE_SIZE)
-            .setPrefetchDistance(3)
-            .build()
-        postsLiveData = LivePagedListBuilder(postDataSourceFactory, config).build()
-    }
+    fun addPost(post: Post) = repository.addPost(post)
 
-    private fun setState(state: RequestState) {
-        postDataSourceFactory.postDataSourceLiveData.value?.updateState(state)
-    }
-
-    fun getState(): LiveData<RequestState> =
-        Transformations.switchMap<PostsDataSource, RequestState>(
-            postDataSourceFactory.postDataSourceLiveData,
-            PostsDataSource::state
-        )
-
-    fun addPost(post: Post) {
-        GlobalScope.launch(Dispatchers.Main) {
-            when (val result = networkManager.createPost(post)) {
-                is Result.Success -> {
-                    Timber.i("Post ${post.id} has been successfully created")
-                    setState(RequestState.SUCCESS)
-                    postDataSourceFactory.postDataSourceLiveData.value?.invalidate()
-                }
-                is Result.Error -> {
-                    Timber.e(result.exception, "Failed to create post")
-                    setState(RequestState.ERROR_UPLOAD)
-                }
-            }
-        }
-    }
-
-    fun updatePosts() = postDataSourceFactory.postDataSourceLiveData.value?.invalidate()
-
-    companion object {
-        private const val PAGE_SIZE = 10
-    }
+    fun updatePosts() = repository.refreshData()
 
     class Factory(
         private val application: Application,
-        private val networkManager: NetworkManager
+        private val repository: PostsRepository
     ) : ViewModelProvider.Factory {
 
         override fun <T : ViewModel?> create(modelClass: Class<T>) =
-            PostsViewModel(application, networkManager) as T
-
+            PostsViewModel(application, repository) as T
     }
 }

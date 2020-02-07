@@ -2,6 +2,7 @@ package com.example.desiregallery.di.modules
 
 import android.app.Application
 import com.example.desiregallery.data.network.NetworkManager
+import com.example.desiregallery.ui.screens.feed.PostsRepository
 import com.example.desiregallery.ui.screens.feed.PostsViewModel
 import dagger.Module
 import dagger.Provides
@@ -15,6 +16,10 @@ class FeedModule {
     @Provides
     fun provideViewModelFactory(
         app: Application,
-        networkManager: NetworkManager
-    ): PostsViewModel.Factory = PostsViewModel.Factory(app, networkManager)
+        repository: PostsRepository
+    ): PostsViewModel.Factory = PostsViewModel.Factory(app, repository)
+
+    @Provides
+    fun providePostsRepository(networkManager: NetworkManager): PostsRepository =
+        PostsRepository(networkManager)
 }

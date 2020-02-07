@@ -181,7 +181,7 @@ class LoginFragment : Fragment() {
                 hideProgress()
                 if (task.isSuccessful) {
                     val user = auth.currentUser
-                    Timber.i("uUer with email ${user?.email} successfully logged in")
+                    Timber.i("User with email ${user?.email} successfully logged in")
                     prefsHelper.authMethod = AuthMethod.EMAIL
                     analytics.trackLogin(AuthMethod.EMAIL)
                     mLoginListener.onSuccessfulLogin()

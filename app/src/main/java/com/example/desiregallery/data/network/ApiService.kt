@@ -6,10 +6,12 @@ import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.data.models.User
 import com.example.desiregallery.data.network.serializers.*
 import com.google.gson.GsonBuilder
+import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
+import java.util.concurrent.TimeUnit
 
 interface ApiService {
 
@@ -37,6 +39,7 @@ interface ApiService {
     companion object {
         private const val BASE_URL =
             "https://firestore.googleapis.com/v1/projects/desiregallery-8072a/databases/(default)/documents/"
+        private const val TIMEOUT_SECONDS = 10L
 
         private fun createApiGson(): GsonConverterFactory {
             val gsonBuilder = GsonBuilder()
@@ -51,8 +54,13 @@ interface ApiService {
         }
 
         fun createService(): ApiService {
+            val client = OkHttpClient.Builder()
+                .readTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .build()
             val retrofit = Retrofit.Builder()
                 .baseUrl(BASE_URL)
+                .client(client)
                 .addConverterFactory(createApiGson())
                 .build()
             return retrofit.create(ApiService::class.java)
