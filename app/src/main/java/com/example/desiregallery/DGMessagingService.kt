@@ -25,8 +25,7 @@ class DGMessagingService : FirebaseMessagingService() {
                 .setContentText(it.body)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .build()
-            val manager = NotificationManagerCompat.from(applicationContext)
-            manager.notify(0, notification)
+            NotificationManagerCompat.from(applicationContext).notify(0, notification)
         }
     }
 }

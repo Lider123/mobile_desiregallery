@@ -35,7 +35,7 @@ import javax.inject.Inject
 /**
  * @author babaetskv on 06.11.19
  */
-class EditProfileFragment : Fragment() {
+class EditProfileFragment : Fragment(), View.OnClickListener {
     @Inject
     lateinit var auth: FirebaseAuth
     @Inject
@@ -83,7 +83,22 @@ class EditProfileFragment : Fragment() {
                 .into(edit_photo)
         }
         edit_birthday.setText(user.birthday)
-        initListeners()
+        edit_birthday.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(p0: Editable?) {
+                user.birthday = p0.toString()
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = Unit
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = Unit
+        })
+        arrayOf(
+            edit_birthday,
+            edit_new_image,
+            edit_done,
+            edit_cancel
+        ).map { it.setOnClickListener(this) }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -103,54 +118,46 @@ class EditProfileFragment : Fragment() {
         parentJob.cancel()
     }
 
-    private fun initListeners() {
-        edit_birthday.addTextChangedListener(object : TextWatcher {
-
-            override fun afterTextChanged(p0: Editable?) {
-                user.birthday = p0.toString()
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.edit_birthday -> {
+                setErrorMessageVisibility(false)
+                editBirthday()
             }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = Unit
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) = Unit
-        })
-        edit_birthday.setOnClickListener {
-            setErrorMessageVisibility(false)
-            editBirthday()
-        }
-        edit_new_image.setOnClickListener {
-            setErrorMessageVisibility(false)
-            CropImage.activity().start(requireContext(), this)
-        }
-        edit_done.setOnClickListener {
-            setErrorMessageVisibility(false)
-            showProgress()
-            val finishEditing = {
-                updateProfile()
-                callback?.onDoneClick(user)
-                hideProgress()
+            R.id.edit_new_image -> {
+                setErrorMessageVisibility(false)
+                CropImage.activity().start(requireContext(), this)
             }
-            newImageUri?.let {
-                uploadPhoto(
-                    it,
-                    {
-                        setErrorMessageVisibility(true)
-                        hideProgress()
-                    },
-                    finishEditing
-                )
-            } ?: finishEditing()
-        }
-        edit_cancel.setOnClickListener {
-            setErrorMessageVisibility(false)
-            callback?.onCancelClick()
+            R.id.edit_done -> {
+                setErrorMessageVisibility(false)
+                showProgress()
+                val finishEditing = {
+                    updateProfile()
+                    callback?.onDoneClick(user)
+                    hideProgress()
+                }
+                newImageUri?.let {
+                    uploadPhoto(
+                        it,
+                        {
+                            setErrorMessageVisibility(true)
+                            hideProgress()
+                        },
+                        finishEditing
+                    )
+                } ?: finishEditing()
+            }
+            R.id.edit_cancel -> {
+                setErrorMessageVisibility(false)
+                callback?.onCancelClick()
+            }
         }
     }
 
     private fun uploadPhoto(uri: Uri, onFailure: () -> Unit, onComplete: () -> Unit) {
-        val resolver = requireActivity().contentResolver
-        val istream = resolver.openInputStream(uri)
-        val selectedImage = BitmapFactory.decodeStream(istream)
+        val selectedImage = requireActivity().contentResolver.openInputStream(uri).let {
+            BitmapFactory.decodeStream(it)
+        }
         coroutineScope.launch(Dispatchers.Main) {
             when (val result = storageHelper.uploadProfileImage(selectedImage, user.login)) {
                 is Result.Success -> {

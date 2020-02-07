@@ -42,9 +42,10 @@ class CommentViewHolder(private val bind: ItemCommentBinding) : BaseViewHolder<C
     }
 
     private fun goToProfileActivity(context: Context, author: User) {
-        val intent = Intent(context, ProfileActivity::class.java).apply {
+        Intent(context, ProfileActivity::class.java).apply {
             putExtra(ProfileActivity.EXTRA_USER, author)
+        }.let {
+            context.startActivity(it)
         }
-        context.startActivity(intent)
     }
 }

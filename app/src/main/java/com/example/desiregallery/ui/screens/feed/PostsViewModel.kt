@@ -32,9 +32,8 @@ class PostsViewModel(
         postsLiveData = LivePagedListBuilder(postDataSourceFactory, config).build()
     }
 
-    private fun setState(state: RequestState) {
+    private fun setState(state: RequestState) =
         postDataSourceFactory.postDataSourceLiveData.value?.updateState(state)
-    }
 
     fun getState(): LiveData<RequestState> =
         Transformations.switchMap<PostsDataSource, RequestState>(

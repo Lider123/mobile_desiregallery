@@ -31,8 +31,7 @@ class PostPresenter(private val networkManager: NetworkManager) : IPostContract.
     }
 
     override fun onImageClick(context: Context) {
-        val imageUrl = post.imageUrl
-        imageUrl?.let { goToImageFullScreen(context) }
+        post.imageUrl?.let { goToImageFullScreen(context) }
     }
 
     override fun onRatingClick(context: Context) {
@@ -42,30 +41,31 @@ class PostPresenter(private val networkManager: NetworkManager) : IPostContract.
 
     override fun onCommentsClick(context: Context) = goToCommentActivity(context)
 
-    override fun onAuthorClick(context: Context) {
-        goToProfileActivity(context)
-    }
+    override fun onAuthorClick(context: Context) = goToProfileActivity(context)
 
     private fun goToCommentActivity(context: Context) {
-        val intent = Intent(context, CommentsActivity::class.java).apply {
+        Intent(context, CommentsActivity::class.java).apply {
             putExtra(CommentsActivity.EXTRA_POST, post)
+        }.also {
+            context.startActivity(it)
         }
-        context.startActivity(intent)
     }
 
     private fun goToImageFullScreen(context: Context) {
-        val intent = Intent(context, FullScreenImageActivity::class.java).apply {
+        Intent(context, FullScreenImageActivity::class.java).apply {
             putExtra(FullScreenImageActivity.EXTRA_IMAGE_URL, post.imageUrl.toString())
             putExtra(FullScreenImageActivity.EXTRA_POST_ID, post.id)
+        }.also {
+            context.startActivity(it)
         }
-        context.startActivity(intent)
     }
 
     private fun goToProfileActivity(context: Context) {
-        val intent = Intent(context, ProfileActivity::class.java).apply {
+        Intent(context, ProfileActivity::class.java).apply {
             putExtra(ProfileActivity.EXTRA_USER, post.author)
+        }.also {
+            context.startActivity(it)
         }
-        context.startActivity(intent)
     }
 
     private fun updateRating(rate: Float) {

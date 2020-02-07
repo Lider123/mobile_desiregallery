@@ -12,21 +12,27 @@ class AnalyticsTracker(context: Context) : IDGAnalyticsTracker {
     private val analytics = FirebaseAnalytics.getInstance(context)
 
     override fun trackLogin(method: AuthMethod) {
-        val bundle = Bundle()
-        bundle.putString(FirebaseAnalytics.Param.METHOD, method.name)
-        analytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle)
+        Bundle().apply {
+            putString(FirebaseAnalytics.Param.METHOD, method.name)
+        }.also {
+            analytics.logEvent(FirebaseAnalytics.Event.LOGIN, it)
+        }
     }
 
     override fun trackSignUp(method: AuthMethod) {
-        val bundle = Bundle()
-        bundle.putString(FirebaseAnalytics.Param.METHOD, method.name)
-        analytics.logEvent(FirebaseAnalytics.Event.SIGN_UP, bundle)
+        Bundle().apply {
+            putString(FirebaseAnalytics.Param.METHOD, method.name)
+        }.also {
+            analytics.logEvent(FirebaseAnalytics.Event.SIGN_UP, it)
+        }
     }
 
     override fun trackSharePhoto(itemId: String) {
-        val bundle = Bundle()
-        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "post_image")
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, itemId)
-        analytics.logEvent(FirebaseAnalytics.Event.SHARE, bundle)
+        Bundle().apply {
+            putString(FirebaseAnalytics.Param.CONTENT_TYPE, "post_image")
+            putString(FirebaseAnalytics.Param.ITEM_ID, itemId)
+        }.also {
+            analytics.logEvent(FirebaseAnalytics.Event.SHARE, it)
+        }
     }
 }

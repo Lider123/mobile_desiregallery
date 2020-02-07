@@ -18,7 +18,7 @@ class PostCreationDialog(
     activity: Activity,
     private val image: Bitmap,
     private val callback: IPostCreationListener
-) : Dialog(activity), IPostCreationContract.View {
+) : Dialog(activity), IPostCreationContract.View, View.OnClickListener {
     @Inject
     lateinit var presenter: PostCreationPresenter
 
@@ -27,8 +27,10 @@ class PostCreationDialog(
     override fun onCreate(savedInstanceState: Bundle?) {
         MainApplication.appComponent.inject(this)
         content = View.inflate(context, R.layout.layout_create_post, null).apply {
-            post_creation_publish.setOnClickListener { presenter.handlePublish() }
-            post_creation_cancel.setOnClickListener { presenter.handleCancel() }
+            arrayOf(
+                post_creation_publish,
+                post_creation_cancel
+            ).map { it.setOnClickListener(this@PostCreationDialog) }
             dialog_post_image.setImageBitmap(image)
         }
         setContentView(content)
@@ -61,4 +63,11 @@ class PostCreationDialog(
     }
 
     override fun finish() = dismiss()
+
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.post_creation_publish -> presenter.handlePublish()
+            R.id.post_creation_cancel -> presenter.handleCancel()
+        }
+    }
 }

@@ -13,14 +13,13 @@ import com.example.desiregallery.data.models.Comment
 import com.example.desiregallery.data.models.Post
 import com.example.desiregallery.data.models.User
 import com.example.desiregallery.data.network.RequestState
-import com.example.desiregallery.ui.screens.base.BaseActivity
+import com.example.desiregallery.ui.screens.base.StyledActivity
 import com.example.desiregallery.ui.widgets.SnackbarWrapper
-import com.example.desiregallery.utils.hideSoftKeyboard
 import kotlinx.android.synthetic.main.activity_comments.*
 import kotlinx.android.synthetic.main.toolbar_comments.*
 import javax.inject.Inject
 
-class CommentsActivity : BaseActivity() {
+class CommentsActivity : StyledActivity(), View.OnClickListener {
     @Inject
     lateinit var accProvider: AccountProvider
     @Inject
@@ -34,13 +33,7 @@ class CommentsActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_comments)
 
-        comments_button_back.setOnClickListener {
-            onBackPressed()
-        }
-        comments_button_send.setOnClickListener {
-            val commentText = comments_input.text.trim()
-            if (commentText.isNotEmpty()) handleSend(commentText.toString())
-        }
+        arrayOf(comments_button_back, comments_button_send).map { it.setOnClickListener(this) }
         comments_list.layoutManager = LinearLayoutManager(this)
         snackbar = SnackbarWrapper(comments_container)
 
@@ -53,6 +46,15 @@ class CommentsActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
         MainApplication.instance.clearCommentComponent()
+    }
+
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.comments_button_back -> onBackPressed()
+            R.id.comments_button_send -> comments_input.text.trim().let {
+                if (it.isNotEmpty()) handleSend(it.toString())
+            }
+        }
     }
 
     private fun initModel() {
@@ -100,7 +102,7 @@ class CommentsActivity : BaseActivity() {
     private fun handleSend(text: String) {
         comments_input.setText("")
         comments_input.clearFocus()
-        hideSoftKeyboard(this)
+        hideSoftKeyboard()
 
         val newComment = Comment().apply {
             this.text = text

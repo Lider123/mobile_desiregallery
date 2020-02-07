@@ -39,7 +39,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         findPreference<SwitchPreference>(getString(R.string.pref_theme_key))?.apply {
             isChecked = prefsHelper.darkModeOn
-            setOnPreferenceChangeListener { preference, newValue ->
+            setOnPreferenceChangeListener { _, newValue ->
                 newValue as Boolean
                 prefsHelper.darkModeOn = newValue
                 prefsHelper.startWithSettings = true
@@ -51,8 +51,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onPreferenceTreeClick(preference: Preference) = when (preference.key) {
         getString(R.string.pref_reset_password_key) -> {
-            val user = auth.currentUser
-            user?.let {
+            auth.currentUser?.let {
                 AlertDialog.Builder(requireActivity(), R.style.CustomAlertDialog)
                     .setTitle(R.string.reset_password)
                     .setMessage(R.string.reset_password_message)
@@ -69,7 +68,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
         else -> super.onPreferenceTreeClick(preference)
     }
-
 
     private fun sendResetPasswordEmail(user: FirebaseUser) {
         auth.sendPasswordResetEmail(user.email!!).addOnCompleteListener { task ->

@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -15,6 +14,7 @@ import com.example.desiregallery.auth.AccountProvider
 import com.example.desiregallery.ui.screens.auth.LoginActivity
 import com.example.desiregallery.ui.screens.base.BaseActivity
 import com.example.desiregallery.ui.IOnBackPressed
+import com.example.desiregallery.ui.screens.base.StyledActivity
 import com.example.desiregallery.ui.screens.feed.FeedFragment
 import com.example.desiregallery.ui.screens.profile.ProfileFragment
 import com.google.android.material.navigation.NavigationView
@@ -23,7 +23,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
-class MainActivity : BaseActivity() {
+class MainActivity : StyledActivity() {
     @Inject
     lateinit var accProvider: AccountProvider
 
@@ -31,7 +31,6 @@ class MainActivity : BaseActivity() {
     private lateinit var navigationView: NavigationView
     private lateinit var headerTextView: TextView
     private lateinit var headerImageView: ImageView
-    private lateinit var toolbar: Toolbar
     private lateinit var mDisposable: Disposable
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +38,8 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
         MainApplication.appComponent.inject(this)
 
-        setToolbar()
+        setToolbar(R.id.main_toolbar, getString(R.string.app_name), true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_menu_coloronprimary_32dp)
         setNavigationMenu()
         setDefaultFragment()
     }
@@ -88,17 +88,6 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun setToolbar() {
-        toolbar = findViewById<Toolbar>(R.id.main_toolbar).apply {
-            title = resources.getString(R.string.app_name)
-        }
-        setSupportActionBar(toolbar)
-        supportActionBar?.run {
-            setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.ic_menu_coloronprimary_32dp)
-        }
-    }
-
     private fun setNavigationMenu() {
         drawerLayout = findViewById(R.id.drawer_layout)
         navigationView = findViewById<NavigationView>(R.id.nav_view).apply {
@@ -131,12 +120,12 @@ class MainActivity : BaseActivity() {
 
     private fun replaceFragment(fragment: Fragment, title: CharSequence) {
         supportFragmentManager.beginTransaction().replace(R.id.main_container, fragment).commit()
-        toolbar.title = title
+        supportActionBar?.title = title
     }
 
     private fun replaceFragment(fragment: Fragment, id: Int) {
         supportFragmentManager.beginTransaction().replace(R.id.main_container, fragment).commit()
-        toolbar.title = resources.getString(id)
+        supportActionBar?.title = resources.getString(id)
     }
 
     private fun handleLogout() {

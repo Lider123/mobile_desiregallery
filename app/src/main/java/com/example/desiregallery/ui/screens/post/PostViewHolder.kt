@@ -1,5 +1,6 @@
 package com.example.desiregallery.ui.screens.post
 
+import android.view.View
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.data.models.Post
@@ -11,14 +12,21 @@ import javax.inject.Inject
 
 class PostViewHolder(
     private val bind: ItemPostBinding
-) : BaseViewHolder<Post>(bind.root), IPostContract.View {
+) : BaseViewHolder<Post>(bind.root), IPostContract.View, View.OnClickListener {
     @Inject
     lateinit var presenter: PostPresenter
 
     override fun bind(item: Post) {
         MainApplication.appComponent.inject(this)
         presenter.attach(this, item)
-        initListeners()
+        with(bind) {
+            arrayOf(
+                itemPostImage,
+                itemPostRating,
+                itemPostComment,
+                itemAuthorImage
+            ).map { it.setOnClickListener(this@PostViewHolder) }
+        }
     }
 
     override fun updateRating(rating: Float) {
@@ -27,14 +35,12 @@ class PostViewHolder(
             .getString(R.string.item_post_rating_format, rating)
     }
 
-    override fun updateImage(imageUrl: String) {
-        Picasso.with(bind.itemPostImage.context)
-            .load(imageUrl)
-            .resize(600, 0)
-            .placeholder(R.drawable.material)
-            .error(R.drawable.image_error)
-            .into(bind.itemPostImage)
-    }
+    override fun updateImage(imageUrl: String) = Picasso.with(bind.itemPostImage.context)
+        .load(imageUrl)
+        .resize(600, 0)
+        .placeholder(R.drawable.material)
+        .error(R.drawable.image_error)
+        .into(bind.itemPostImage)
 
     override fun updateAuthorName(name: String) {
         bind.itemAuthorText.text = name
@@ -60,20 +66,12 @@ class PostViewHolder(
         bind.itemTimestamp.text = formatDate(bind.itemTimestamp.context, time)
     }
 
-    private fun initListeners() {
-        with(bind) {
-            itemPostImage.setOnClickListener {
-                presenter.onImageClick(bind.itemPostImage.context)
-            }
-            itemPostRating.setOnClickListener {
-                presenter.onRatingClick(bind.itemPostRating.context)
-            }
-            itemPostComment.setOnClickListener {
-                presenter.onCommentsClick(bind.itemPostComment.context)
-            }
-            itemAuthorImage.setOnClickListener {
-                presenter.onAuthorClick(bind.itemAuthorImage.context)
-            }
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.item_post_image -> presenter.onImageClick(bind.itemPostImage.context)
+            R.id.item_post_rating -> presenter.onRatingClick(bind.itemPostRating.context)
+            R.id.item_post_comment -> presenter.onCommentsClick(bind.itemPostComment.context)
+            R.id.item_author_image -> presenter.onAuthorClick(bind.itemAuthorImage.context)
         }
     }
 }

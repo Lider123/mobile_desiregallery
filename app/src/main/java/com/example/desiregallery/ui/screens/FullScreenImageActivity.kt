@@ -4,8 +4,6 @@ import android.Manifest
 import android.app.Activity
 import android.graphics.Bitmap
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import com.example.desiregallery.R
 import kotlinx.android.synthetic.main.activity_full_screen_image.*
 import android.content.pm.PackageManager
@@ -15,6 +13,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.view.*
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.analytics.IDGAnalyticsTracker
+import com.example.desiregallery.ui.screens.base.BaseActivity
 import com.example.desiregallery.ui.widgets.SnackbarWrapper
 import com.example.desiregallery.utils.*
 import com.squareup.picasso.Callback
@@ -22,11 +21,10 @@ import com.squareup.picasso.Picasso
 import timber.log.Timber
 import javax.inject.Inject
 
-class FullScreenImageActivity : AppCompatActivity() {
+class FullScreenImageActivity : BaseActivity() {
     @Inject
     lateinit var analytics: IDGAnalyticsTracker
 
-    private lateinit var toolbar: Toolbar
     private lateinit var snackbar: SnackbarWrapper
 
     private lateinit var image: Bitmap
@@ -39,7 +37,7 @@ class FullScreenImageActivity : AppCompatActivity() {
         MainApplication.appComponent.inject(this)
         snackbar = SnackbarWrapper(full_screen_container)
 
-        setToolbar()
+        setToolbar(R.id.image_screen_toolbar, "", true)
 
         val imageUrl = intent.getStringExtra(EXTRA_IMAGE_URL)
         Picasso.with(this)
@@ -91,7 +89,7 @@ class FullScreenImageActivity : AppCompatActivity() {
     ) {
         when (requestCode) {
             WRITE_REQUEST_CODE -> if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                downloadBitmap(image, object : DownloadCallback {
+                image.download(object : DownloadCallback {
 
                     override fun onSuccess() {
                         Timber.i("Image has been downloaded")
@@ -120,20 +118,13 @@ class FullScreenImageActivity : AppCompatActivity() {
         }
     }
 
-    private fun setToolbar() {
-        toolbar = findViewById<Toolbar>(R.id.image_screen_toolbar).apply {
-            title = ""
-        }
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    }
-
     private fun shareImage() {
-        getLocalBitmapUri(image, this)?.let {
-            val shareIntent = Intent()
-            shareIntent.action = Intent.ACTION_SEND
-            shareIntent.putExtra(Intent.EXTRA_STREAM, it)
-            shareIntent.type = "image/*"
+        image.getLocalUri(this)?.let {
+            val shareIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_STREAM, it)
+                type = "image/*"
+            }
             startActivityForResult(
                 Intent.createChooser(shareIntent, getString(R.string.share_image)),
                 SHARING_REQUEST_CODE

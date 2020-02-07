@@ -18,23 +18,22 @@ import android.provider.MediaStore
 
 private const val DOWNLOAD_FOLDER_DEFAULT = "DesireDownloads/"
 
-fun bitmapToBytes(bmp: Bitmap): ByteArray {
-    val stream = ByteArrayOutputStream()
-    bmp.compress(Bitmap.CompressFormat.PNG, 100, stream)
-    return stream.toByteArray()
-}
+fun Bitmap.toBytes(): ByteArray = ByteArrayOutputStream().also {
+    compress(Bitmap.CompressFormat.PNG, 100, it)
+}.toByteArray()
 
-fun bytesToBitmap(bytes: ByteArray): Bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+fun ByteArray.toBitmap(): Bitmap = BitmapFactory.decodeByteArray(this, 0, this.size)
 
-fun downloadBitmap(bitmap: Bitmap, callback: DownloadCallback) {
+fun Bitmap.download(callback: DownloadCallback) {
     val root = Environment.getExternalStorageDirectory()
     val path = File(root, DOWNLOAD_FOLDER_DEFAULT)
     path.mkdir()
     val n = Random().nextInt(1e10.toInt()).toString().padStart(10, '0')
     val file = File(path, "$n.jpg")
     try {
-        val out = FileOutputStream(file)
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+        val out = FileOutputStream(file).also {
+            this.compress(Bitmap.CompressFormat.JPEG, 100, it)
+        }
         out.flush()
         out.close()
         callback.onSuccess()
@@ -43,10 +42,10 @@ fun downloadBitmap(bitmap: Bitmap, callback: DownloadCallback) {
     }
 }
 
-fun bitmapToBase64(bitmap: Bitmap): String {
-    val byteArrayOutputStream = ByteArrayOutputStream()
-    bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
-    val byteArray = byteArrayOutputStream.toByteArray()
+fun Bitmap.toBase64(): String {
+    val byteArray = ByteArrayOutputStream().also {
+        this.compress(Bitmap.CompressFormat.PNG, 100, it)
+    }.toByteArray()
     return Base64.encodeToString(byteArray, Base64.DEFAULT)
 }
 
@@ -61,7 +60,7 @@ fun base64ToBitmap(str: String): Bitmap {
  * @param bmp Bitmap to save temporarily in storage and get URI
  * @return URI path of given bitmap
  * */
-fun getLocalBitmapUri(bmp: Bitmap, context: Context): Uri? {
+fun Bitmap.getLocalUri(context: Context): Uri? {
     var bmpUri: Uri? = null
     try {
         val file = File(
@@ -69,7 +68,7 @@ fun getLocalBitmapUri(bmp: Bitmap, context: Context): Uri? {
             "share_image_" + System.currentTimeMillis() + ".png"
         )
         val out = FileOutputStream(file)
-        bmp.compress(Bitmap.CompressFormat.PNG, 90, out)
+        this.compress(Bitmap.CompressFormat.PNG, 90, out)
         out.close()
         bmpUri = Uri.fromFile(file)
     } catch (e: IOException) {

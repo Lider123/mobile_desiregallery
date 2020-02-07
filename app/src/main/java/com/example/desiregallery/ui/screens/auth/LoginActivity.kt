@@ -4,9 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import com.example.desiregallery.R
 import com.example.desiregallery.ui.screens.MainActivity
-import com.example.desiregallery.ui.screens.base.BaseActivity
+import com.example.desiregallery.ui.screens.base.StyledActivity
 
-class LoginActivity : BaseActivity(true), ILoginListener {
+class LoginActivity : StyledActivity(true), ILoginListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,8 +16,9 @@ class LoginActivity : BaseActivity(true), ILoginListener {
     override fun onSuccessfulLogin() = goToMainActivity()
 
     private fun goToMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
+        Intent(this, MainActivity::class.java).also {
+            startActivity(it)
+        }
         finish()
     }
 }

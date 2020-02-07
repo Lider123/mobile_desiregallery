@@ -15,12 +15,13 @@ class SmallPostAdapter(override val items: List<Post>) : BaseAdapter<Post>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SmallPostViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val bind = DataBindingUtil.inflate<ItemPostSmallBinding>(
+        return DataBindingUtil.inflate<ItemPostSmallBinding>(
             inflater,
             R.layout.item_post_small,
             parent,
             false
-        )
-        return SmallPostViewHolder(bind)
+        ).let {
+            SmallPostViewHolder(it)
+        }
     }
 }

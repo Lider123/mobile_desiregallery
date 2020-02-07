@@ -5,12 +5,12 @@ import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.auth.EmailAccount
 import com.example.desiregallery.data.models.User
-import com.example.desiregallery.ui.screens.base.BaseActivity
+import com.example.desiregallery.ui.screens.base.StyledActivity
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.toolbar_profile.*
 import javax.inject.Inject
 
-class ProfileActivity : BaseActivity() {
+class ProfileActivity : StyledActivity() {
     @Inject
     lateinit var auth: FirebaseAuth
 

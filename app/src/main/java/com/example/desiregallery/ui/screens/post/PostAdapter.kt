@@ -12,8 +12,9 @@ class PostAdapter : BasePagedListAdapter<Post>(Post.CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val bind = DataBindingUtil
-            .inflate<ItemPostBinding>(inflater, R.layout.item_post, parent, false)
-        return PostViewHolder(bind)
+        return DataBindingUtil
+            .inflate<ItemPostBinding>(inflater, R.layout.item_post, parent, false).let {
+                PostViewHolder(it)
+            }
     }
 }

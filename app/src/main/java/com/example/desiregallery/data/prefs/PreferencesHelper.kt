@@ -11,48 +11,52 @@ class PreferencesHelper(context: Context) : IDGSharedPreferencesHelper {
     private val appPrefs = context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
     private val mPrefsLock = ReentrantLock()
 
-    override val hasAuthMethod: Boolean get() = appPrefs.contains(PREF_AUTH_METHOD)
+    override val hasAuthMethod: Boolean
+        get() = appPrefs.contains(PREF_AUTH_METHOD)
     override var authMethod: AuthMethod?
         get() {
-            mPrefsLock.lock()
-            val methodName = appPrefs.getString(PREF_AUTH_METHOD, null)
-            mPrefsLock.unlock()
+            val methodName = lockDecorator {
+                appPrefs.getString(PREF_AUTH_METHOD, null)
+            }
             return if (methodName == null) methodName else AuthMethod.fromString(methodName)
         }
         set(value) {
-            mPrefsLock.lock()
-            appPrefs.edit().putString(PREF_AUTH_METHOD, value?.name).apply()
-            mPrefsLock.unlock()
+            lockDecorator {
+                appPrefs.edit().putString(PREF_AUTH_METHOD, value?.name).apply()
+            }
         }
     override var darkModeOn: Boolean
-        get() {
-            mPrefsLock.lock()
-            val darkModeOn = appPrefs.getBoolean(PREF_DARK_MODE, false)
-            mPrefsLock.unlock()
-            return darkModeOn
+        get() = lockDecorator {
+            appPrefs.getBoolean(PREF_DARK_MODE, false)
         }
         set(value) {
-            mPrefsLock.lock()
-            appPrefs.edit().putBoolean(PREF_DARK_MODE, value).apply()
-            mPrefsLock.unlock()
+            lockDecorator {
+                appPrefs.edit().putBoolean(PREF_DARK_MODE, value).apply()
+            }
         }
     override var startWithSettings: Boolean
         get() {
-            mPrefsLock.lock()
-            val startWithSettings = appPrefs.getBoolean(PREF_START_WITH_SETTINGS, false)
-            mPrefsLock.unlock()
-            return startWithSettings
+            return lockDecorator {
+                appPrefs.getBoolean(PREF_START_WITH_SETTINGS, false)
+            }
         }
         set(value) {
-            mPrefsLock.lock()
-            appPrefs.edit().putBoolean(PREF_START_WITH_SETTINGS, value).apply()
-            mPrefsLock.unlock()
+            lockDecorator {
+                appPrefs.edit().putBoolean(PREF_START_WITH_SETTINGS, value).apply()
+            }
         }
 
     override fun clearAuthMethod() {
+        lockDecorator {
+            appPrefs.edit().remove(PREF_AUTH_METHOD).apply()
+        }
+    }
+
+    private inline fun <T : Any?> lockDecorator(f: () -> T): T {
         mPrefsLock.lock()
-        appPrefs.edit().remove(PREF_AUTH_METHOD).apply()
+        val result = f()
         mPrefsLock.unlock()
+        return result
     }
 
     companion object {

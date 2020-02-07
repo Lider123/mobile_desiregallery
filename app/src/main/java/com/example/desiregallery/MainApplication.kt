@@ -32,7 +32,6 @@ class MainApplication : Application() {
             .dataModule(DataModule(applicationContext))
             .postsModule(PostsModule())
             .build()
-
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree()) else {
             Timber.plant(ReleaseTree())
             initSentry()
