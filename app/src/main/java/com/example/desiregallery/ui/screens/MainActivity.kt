@@ -14,6 +14,7 @@ import com.example.desiregallery.R
 import com.example.desiregallery.auth.AccountProvider
 import com.example.desiregallery.ui.screens.auth.LoginActivity
 import com.example.desiregallery.ui.screens.base.BaseActivity
+import com.example.desiregallery.ui.IOnBackPressed
 import com.example.desiregallery.ui.screens.feed.FeedFragment
 import com.example.desiregallery.ui.screens.profile.ProfileFragment
 import com.google.android.material.navigation.NavigationView
@@ -81,6 +82,11 @@ class MainActivity : BaseActivity() {
         else -> super.onOptionsItemSelected(item)
     }
 
+    override fun onBackPressed() {
+        supportFragmentManager.findFragmentById(R.id.main_container)?.let {
+            if (it !is IOnBackPressed || it.onBackPressed().not()) super.onBackPressed()
+        }
+    }
 
     private fun setToolbar() {
         toolbar = findViewById<Toolbar>(R.id.main_toolbar).apply {

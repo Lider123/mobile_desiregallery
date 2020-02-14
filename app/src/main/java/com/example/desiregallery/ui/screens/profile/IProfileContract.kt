@@ -19,11 +19,13 @@ interface IProfileContract {
         fun updateEditButtonVisibility(visible: Boolean)
         fun updateNoPostsHintVisibility(visible: Boolean)
         fun showMessage(message: String)
+        fun showEditFragment(fragment: EditProfileFragment)
+        fun hideEditFragment()
     }
 
     interface Presenter {
         fun attach(view: View)
         fun detach()
-        fun onEditClick(fragmentManager: FragmentManager)
+        fun onEditClick()
     }
 }

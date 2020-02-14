@@ -11,6 +11,7 @@ import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.auth.IAccount
 import com.example.desiregallery.data.models.Post
+import com.example.desiregallery.ui.IOnBackPressed
 import com.example.desiregallery.ui.screens.post.SmallPostAdapter
 import com.example.desiregallery.ui.widgets.SnackbarWrapper
 import com.squareup.picasso.Picasso
@@ -18,11 +19,13 @@ import kotlinx.android.synthetic.main.fragment_profile.*
 import javax.inject.Inject
 
 class ProfileFragment private constructor(private val account: IAccount?) : Fragment(),
-    IProfileContract.View {
+    IProfileContract.View, IOnBackPressed {
     @Inject
     lateinit var presenter: ProfilePresenter
 
     private lateinit var snackbar: SnackbarWrapper
+    private var editFragment: EditProfileFragment? = null
+    private var editFragmentIsShown = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,8 +94,34 @@ class ProfileFragment private constructor(private val account: IAccount?) : Frag
         hint_no_posts.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
+    override fun showEditFragment(fragment: EditProfileFragment) {
+        editFragment = fragment
+        val modalFragment = ModalFragmentFactory(requireFragmentManager()).create(
+            editFragment as EditProfileFragment,
+            R.id.profile_container
+        )
+        requireFragmentManager().beginTransaction()
+            .add(R.id.profile_container, modalFragment)
+            .commit()
+        editFragmentIsShown = true
+    }
+
+    override fun hideEditFragment() {
+        editFragment?.let {
+            requireFragmentManager().beginTransaction()
+                .remove(it)
+                .commit()
+            editFragmentIsShown = false
+        }
+    }
+
+    override fun onBackPressed() = if (editFragmentIsShown) {
+        hideEditFragment()
+        true
+    } else false
+
     private fun initListeners() {
-        profile_edit.setOnClickListener { presenter.onEditClick(requireFragmentManager()) }
+        profile_edit.setOnClickListener { presenter.onEditClick() }
     }
 
     companion object {

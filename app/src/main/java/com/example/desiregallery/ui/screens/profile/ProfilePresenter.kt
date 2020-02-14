@@ -1,7 +1,6 @@
 package com.example.desiregallery.ui.screens.profile
 
 import android.content.res.Resources
-import androidx.fragment.app.FragmentManager
 import com.example.desiregallery.R
 import com.example.desiregallery.auth.AccountProvider
 import com.example.desiregallery.auth.EmailAccount
@@ -31,7 +30,6 @@ class ProfilePresenter(
     private val auth: FirebaseAuth
 ) : IProfileContract.Presenter {
     private lateinit var view: IProfileContract.View
-    private var editFragment: EditProfileFragment? = null
 
     private lateinit var mDisposable: Disposable
 
@@ -49,34 +47,24 @@ class ProfilePresenter(
         if (account?.isCurrent() == true && !mDisposable.isDisposed) mDisposable.dispose()
     }
 
-    override fun onEditClick(fragmentManager: FragmentManager) {
+    override fun onEditClick() {
         if (account?.isCurrent() == true && account is EmailAccount) {
-            editFragment = EditProfileFragment.createInstance(
+            val editFragment = EditProfileFragment.createInstance(
                 account.user,
                 object : EditProfileFragment.Callback {
 
                     override fun onDoneClick(user: User) {
-                        fragmentManager.beginTransaction()
-                            .remove(editFragment!!)
-                            .commit()
+                        view.hideEditFragment()
                         accProvider.currAccount = EmailAccount(user, auth)
                         updateAll()
                         view.showMessage(resources.getString(R.string.changes_saved))
                     }
 
                     override fun onCancelClick() {
-                        fragmentManager.beginTransaction()
-                            .remove(editFragment!!)
-                            .commit()
+                        view.hideEditFragment()
                     }
                 })
-            val modalFragment = ModalFragmentFactory(fragmentManager).create(
-                editFragment as EditProfileFragment,
-                R.id.profile_container
-            )
-            fragmentManager.beginTransaction()
-                .add(R.id.profile_container, modalFragment)
-                .commit()
+            view.showEditFragment(editFragment)
         }
     }
 
