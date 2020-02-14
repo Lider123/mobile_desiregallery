@@ -26,9 +26,8 @@ data class Comment(
     companion object {
         val CALLBACK: DiffUtil.ItemCallback<Comment> = object : DiffUtil.ItemCallback<Comment>() {
 
-            override fun areItemsTheSame(oldItem: Comment, newItem: Comment): Boolean {
-                return oldItem.id == newItem.id
-            }
+            override fun areItemsTheSame(oldItem: Comment, newItem: Comment) =
+                (oldItem.id == newItem.id)
 
             override fun areContentsTheSame(oldItem: Comment, newItem: Comment) = true
         }

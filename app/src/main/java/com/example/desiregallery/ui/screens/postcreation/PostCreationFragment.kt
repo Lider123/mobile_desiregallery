@@ -9,15 +9,17 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
-import com.example.desiregallery.utils.bitmapToBytes
-import com.example.desiregallery.utils.bytesToBitmap
+import com.example.desiregallery.utils.toBitmap
+import com.example.desiregallery.utils.toBytes
 import kotlinx.android.synthetic.main.layout_create_post.*
 import javax.inject.Inject
 
 /**
  * @author babaetskv on 18.11.19
  */
-class PostCreationFragment private constructor() : Fragment(), IPostCreationContract.View {
+class PostCreationFragment private constructor() : Fragment(),
+    IPostCreationContract.View,
+    View.OnClickListener {
     @Inject
     lateinit var presenter: PostCreationPresenter
 
@@ -36,20 +38,19 @@ class PostCreationFragment private constructor() : Fragment(), IPostCreationCont
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        post_creation_publish.setOnClickListener { presenter.handlePublish() }
-        post_creation_cancel.setOnClickListener { presenter.handleCancel() }
+        arrayOf(post_creation_publish, post_creation_cancel).map { it.setOnClickListener(this) }
         arguments?.let {
             val imageBytes = it.getByteArray(ARG_IMAGE_BYTES)
-            val image = bytesToBitmap(imageBytes!!)
+            val image = imageBytes!!.toBitmap()
             dialog_post_image.setImageBitmap(image)
         }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if (requireActivity() is IPostCreationListener) {
-            mPostCreationListener = requireActivity() as IPostCreationListener
-        } else throw Exception("Parent activity doesn't implement post creation interface")
+        (requireActivity() as? IPostCreationListener)?.let {
+            mPostCreationListener = it
+        } ?: throw Exception("Parent activity doesn't implement post creation interface")
     }
 
     override fun onStart() {
@@ -78,13 +79,20 @@ class PostCreationFragment private constructor() : Fragment(), IPostCreationCont
     override fun finish() {
     }
 
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.post_creation_publish -> presenter.handlePublish()
+            R.id.post_creation_cancel -> presenter.handleCancel()
+        }
+    }
+
     companion object {
         const val ARG_IMAGE_BYTES = "imageBytes"
 
         fun createInstance(image: Bitmap): PostCreationFragment {
             val instance = PostCreationFragment()
             Bundle().apply {
-                val imageBytes = bitmapToBytes(image)
+                val imageBytes = image.toBytes()
                 putByteArray(ARG_IMAGE_BYTES, imageBytes)
             }.also {
                 instance.arguments = it

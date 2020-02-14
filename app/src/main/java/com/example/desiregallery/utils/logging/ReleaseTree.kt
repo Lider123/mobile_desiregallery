@@ -16,21 +16,23 @@ class ReleaseTree : Timber.Tree() {
         when (priority) {
             Log.WARN -> {
                 Crashlytics.log(priority, tag, message)
-                val event = EventBuilder()
+                EventBuilder()
                     .withLevel(Event.Level.WARNING)
                     .withTag("tag", tag)
                     .withMessage(message)
-                    .build()
-                Sentry.capture(event)
+                    .build().let {
+                        Sentry.capture(it)
+                    }
             }
             Log.ERROR -> {
                 Crashlytics.log(priority, tag, message)
-                val event = EventBuilder()
+                EventBuilder()
                     .withLevel(Event.Level.ERROR)
                     .withTag("tag", tag)
                     .withMessage(message)
-                    .build()
-                Sentry.capture(event)
+                    .build().let {
+                        Sentry.capture(it)
+                    }
             }
         }
     }

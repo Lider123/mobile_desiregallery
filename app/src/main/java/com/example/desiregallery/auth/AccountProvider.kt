@@ -37,10 +37,8 @@ class AccountProvider(
     val mObservable = PublishSubject.create<Wrapper<IAccount>>()
 
     val isAuthorized: Boolean
-        get() {
-            prefs.authMethod ?: return false
-            return true
-        }
+        get() = (prefs.authMethod != null)
+
 
     fun setCurrentUser() {
         when (prefs.authMethod) {
@@ -61,11 +59,12 @@ class AccountProvider(
                 val login = it.displayName!!
                 when (val result = networkManager.getUser(login)) {
                     is Result.Success -> {
-                        val user = result.data
                         Timber.i("Successfully got user $login")
-                        currAccount = EmailAccount(user, auth)
-                        addMessageToken(user)
-                        updateUserInfo(user)
+                        result.data.also {
+                            currAccount = EmailAccount(it, auth)
+                            addMessageToken(it)
+                            updateUserInfo(it)
+                        }
                     }
                     is Result.Error -> Timber.e(result.exception, "Failed to get user $login")
                 }
@@ -84,14 +83,14 @@ class AccountProvider(
                         return
                     }
 
-                    val user: VKApiUser = (response.parsedModel as VKList<*>)[0] as VKApiUser
-                    currAccount = VKAccount(user)
-                    currAccount?.let { account ->
+                    val user = (response.parsedModel as VKList<*>)[0] as VKApiUser
+                    currAccount = VKAccount(user).also { account ->
                         Timber.i("Got data for user ${account.displayName}")
                         GlobalScope.launch(Dispatchers.Main) {
                             val result = networkManager.getUser(account.displayName)
-                            val vkUser = if (result is Result.Success) result.data
-                            else User(photo = account.photoUrl, login = account.displayName)
+                            val vkUser = if (result is Result.Success) result.data else {
+                                User(photo = account.photoUrl, login = account.displayName)
+                            }
                             vkUser.let {
                                 addMessageToken(it)
                                 updateUserInfo(it)
@@ -108,19 +107,19 @@ class AccountProvider(
     }
 
     private fun setCurrentGoogleUser() {
-        val account = GoogleSignIn.getLastSignedInAccount(context)
-        account ?: run {
+        val googleAcc = GoogleSignIn.getLastSignedInAccount(context)
+        googleAcc ?: run {
             Timber.e("Failed to get google account")
             return
         }
 
-        currAccount = GoogleAccount(account, googleClient)
-        currAccount?.let { it ->
-            Timber.i("Got data for user ${it.displayName}")
+        currAccount = GoogleAccount(googleAcc, googleClient).also { account ->
+            Timber.i("Got data for user ${account.displayName}")
             GlobalScope.launch(Dispatchers.Main) {
-                val result = networkManager.getUser(it.displayName)
-                val googleUser = if (result is Result.Success) result.data
-                else User(photo = it.photoUrl, login = it.displayName)
+                val result = networkManager.getUser(account.displayName)
+                val googleUser = if (result is Result.Success) result.data else {
+                    User(photo = account.photoUrl, login = account.displayName)
+                }
                 googleUser.let {
                     addMessageToken(it)
                     updateUserInfo(it)
@@ -137,10 +136,7 @@ class AccountProvider(
                 tokenSet.add(result.data)
                 user.messageTokens = tokenSet.toList()
             }
-            is Result.Error -> Timber.e(
-                result.exception,
-                "Failed to get message token"
-            )
+            is Result.Error -> Timber.e(result.exception, "Failed to get message token")
         }
     }
 

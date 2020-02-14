@@ -4,7 +4,7 @@ import com.example.desiregallery.di.modules.*
 import com.example.desiregallery.ui.screens.*
 import com.example.desiregallery.ui.screens.auth.LoginFragment
 import com.example.desiregallery.ui.screens.auth.SignUpActivity
-import com.example.desiregallery.ui.screens.base.BaseActivity
+import com.example.desiregallery.ui.screens.base.StyledActivity
 import com.example.desiregallery.ui.screens.feed.FeedFragment
 import com.example.desiregallery.ui.screens.post.PostViewHolder
 import com.example.desiregallery.ui.screens.post.SmallPostViewHolder
@@ -32,7 +32,7 @@ import javax.inject.Singleton
     ]
 )
 interface AppComponent {
-    fun inject(activity: BaseActivity)
+    fun inject(activity: StyledActivity)
     fun inject(activity: SignUpActivity)
     fun inject(activity: MainActivity)
     fun inject(activity: FullScreenImageActivity)

@@ -11,12 +11,12 @@ import com.example.desiregallery.data.network.query.operators.ComparisonOperator
 class PostsQueryRequest(limit: Int, offset: Long, author: String? = null) : BaseQueryRequest() {
 
     init {
-        this.from("posts")
-        this.orderBy("timestamp", OrderDirection.DESCENDING)
-        if (limit > 0) this.limit(limit)
-        if (offset > 0) this.offset(offset)
+        from("posts")
+        orderBy("timestamp", OrderDirection.DESCENDING)
+        if (limit > 0) limit(limit)
+        if (offset > 0) offset(offset)
         author?.let {
-            this.where(FieldFilter("author", ComparisonOperator.EQUAL, Value(author)))
+            where(FieldFilter("author", ComparisonOperator.EQUAL, Value(author)))
         }
     }
 }

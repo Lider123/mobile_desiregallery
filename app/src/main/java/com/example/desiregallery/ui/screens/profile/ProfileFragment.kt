@@ -42,7 +42,7 @@ class ProfileFragment private constructor(private val account: IAccount?) : Frag
         super.onViewCreated(view, savedInstanceState)
         snackbar = SnackbarWrapper(profile_content)
         presenter.attach(this)
-        initListeners()
+        profile_edit.setOnClickListener { presenter.onEditClick() }
     }
 
     override fun onStop() {
@@ -120,14 +120,8 @@ class ProfileFragment private constructor(private val account: IAccount?) : Frag
         true
     } else false
 
-    private fun initListeners() {
-        profile_edit.setOnClickListener { presenter.onEditClick() }
-    }
-
     companion object {
 
-        fun createInstance(account: IAccount): ProfileFragment {
-            return ProfileFragment(account)
-        }
+        fun createInstance(account: IAccount) = ProfileFragment(account)
     }
 }

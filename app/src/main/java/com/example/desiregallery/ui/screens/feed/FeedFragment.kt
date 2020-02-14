@@ -78,8 +78,9 @@ class FeedFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val imageUri = CropImage.getActivityResult(data).uri
-            val istream = activity!!.contentResolver.openInputStream(imageUri)
-            val selectedImage = BitmapFactory.decodeStream(istream)
+            val selectedImage = activity!!.contentResolver.openInputStream(imageUri).let {
+                BitmapFactory.decodeStream(it)
+            }
             PostCreationDialog(
                 activity!!,
                 selectedImage,
@@ -99,9 +100,9 @@ class FeedFragment : Fragment() {
     private fun initModel() {
         model = ViewModelProviders.of(this, vmFactory).get(PostsViewModel::class.java)
         model.postsLiveData.observe(this, Observer { posts ->
-            val adapter = PostAdapter()
-            adapter.submitList(posts)
-            post_list.adapter = adapter
+            post_list.adapter = PostAdapter().apply {
+                submitList(posts)
+            }
         })
         model.getState().observe(this, Observer { status ->
             status ?: return@Observer

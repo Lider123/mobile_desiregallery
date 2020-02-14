@@ -13,7 +13,7 @@ import com.example.desiregallery.auth.AuthMethod
 import com.example.desiregallery.data.Result
 import com.example.desiregallery.data.models.User
 import com.example.desiregallery.data.network.NetworkManager
-import com.example.desiregallery.ui.screens.base.BaseActivity
+import com.example.desiregallery.ui.screens.base.StyledActivity
 import com.example.desiregallery.ui.widgets.SnackbarWrapper
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -31,7 +31,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class SignUpActivity : BaseActivity() {
+class SignUpActivity : StyledActivity(), View.OnClickListener {
     @Inject
     lateinit var auth: FirebaseAuth
     @Inject
@@ -54,7 +54,8 @@ class SignUpActivity : BaseActivity() {
         }
 
         sign_up_button.isEnabled = false
-        initListeners()
+        sign_up_input_birthday.setOnClickListener(this)
+        sign_up_button.setOnClickListener(this)
     }
 
     override fun onStart() {
@@ -75,6 +76,66 @@ class SignUpActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
         parentJob.cancel()
+    }
+
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.sign_up_input_birthday -> {
+                hideError()
+                val dateSetListener =
+                    DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                        val date = getString(R.string.date_format, dayOfMonth, month + 1, year)
+                        sign_up_input_birthday.setText(date)
+                    }
+                val calendar = Calendar.getInstance()
+                DatePickerDialog(
+                    this,
+                    dateSetListener,
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)
+                ).show()
+            }
+            R.id.sign_up_button -> {
+                disableAll()
+                hideError()
+                signUp()
+            }
+        }
+    }
+
+    private fun signUp() {
+        val login = sign_up_input_login.text.toString()
+        val email = sign_up_input_email.text.toString()
+        val birthday = sign_up_input_birthday.text.toString()
+        val password = sign_up_input_password.text.toString()
+        val passwordConfirm = sign_up_input_confirm.text.toString()
+
+        if (password != passwordConfirm) {
+            showError(getText(R.string.non_equal_passwords).toString())
+            enableAll()
+            return
+        }
+
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    Timber.i("VKUser $login successfully signed up")
+                    saveUserInfo(User(email, password).also {
+                        it.login = login
+                        it.birthday = birthday
+                    })
+                    enableAll()
+                    analytics.trackSignUp(AuthMethod.EMAIL)
+                    onBackPressed()
+                } else {
+                    Timber.e(task.exception, "Failed to sign up")
+                    val message = task.exception?.localizedMessage
+                        ?: getString(R.string.sign_up_error, getString(R.string.unknown_error))
+                    snackbar.show(message)
+                    enableAll()
+                }
+            }
     }
 
     private fun createTextChangeObservable(): Observable<String> {
@@ -108,59 +169,6 @@ class SignUpActivity : BaseActivity() {
             }
         }
         return observable.debounce(1, TimeUnit.SECONDS)
-    }
-
-    private fun initListeners() {
-        sign_up_input_birthday.setOnClickListener {
-            hideError()
-            val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-                val date = getString(R.string.date_format, dayOfMonth, month + 1, year)
-                sign_up_input_birthday.setText(date)
-            }
-            val calendar = Calendar.getInstance()
-            DatePickerDialog(
-                this,
-                dateSetListener,
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-            ).show()
-        }
-        sign_up_button.setOnClickListener {
-            disableAll()
-            hideError()
-            val login = sign_up_input_login.text.toString()
-            val email = sign_up_input_email.text.toString()
-            val birthday = sign_up_input_birthday.text.toString()
-            val password = sign_up_input_password.text.toString()
-            val passwordConfirm = sign_up_input_confirm.text.toString()
-
-            if (password != passwordConfirm) {
-                showError(getText(R.string.non_equal_passwords).toString())
-                enableAll()
-                return@setOnClickListener
-            }
-
-            auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        Timber.i("VKUser $login successfully signed up")
-                        saveUserInfo(User(email, password).also {
-                            it.login = login
-                            it.birthday = birthday
-                        })
-                        enableAll()
-                        analytics.trackSignUp(AuthMethod.EMAIL)
-                        onBackPressed()
-                    } else {
-                        Timber.e(task.exception, "Failed to sign up")
-                        val message = task.exception?.localizedMessage
-                            ?: getString(R.string.sign_up_error, getString(R.string.unknown_error))
-                        snackbar.show(message)
-                        enableAll()
-                    }
-                }
-        }
     }
 
     private fun saveUserInfo(user: User) {

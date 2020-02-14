@@ -11,10 +11,10 @@ import com.example.desiregallery.data.network.query.operators.ComparisonOperator
 class CommentsQueryRequest(postId: String, limit: Int, offset: Long) : BaseQueryRequest() {
 
     init {
-        this.from("comments")
-        this.where(FieldFilter("postId", ComparisonOperator.EQUAL, Value(postId)))
-        this.orderBy("timestamp", OrderDirection.ASCENDING)
-        if (limit > 0) this.limit(limit)
-        if (offset > 0) this.offset(offset)
+        from("comments")
+        where(FieldFilter("postId", ComparisonOperator.EQUAL, Value(postId)))
+        orderBy("timestamp", OrderDirection.ASCENDING)
+        if (limit > 0) limit(limit)
+        if (offset > 0) offset(offset)
     }
 }

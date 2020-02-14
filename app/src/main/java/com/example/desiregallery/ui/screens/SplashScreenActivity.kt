@@ -7,10 +7,10 @@ import com.example.desiregallery.MainApplication
 import com.example.desiregallery.R
 import com.example.desiregallery.data.prefs.IDGSharedPreferencesHelper
 import com.example.desiregallery.ui.screens.auth.LoginActivity
-import com.example.desiregallery.ui.screens.base.BaseActivity
+import com.example.desiregallery.ui.screens.base.StyledActivity
 import javax.inject.Inject
 
-class SplashScreenActivity : BaseActivity(true) {
+class SplashScreenActivity : StyledActivity(true) {
     @Inject
     lateinit var prefs: IDGSharedPreferencesHelper
 
@@ -25,14 +25,16 @@ class SplashScreenActivity : BaseActivity(true) {
     }
 
     private fun goToLoginActivity() {
-        val intent = Intent(applicationContext, LoginActivity::class.java)
-        startActivity(intent)
+        Intent(applicationContext, LoginActivity::class.java).also {
+            startActivity(it)
+        }
         finish()
     }
 
     private fun goToMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
+        Intent(this, MainActivity::class.java).also {
+            startActivity(it)
+        }
         finish()
     }
 

@@ -2,7 +2,7 @@ package com.example.desiregallery.data.storage
 
 import android.graphics.Bitmap
 import com.example.desiregallery.data.Result
-import com.example.desiregallery.utils.bitmapToBytes
+import com.example.desiregallery.utils.toBytes
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
@@ -24,7 +24,7 @@ class StorageHelper(private val storage: FirebaseStorage) : IStorageHelper {
         withContext(Dispatchers.IO) {
             val imageRef = storage.getReferenceFromUrl(STORAGE_URL).child(path)
             try {
-                val uploadTask = imageRef.putBytes(bitmapToBytes(bitmap))
+                val uploadTask = imageRef.putBytes(bitmap.toBytes())
                 uploadTask.await()
                 if (!uploadTask.isSuccessful) return@withContext Result.Error(IOException("Upload task wasn't successful"))
 

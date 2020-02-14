@@ -12,12 +12,13 @@ class CommentsAdapter : BasePagedListAdapter<Comment>(Comment.CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): CommentViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val bind = DataBindingUtil.inflate<ItemCommentBinding>(
+        return DataBindingUtil.inflate<ItemCommentBinding>(
             inflater,
             R.layout.item_comment,
             parent,
             false
-        )
-        return CommentViewHolder(bind)
+        ).let {
+            CommentViewHolder(it)
+        }
     }
 }

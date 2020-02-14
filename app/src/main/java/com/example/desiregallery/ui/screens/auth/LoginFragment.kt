@@ -39,7 +39,7 @@ import javax.inject.Inject
 /**
  * @author babaetskv on 18.11.19
  */
-class LoginFragment : Fragment() {
+class LoginFragment : Fragment(), View.OnClickListener {
     @Inject
     lateinit var auth: FirebaseAuth
     @Inject
@@ -54,14 +54,16 @@ class LoginFragment : Fragment() {
 
     lateinit var mLoginListener: ILoginListener
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        MainApplication.appComponent.inject(this)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        MainApplication.appComponent.inject(this)
-        return inflater.inflate(R.layout.fragment_login, container, false)
-    }
+    ): View? = inflater.inflate(R.layout.fragment_login, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -70,14 +72,21 @@ class LoginFragment : Fragment() {
         mDisposable = createTextChangedObservable().toFlowable(BackpressureStrategy.LATEST)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { checkForEmptyFields() }
-        initListeners()
+        arrayOf(
+            button_sign_in,
+            button_sign_in_vk,
+            button_sign_in_google,
+            link_sign_up
+        ).map {
+            it.setOnClickListener(this)
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if (requireActivity() is ILoginListener) {
-            mLoginListener = requireActivity() as ILoginListener
-        } else throw Exception("Parent activity doesn't implement login interface")
+        (requireActivity() as? ILoginListener)?.let {
+            mLoginListener = it
+        } ?: throw Exception("Parent activity doesn't implement login interface")
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -96,6 +105,7 @@ class LoginFragment : Fragment() {
 
                     override fun onError(error: VKError?) {
                         if (error?.errorCode == VKError.VK_CANCELED) return
+
                         Timber.e("Failed to sign in with vk: ${error?.errorMessage}")
                         snackbar.show(getString(R.string.sign_in_vk_failure))
                     }
@@ -114,6 +124,26 @@ class LoginFragment : Fragment() {
         if (!mDisposable.isDisposed) mDisposable.dispose()
     }
 
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.button_sign_in -> {
+                val email = input_email.text.toString()
+                val password = input_password.text.toString()
+                logIn(email, password)
+            }
+            R.id.button_sign_in_vk -> {
+                VKSdk.login(requireActivity(), VKScope.FRIENDS, VKScope.OFFLINE)
+            }
+            R.id.button_sign_in_google -> {
+                startActivityForResult(googleClient.signInIntent, GOOGLE_SIGN_IN_REQUEST_CODE)
+            }
+            R.id.link_sign_up -> {
+                val intent = Intent(requireActivity(), SignUpActivity::class.java)
+                startActivity(intent)
+            }
+        }
+    }
+
     private fun createTextChangedObservable(): Observable<String> {
         val observable = Observable.create<String> { emitter ->
             val inputTextWatcher = object : TextWatcher {
@@ -123,10 +153,11 @@ class LoginFragment : Fragment() {
                     i: Int,
                     i2: Int,
                     i3: Int
-                ) = Unit
+                ) {
+                }
 
-                override fun onTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) =
-                    Unit
+                override fun onTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {
+                }
 
                 override fun afterTextChanged(editable: Editable) {
                     emitter.onNext(editable.toString())
@@ -153,24 +184,6 @@ class LoginFragment : Fragment() {
             if (e.statusCode == GoogleSignInStatusCodes.SIGN_IN_CANCELLED) return
             Timber.e(e, "Failed to sign in with google")
             snackbar.show(getString(R.string.sign_in_google_failure))
-        }
-    }
-
-    private fun initListeners() {
-        button_sign_in.setOnClickListener {
-            val email = input_email.text.toString()
-            val password = input_password.text.toString()
-            logIn(email, password)
-        }
-        button_sign_in_vk.setOnClickListener {
-            VKSdk.login(requireActivity(), VKScope.FRIENDS, VKScope.OFFLINE)
-        }
-        button_sign_in_google.setOnClickListener {
-            startActivityForResult(googleClient.signInIntent, GOOGLE_SIGN_IN_REQUEST_CODE)
-        }
-        link_sign_up.setOnClickListener {
-            val intent = Intent(requireActivity(), SignUpActivity::class.java)
-            startActivity(intent)
         }
     }
 
