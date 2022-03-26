@@ -73,6 +73,11 @@
         <item name="android:background">@drawable/button_vk_background</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
+    <style name="GoogleButton" parent="CustomButton">
+        <item name="android:background">@drawable/button_google_background</item>
+        <item name="android:textColor">#444</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
 
     <style name="CustomProgressBar" parent="Widget.AppCompat.ProgressBar">
         <item name="android:indeterminateDrawable">@drawable/custom_spinner</item>
